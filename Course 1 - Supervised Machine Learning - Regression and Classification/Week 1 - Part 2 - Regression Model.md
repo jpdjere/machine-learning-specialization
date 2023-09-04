@@ -221,6 +221,7 @@ plt.legend()
 plt.show()
 ```
 ![](2023-09-05-00-13-29.png)
+
 As you can see, setting  𝑤=100 and  𝑏=100 does not result in a line that fits our data.
 
 If we adjust so that:
@@ -243,3 +244,69 @@ print(f"${cost_1200sqft:.0f} thousand dollars")
 ```
 
 $340 thousand dollars
+
+## Cost function formula
+
+![](2023-09-05-00-19-34.png)
+
+In ML, **parameters are the variables of the model that you can adjust during training to improve the model**.
+
+Sometimes, the parameters $w$ and $b$ are also called **coefficients** or **weights**.
+
+Depending of the values we give to the parameters, we'll get a different function `f(x)`:
+
+![](2023-09-05-00-22-34.png)
+
+Notice that $b$ is also called the **y-intercept** because that's where it crosses the y axis. 
+
+And notice that $w$ is the **slope** of our line.
+
+![](2023-09-05-00-25-04.png)
+
+In the graph above, notice the difference between $y$ and $ŷ$, where the first is the **target** or actual value, belonging to the dataset, and the second one is the **estimate**, given by the function.
+
+Now the question is: **how do you find values for $w$ and $b$ so that the prediction of $ŷ$ is close to the true target $y^{(i)}$, for many or maybe all training examples $(x^{(i)},y^{(i)})$**?
+
+To answer that question, let's first take a look at how to measure how well a line fits the training data. To do that, we're going to construct **a cost function**.
+
+The **cost function takes the prediction $ŷ$ and compares it to the target $y$ by taking $ŷ - y$**.
+
+The difference is called the **error**, and it measures **how far off the prediction is from the target.**
+
+We'll actually want to compute the **square of this error:**
+
+$$(ŷ - y)^2$$
+
+And we are going to compute this term for different training examples $i$ in the training set.
+
+$$(ŷ^{(i)} - y{(i)})^2$$
+
+We want to measure the error across the entire training set. We'll sum the squared errors using a **summation**:
+
+\sum_{i=1}^n a_i.
+
+$$\sum_{i=1}^m (ŷ^{(i)} - y{(i)})^2$$
+
+where $m$ is the number of training examples in this dataset. Notice that if we have more training examples $m$ wis larger and the cost function will calculate a bigger number. 
+
+This is why we compute the **average squared error** instead of the **total squared error**, by dividing by $m$.
+
+$${\sum_{i=1}^m (ŷ^{(i)} - y{(i)})^2}\over {m}$$
+
+By convention, the cost function that machine learning people use actually divides by 2 times m. The extra division by 2 is just meant to make some of our later calculations look neater, but the cost function still works whether you include this division by 2 or not.
+
+$${\sum_{i=1}^m (ŷ^{(i)} - y{(i)})^2}\over {2m}$$
+
+This expression is the **cost function and it's represented with $J$**:
+
+$$J_{(w,b)} = {{\sum_{i=1}^m (ŷ^{(i)} - y{(i)})^2}\over {2m}}$$
+
+Since:
+
+$$ ŷ^{(i)} = f_{w,b}(x^{(i)})$$
+
+We can replace the $ŷ$ in the formula above, and end up with:
+
+$$J_{(w,b)} = {{\sum_{i=1}^m (f_{w,b}(x^{(i)}) - y{(i)})^2}\over {2m}}$$
+
+Eventually we're going to want to find values of $w$ and $b$ that make the cost function small. But before going there, let's first gain more intuition about what $J_{(w,b)}$ is really computing.
