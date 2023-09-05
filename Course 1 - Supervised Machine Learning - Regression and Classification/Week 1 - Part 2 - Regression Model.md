@@ -310,3 +310,133 @@ We can replace the $ŷ$ in the formula above, and end up with:
 $$J_{(w,b)} = {{\sum_{i=1}^m (f_{w,b}(x^{(i)}) - y{(i)})^2}\over {2m}}$$
 
 Eventually we're going to want to find values of $w$ and $b$ that make the cost function small. But before going there, let's first gain more intuition about what $J_{(w,b)}$ is really computing.
+
+## Cost function intuition
+
+Now, let's build some intuition about what the cost function is really doing. Let's recap first:
+
+You want to find values for $w$, and $b$, so that the straight line fits the training data well. To measure how well a choice of $w$ and $b$ fits the training data, you have a cost function $J$. What the cost function  does is, it measures the difference between the model's predictions, and the actual true values for y. What you see later, is that linear regression would try to find values for $w$, and $b$, then make a J of $w$ be as small as possible.
+
+In math we write it like so:
+
+![](2023-09-05-23-49-35.png)
+
+Let's first try with a simplified version of the regresion model, setting $b$ to `0`. (Notice that this also means that the line will cross the `y` axis at `0`)
+
+![](2023-09-05-23-52-08.png)
+
+Now, using this simplified model, let's see how the cost function changes as you choose different values for the parameter $w$. 
+
+Let's look at graphs of the model $f(x)$, and the cost function $J(w)$.
+
+First, notice that for $f_w(x)$, when the parameter $w$ is fixed, that is, is always a constant value, then $f_w(x)$ is only a function of x, which means that the estimated value of $y$ depends only on the value of the input $x$.
+
+In contrast, looking to the right, the cost function $J$, is a function of $w$, where $w$ controls the slope of the line defined by $f_w$. The cost defined by $J$ depends on a parameter, in this case, the parameter $w$. 
+
+We can plot them side by side to see how they are related. We'll start with the model $f_w(x)$ on the left, and three points $(1,1)$, $(2,2)$ and $(3,3)$. We'll also start by setting a fixed value of `1` to $w$ and create the linear line model over the data.
+
+![](2023-09-06-00-13-51.png)
+
+Now we can calculate the cost for this case, i.e. when $w$ equals `1`.
+
+Our cost function is:
+
+$$J_{(w,b)} = {{\sum_{i=1}^m (f_{w,b}(x^{(i)}) - y{(i)})^2}\over {2m}}$$
+
+And we can replace $f_{w,b}(x)$ with what we know is our linear model, i.e. $wx^{(i)}$, then we end up with:
+
+$$J_{(w,b)} = {{\sum_{i=1}^m wx^{(i)} - y{(i)}^2}\over {2m}}$$.
+
+And for this dataset, for all three data points of our training sample, $J(w)$ when $w$ is `1` is 0!
+
+![](2023-09-06-00-19-33.png)
+
+And we can plot that on the right, with a graph of  $J(w)$ on the `y` axis and  $w$ on the `x` axis. So when $w$ is `1`, then $J(w)$ is `0`:
+
+![](2023-09-06-00-21-14.png)
+
+We can also see what happens for other values of $w$. What happens when $w$ is `0.5`? We can see that now the $error$ for each training point is different to $0$, and they sum up, so that $J(w) = J(0.5)$ is now different to `0`:
+
+![](2023-09-06-00-24-03.png)
+
+You can see that the $J(0.5)$ is around `0.58` and is marked on the graph.
+
+Now lets take $J(0)$, for which $f_w(x)$ is just an horizontal line, shown in yellow below:
+
+![](2023-09-06-00-25-32.png)
+
+And the result of the cost function ends up being even higher when $J(0)$: $J(0) = around 2.3$
+
+![](2023-09-06-00-27-18.png)
+
+And if you continue computing the cost function for different values of $w$ and plot them, you can get to see the shape of the cost function $J(w)$:
+
+![](2023-09-06-00-28-33.png)
+
+You can see here it is a parabola. Given this, **how can you choose the value of $w$ that results in $f(x)$ fitting the data well?**
+
+As we said, we need to choose a value of $w$ for which $J(w)$ is as minimum as possible. **Since $J(w)$ is the function that measures how big the squared errors are, minimizing it will minimize the error of our model.**
+
+And we can see here that $w$ being `1` is the value that minimizes the values of $J(w)$ and makes our model best fit our training data.
+
+## Visualizing the cost function
+
+Let's see someother visualizations of the cost function.
+
+![](2023-09-06-00-35-32.png)
+
+Now, we won't set $b$ to be `0`.
+
+Let's star with an example for the house prices dataset, in which we arbitrarily set:
+- $b = 50$
+- $w = 0.06$
+
+This looks like:
+
+![](2023-09-06-00-36-58.png)
+
+In the last example, since we had set $b = 0$, our cost function had only `1` dimension, and has the shape of a **parabola**.
+
+Since now our cost function $J(w,b)$ is dependant on two parameters, we need to graph it as a 3D plot, where $b$ and $w$ are the two axis and a third one for $J(w, b)$, which looks like:
+
+![](2023-09-06-00-42-34.png)
+
+We can use **contour plots** to graph these kind of 3D graphs in 2D:
+
+![](2023-09-06-00-43-38.png)
+
+The above is the contour plot of our cost function $J$ for the housing prices example dataset.
+
+Notice that the contour plot has as axis $w$ and $b$, and the contour lines on it mark the points for which different values of $(w, b)$ have the same result for $J(w, b)$.
+
+## Visualization examples
+
+Let's look at some more visualizations of $w$ and $b$. 
+
+Let's start by taking $b = 800$ and $w = -0.15$. Notice that with these values, our model $f(x)$ intercepts the y axis at `800` and the slope is negative since $w$ is negative. 
+
+We can immediately notice that this is not a good fit for our data: many training points are far away from the model, and the acutal point in the contour graph is far away from the minimum:
+
+![](2023-09-06-00-51-06.png)
+
+Let's look now for:
+- $b = 360$
+- $w = 0$
+
+![](2023-09-06-00-52-35.png)
+
+And now:
+- $b = 500$
+- $w = -0.15$
+
+![](2023-09-06-00-53-10.png)
+
+With these values we are further away from the minimum than in the previous example.
+
+Last example, which is pretty close to the minimum:
+- $b = 71$
+- $w = 0.13$
+
+![](2023-09-06-00-54-36.png)
+
+See how the errors calculated for each training data point against the prediction are very small compared to other models. And how for this model, $J(w, b)$ is very near the minimum of the contour graph.
