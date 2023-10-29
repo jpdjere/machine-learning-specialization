@@ -40,11 +40,11 @@ The key characterisitc of supervised learning algorithms is that **you give your
 
 Examples:
 
-![](2023-09-04-22-34-33.png)
+![](./img/2023-09-04-22-34-33.png)
 
 Supervised learning with regression:
 
-![](2023-09-04-22-35-53.png)
+![](./img/2023-09-04-22-35-53.png)
 
 **Regression**: predict a number out of infinitely many possible outputs.
 
@@ -56,9 +56,9 @@ A second major type of supervisted learning algorithm is called **classification
 
 Example: Breast cancer detection
 
-![](2023-09-04-22-45-22.png) 
-![](2023-09-04-22-45-56.png) 
-![](2023-09-04-22-46-40.png)
+![](./img/2023-09-04-22-45-22.png) 
+![](./img/2023-09-04-22-45-56.png) 
+![](./img/2023-09-04-22-46-40.png)
 
 ## Unsupervised learning - Part 1
 
@@ -70,15 +70,21 @@ In the case of breast cancer detecion, you would be given data on patient's tumo
 
 Instead, our job is to find some structure or pattern in the data; or just find something interesting in the data.
 
-![](2023-09-04-22-53-52.png)
+![](./img/2023-09-04-22-53-52.png)
 
 An unsupervised algorithm might decide that the data **can be assigned to two different groups or two different clusters.** This is called a **clustering algorithm** because it places the unlabled data into different clusters.
+
+![](2023-10-29-22-38-04.png)
+
+When writing code, it is more natural to do simultaneous update anyways.
+
+
 
 This has many applications: for example, Google News does it every day by looking at all news articles in the internet and grouping related stories together.
 
 You can see from an example how Google uses this algorithm: notice that the words "panda", "twins" and "zoo" appears in all news stories.
 
-![](2023-09-04-22-59-04.png)
+![](./img/2023-09-04-22-59-04.png)
 
 This clustering algorithm figures out on its own which words suggest that certain articles are in the same group: there is no Googlew News employee that manually tells the algorithm to find articles that contain the word "panda". So the algorithm figures that by itself, **without supervision**.
 
@@ -86,7 +92,7 @@ That's why the **clustering algorithm is a type of unsupervised algorithm**.
 
 Another example: **DNA microarray**
 
-![](2023-09-04-23-03-21.png)
+![](./img/2023-09-04-23-03-21.png)
 
 We just tell the algorithm: "here's a bunch of data. I don't know what the different types of people are, but can you automatically find structure in the data?". And the algorithm automatically figures out the major types of individuals, without us giving it the right answers from examples in advance.
 
@@ -94,8 +100,8 @@ We just tell the algorithm: "here's a bunch of data. I don't know what the diffe
 
 In **unsupervised learning, the data comes only with inputs `x` but no output labels `y`**, and the algorithm has to find some structure or some patterns or something interesting in the data,
 
-Apart form the **clustering algorithm**, we will se two other types of unsupervised learning:
+Apart from the **clustering algorithm**, we will see two other types of unsupervised learning:
 
-- **anomaly detection**: used to detect unusual events. This is really important for fraud detection in the financial system, where unusales events or transactions could be signs of fraud. 
+- **anomaly detection**: used to detect unusual events. This is really important for fraud detection in the financial system, where unusual events or transactions could be signs of fraud. 
 - **dimensionality reduction**: lets you take a big dataset and almost magically compress it to a much smaller dataset while losing as little information as possible.
 
