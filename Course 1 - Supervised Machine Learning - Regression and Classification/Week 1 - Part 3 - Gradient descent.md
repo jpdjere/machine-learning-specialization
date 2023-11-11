@@ -246,3 +246,8 @@ To be more precise: this process of gradient descent is called **batch gradient 
 
 There are **other versions** of gradient descent that do not use the whole training set, but small subsets of the data at each step.
 
+## Optional lab: Gradient Descent
+
+[LINK](https://www.coursera.org/learn/machine-learning/ungradedLab/lE1al/optional-lab-gradient-descent/)
+
+[Local link](./Optional%20Lab%20-%20Gradient%20Descent.ipynb)
