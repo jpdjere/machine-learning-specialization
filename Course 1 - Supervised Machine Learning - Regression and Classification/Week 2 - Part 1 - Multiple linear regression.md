@@ -1,18 +1,18 @@
-# Multiple features
+# Multiple linear regression
 
 ## Multiple features
 
 Let's start by looking at the version of linear regression that looks at not just one feature, but a lot of different features. In the original version of linear regression, you had a single feature $x$, the size of the house, and you're able to predict $y$, the price of the house.
 
-![](2023-11-11-23-44-20.png)
+![](./img/2023-11-11-23-44-20.png)
 
 But now, what if, on top of knowing the size of the house, you knew the number of bedrooms, the number of floors and the age of the home in years? This looks like it woud give you much more information with which to predict the price:
 
-![](2023-11-11-23-45-56.png)
+![](./img/2023-11-11-23-45-56.png)
 
 We'l introduce new notation:
 
-![](2023-11-11-23-55-11.png)
+![](./img/2023-11-11-23-55-11.png)
 
 See in the image above, how each feature is now represented by an $x$ with a subscript:
 
@@ -23,7 +23,7 @@ As before, we will use $x^{(i)}$ to denote the $i^{th}$ training example. But si
 
 $$\vec{x}^{(i)}$$
 
-![](2023-11-12-00-02-33.png)
+![](./img/2023-11-12-00-02-33.png)
 
 As a concrete example, when $i = 2$:
 
@@ -37,11 +37,11 @@ So for example:
 
 ${\vec{x}}_3^{(2)} = 2$
 
-![](2023-11-12-00-08-14.png)
+![](./img/2023-11-12-00-08-14.png)
 
 Let's now look what a model would look like:
 
-![](2023-11-12-00-09-05.png)
+![](./img/2023-11-12-00-09-05.png)
 
 Notice that now for each feature, we have a parameter $w$, so for $n$ features, our model will look like:
 
@@ -61,7 +61,7 @@ Then we also have the vector $\vec{x}$ for all the features:
 
 $$ \vec{x} = [x_1\space x_2\space x_3\space ...\space x_n ]$$
 
-![](2023-11-12-00-16-52.png)
+![](./img/2023-11-12-00-16-52.png)
 
 So now we can rewrite the model as:
 
@@ -69,7 +69,7 @@ $$ f_{\vec{w}, b} (\vec{x}) = \vec{w} \cdot \vec{x} + b$$
 
 where we use the dot product for the multiplication between the vectors.
 
-![](2023-11-12-00-19-53.png)
+![](./img/2023-11-12-00-19-53.png)
 
 This is called **multiple linear regresssion**.
 
@@ -91,7 +91,7 @@ b = 4
 x = np.array(10, 20, 30)
 ```
 
-![](2023-11-12-00-32-12.png)
+![](./img/2023-11-12-00-32-12.png)
 
 Notice the difference in the indexing: **in linear algebra we start with 1, while in Python and numPy the first value is accessed with index 0**.
 
@@ -154,7 +154,7 @@ for j in range(0, 16):
 
 We can see that `j` ranges from 0 to 15, and the computer runs the operations sequentially, one after the other.
 
-![](2023-11-12-18-01-00.png)
+![](./img/2023-11-12-18-01-00.png)
 
 In contrast, the following function in numPy is implementened in the computer hardware with vectorization:
 
@@ -166,17 +166,17 @@ Now, the computer gets all the values of vectors `w` and `x` and, **in a single 
 
 After that, in a subsequent step $t_1$, the computer takes the 16 numbers that are the result of the multiplications and adds them all together using specialized hardware, to add them altogether efficiently.
 
-![](2023-11-12-18-05-06.png)
+![](./img/2023-11-12-18-05-06.png)
 
 This matters more when you're running algorithms on large data sets or trying to train large models, which is often the case with machine learning.
 
 Let's now take a look at a concrete example, with 16 features and 16 parameters (apart from `b`, so 17 in total):
 
-![](2023-11-12-18-08-16.png)
+![](./img/2023-11-12-18-08-16.png)
 
 And now you calculate 16 **derivative** terms for each of the 16 weights `w`, and store them in a numPy array:
 
-![](2023-11-12-18-09-07.png)
+![](./img/2023-11-12-18-09-07.png)
 
 ```py
 w = np.array([0.5, 1.3, ..., 3.4])
@@ -195,7 +195,7 @@ for j in range(16):
   w[j] = w[j] - 0.1*d[j]
 ```
 
-![](2023-11-12-18-17-09.png)
+![](./img/2023-11-12-18-17-09.png)
 
 In contrast, with vectorization, you can imagine the computer parallel processing power like this: it takes all sixteen values in the vector and substracts, in parallel, `0.1` times the values in in vector `d` and assigns all sixteen calculations back to `w`, all at the same time and all in one step.
 
@@ -623,7 +623,7 @@ Let's put together everything we've learnt to implement **gradient descent for m
 
 Let's first review what multiple linear regression looks like:
 
-![](2023-11-19-20-51-47.png)
+![](./img/2023-11-19-20-51-47.png)
 
 Notice that now, $\vec{\mathbf{w}}$ and $\vec{\mathbf{x}}$ are vectors of length $n$, (multiplied by the dot product) while $b$ is still a number.
 
@@ -633,7 +633,7 @@ $$ f_{\vec{\mathbf{w}}, b} (\vec{\mathbf{x}})= \vec{\mathbf{w}} \cdot \vec{\math
 
 The same happens for our **cost function** and for our **gradient descent** algorithm:
 
-![](2023-11-19-21-02-02.png)
+![](./img/2023-11-19-21-02-02.png)
 
 Let's take a look at how this looks like when you implement gradient descent, particularly at how the **derivate term** looks like.
 
@@ -668,11 +668,11 @@ $b = b - α ({1\over {m}} {\sum_{i=1}^m (f_{\vec{\mathbf{w}},b}(\vec{\mathbf{x}}
 
 And that's it for gradient descent for multiple linear regression. Here's a summary;
 
-![](2023-11-19-21-15-18.png)
+![](./img/2023-11-19-21-15-18.png)
 
 ### Normal equation: alternative to gradient descent
 
-![](2023-11-19-21-16-51.png)
+![](./img/2023-11-19-21-16-51.png)
 
 ## Optional Lab: Multiple Variable Linear Regression
 
@@ -1035,6 +1035,6 @@ prediction: 286.17, target value: 232
 prediction: 171.47, target value: 178
 ```
 
-![](2023-11-19-22-21-58.png)
+![](./img/2023-11-19-22-21-58.png)
 
 *These results are not inspiring*! Cost is still declining and our predictions are not very accurate. The next lab will explore how to improve on this.
