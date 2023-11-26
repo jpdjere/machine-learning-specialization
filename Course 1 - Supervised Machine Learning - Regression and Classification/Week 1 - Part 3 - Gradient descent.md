@@ -250,7 +250,7 @@ There are **other versions** of gradient descent that do not use the whole train
 
 [LINK](https://www.coursera.org/learn/machine-learning/ungradedLab/lE1al/optional-lab-gradient-descent/)
 
-[Local link](./Optional%20Lab%20-%20Gradient%20Descent.ipynb)
+[Local link](./labs/Week%201/Optional%20Lab%20-%20Gradient%20Descent.ipynb)
 
 In this lab, you will:
 - automate the process of optimizing $w$ and $b$ using gradient descent.
