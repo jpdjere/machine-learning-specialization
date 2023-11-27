@@ -444,7 +444,7 @@ See how the errors calculated for each training data point against the predictio
 
 [LINK](https://www.coursera.org/learn/machine-learning/ungradedLab/udPHh/optional-lab-cost-function)
 
-[Local link](./Optional%20Lab%20-%20Cost%20Function.ipynb)
+[Local link](./labs/Week%201/Optional%20Lab%20-%20Cost%20Function.ipynb)
 
 In this lab you will:
 - you will implement and explore the `cost` function for linear regression with one variable. 
