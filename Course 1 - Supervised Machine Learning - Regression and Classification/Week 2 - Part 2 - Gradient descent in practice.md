@@ -599,3 +599,116 @@ In the plot below, the scale of the parameters is matched. The left plot is the 
 plt_equal_scale(X_train, X_norm, y_train)
 ```
 ![](2023-11-26-18-18-39.png)
+
+## Feature engineering
+
+
+The choice of features can have a huge impact on your learning algorithm's performance. In fact, for many practical applications, choosing or entering the right features is a critical step to making the algorithm work well. 
+
+Let's take a look at how you can **engineer the most appropiate features** for our learning algorithm.
+
+Let's study **feature engineering** by going back to the example of predicting house prices.
+
+If you have two features for a house:
+
+- $x_1$ is the width of the lot (frontage)
+- $x_2$ is the depth of the lot.
+
+Assuming a rectangular shape for the plot, we can simply build a model where the features are $x_1$ and $x_2$, and it can work moderately well.
+
+$$ f_{\vec{w},b} = w_1 x_1 + w_2 x_2 + b $$
+
+![](2023-12-03-14-39-27.png)
+
+But notice that the area of the plot can be calculated by multiplying $x_1$ and $x_2$.
+
+We might have an intuition that the area of the land is more predictive of the price (than the frontage and depth as separate features).
+
+So we can define a new feature, $x_3$, the area of the plot, that is defined as $x_1$ times $x_2$.
+
+So now we can have a model that is:
+
+$$ f_{\vec{w},b} = w_1 x_1 + w_2 x_2 + w_3 x_3 + b $$
+
+So **the model can now choose (calculate) parameters $w_1$, $w_2$ and $w_3$ depending on whether the data shows that the frontage, the depth or the are of the lot is the most important factor for predicting the price of the house.**
+
+![](2023-12-03-14-44-34.png)
+
+This is an example of **feature engineering**: using intuition or knowledge of the data to design new features, by transforming or combining original features, to make it easier for the learning algorithm to make accurate predictions.
+
+
+## Polynomial Regression
+
+So far, we have only fitted **straight lines** to our data. Let's now take the dieas of multiple linear regression and feature engineering and combine them to come up with a new algorithm called **polynomial regression**, which allows us to fit curves, non-linear function, to your data.
+
+If we have a housing data set that looks like this:
+
+![](2023-12-03-14-52-58.png)
+
+It doesn't look like a straight line fits this data very well. So maybe we want to fit a curve, maybe a **quadratic** function to the data, like this:
+
+$$ f_{\vec{w},b} = w_1 x + w_2 x^2 + b $$
+
+![](2023-12-03-14-54-20.png)
+
+Notice that this includes as features a size $x$ and also $x^2$, which is the size of the house **squared**. Maybe this could give use a better fit to the data.
+
+But then we realized that a quadractic model doesn't make much sense here because such a curve eventually comes down, and it doesn't make sense for prices to start coming down after a certain price.
+
+So we then choose a **cubic** function, where we not only have $x^2$, we also have $x^3$, or the size of the house to the power of three.
+
+$$ f_{\vec{w},b} = w_1 x + w_2 x^2 + w_3 x^3 + b $$
+
+![](2023-12-03-15-04-47.png)
+
+We can see in the graph the curve that this model produces, which is a somewhat better fir to the data because the price does eventually come up again as the size increases.
+
+Both of these are examples of **polynomial regression**, because we took our original featre $x$ and raised it to two, three or any other power.
+
+**IMPORTANT:** when we create features that are original featres to a certain power, then **features scaling becomes** increasingly important. Why? Let's take a look:
+
+- if the size of a house ranges from 1 to 1000 ($1$ to $10^3$)
+- the size squared ($x^2$) will range from 1 to 1.000.000 ($1$ to $10^6$)
+- the size cubed ($x^3$) will range from 1 to 1.000.000.000 ($1$ to $10^9$)
+
+So these new features $x^2$ and $x^3$ take **very different ranges of values** compared to the original feature of $x$. 
+
+If we are using gradient descent, we have to use **feature scaling** to get our features into comparable ranges of values.
+
+### Choice of features
+
+One last example of how we really have a wide range of choirces of features to use: another reasonable alternative to taking the size squared and size cube is to use the square root of the size: $\sqrt{x}$.
+
+And the model might look like:
+
+
+$$ f_{\vec{w},b} = w_1 x + w_2 \sqrt{x} + b $$
+
+Notice how the square root function looks: it becomes a bit less steep as $x$ increases, but it doesn't ever completely flatten out, and it never comes back down.
+
+So, you may ask yourself: **how do I decide what features to use?** That's something we will learn in the second course of this specialization: how we can choose different features and different models that include or don't include these features, and the process for measuring how well these different models perform to help us decide which feature to include or not.
+
+## Optional Lab: Feature Engineering and Polynomial Regression
+
+[LINK](https://www.coursera.org/learn/machine-learning/ungradedLab/Xat0X/optional-lab-feature-engineering-and-polynomial-regression/lab?path=%2Fnotebooks%2FC1_W2_Lab04_FeatEng_PolyReg_Soln.ipynb)
+
+[Internal link](./labs/Week%202/Optional%20lab%20-%20Feature%20engineering%20and%20Polynomial%20regression.ipynb)
+
+In this lab, we will explore **feature engineering** and **polynomial regression**, which allow us to use the machinery of linear regression to fit very complicated (and even non-linear) functions.
+
+First, we'll import our tools:
+
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+from lab_utils_multi import zscore_normalize_features, run_gradient_descent_feng
+np.set_printoptions(precision=2)  # reduced display precision on numpy arrays
+```
+
+### Overview
+
+Out of the box, linear regression provides a means of building models of the form:
+$$f_{\mathbf{w},b} = w_0x_0 + w_1x_1+ ... + w_{n-1}x_{n-1} + b \tag{1}$$ 
+What if your features/data are non-linear or are combinations of features? For example,  Housing prices do not tend to be linear with living area but penalize very small or very large houses resulting in the curves shown in the graphic above. 
+
+How can we use the machinery of linear regression to fit this curve? Recall, the 'machinery' we have is the ability to modify the parameters $\mathbf{w}$, $\mathbf{b}$ in (1) to 'fit' the equation to the training data. However, no amount of adjusting of $\mathbf{w}$,$\mathbf{b}$ in (1) will achieve a fit to a non-linear curve.
