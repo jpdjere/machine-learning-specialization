@@ -14,7 +14,7 @@ $x_1$ typically ranges from 300 to 2000 square feet, while for $x_2$ the data ra
 
 So if we look at an example of a house that has a size of 2000 square feet and 5 bedrooms, and a price of \$500k, what should reasonable values for the size of parameters $w_1$ and $w_2$ be?
 
-![](2023-11-20-21-59-43.png)
+![](./img/2023-11-20-21-59-43.png)
 
 Let's try by taking a look at one possible set of parameters: say $w_1$ is 50 and $w_2$ is 0.1 and $b$ is 50 for the purposes of discussion.
 
@@ -26,7 +26,7 @@ And thus:
 
 $$ \text{price} = 50 * 2000 + 0.1 * 5 + 50 = 100000k$$
 
-100.000k (100 million dollars) is very far from the actual price of $500.000. So this is not a good set of parameter choices for $w_1$ and $w_2$.
+100.000k (100 million dollars) is very far from the actual price of $500.000$. So this is not a good set of parameter choices for $w_1$ and $w_2$.
 
 Now, let's turn $w_1$ and $w_2$ around: 
 
@@ -48,11 +48,11 @@ So how does this relate to gradient descent? Let's take a look at the scatter pl
 
 If you plot the training data, you'll notice that the horizontal axis is on a much larger scale -or much larger range of values- compared to the vertical axis.
 
-![](2023-11-20-22-14-45.png)
+![](./img/2023-11-20-22-14-45.png)
 
 Let's take a look at how the **cost function** will look on a **contour plot**:
 
-![](2023-11-20-22-15-53.png)
+![](./img/2023-11-20-22-15-53.png)
 
 You can see that the horizontal axis has a much narrower range than the vertical (in this example, between 0 and 1), while on the verical axis, it takes on much larger values (like between 10 and 100).
 
@@ -64,17 +64,17 @@ In contrast, **it takes a much larger changes in $w_2$ in order to change the pr
 
 So what's the problem with this? What this might cause is that, when running gradient descent with the data as-is, **the algorithm will end up bouncing back and forth for a long time before it can finally find its way to the global minimum, because the contours are so tall and skinny.**
 
-![](2023-11-20-22-25-07.png)
+![](./img/2023-11-20-22-25-07.png)
 
 In situations like this, a useful thing to do is to **scale the features**: performing some transformation of your training data, so that $x_1$ now ranges from 0 to 1, and $x_2$ has the same range as well. And that makes the data points on the graph more uniformly scattered:
 
-![](2023-11-20-22-27-49.png)
+![](./img/2023-11-20-22-27-49.png)
 
 You can see also that the new sacles on the plot are different than those on the graph on the top. **The key point that the new scales for $x_1$ and $x_2$ have now comparable ranges of values to each other.**
 
 And if you run a gradient descent on a cost function with these rescales features, the **the contours will look more like circles, and less tall and skinny.** And the gradient descent **can find a much more direct path to the global minimum**.
 
-![](2023-11-20-22-30-55.png)
+![](./img/2023-11-20-22-30-55.png)
 
 ## Feature scaling - Part 2
 
@@ -97,7 +97,7 @@ $$ 0 \le x_2,scaled \le 1$$
 
 Notice how the scatterplot of datapoints looks now:
 
-![](2023-11-20-22-44-33.png)
+![](./img/2023-11-20-22-44-33.png)
 
 ### Mean normalization
 
@@ -122,7 +122,7 @@ $$ -0.46 \le x_{2,scaled} \le 0.54$$
 
 And notice how the scatterplot looks:
 
-![](2023-11-20-22-54-29.png)
+![](./img/2023-11-20-22-54-29.png)
 
 ### Z-score normalization
 
@@ -140,7 +140,7 @@ $$ -1.6 \le x_{2,scaled} \le 1.9$$
 
 And the graph looks like:
 
-![](2023-11-20-22-57-56.png)
+![](./img/2023-11-20-22-57-56.png)
 
 ### Rules of thumb for feature scaling
 
@@ -150,7 +150,7 @@ $$ \text{aim for about -1}\le x_j \le 1 \space \text{for each feature} \space x_
 
 These values can be flexible, values near those values are acceptable. We must be really careful to rescale when the values **are either too large or too small**:
 
-![](2023-11-20-23-02-34.png)
+![](./img/2023-11-20-23-02-34.png)
 
 When in doubt, rescale, since there is no harm in doing it.
 
@@ -162,13 +162,13 @@ By learning to recognize what a well-running implementation of gradient descent 
 
 A good way to make sure that the gradient descent is working well is to **plot the cost function $J$ against each iteration of gradient descent**:
 
-![](2023-11-20-23-09-48.png)
+![](./img/2023-11-20-23-09-48.png)
 
 This curve is called a **learning curve**. 
 
 Concretely if you look at the pink point on the curve, at 100 iterations, it means that after 100 iterations of gradient descent, the cost J is the value indicated by the vertical axis. And same for 200 iterations:
 
-![](2023-11-20-23-11-41.png)
+![](./img/2023-11-20-23-11-41.png)
 
 Looking at this graph helps you to see how the cost $J$ changes after each iteration of gradient descent: if gradient descent is working properly, then **the cost $J$ should decrease after every single iteration**. If $J$ ever increases after one iteration, that means either $\alpha$ is chosen poorly (it usually means $\alpha$ is too large), or there could be a bug in the code.
 
@@ -195,7 +195,7 @@ This can be because of two reasons:
 
 In this case, as we have already seen, what's happening is that our gradient descent algorithm is overshooting over the minimum.
 
-![](2023-11-20-23-25-21.png)
+![](./img/2023-11-20-23-25-21.png)
 
 To fix this, simply decrease your learning rate until you see your cost consistently decrease until you reach a global minimum.
 
@@ -246,7 +246,7 @@ for i in range(len(ax)):
 ax[0].set_ylabel("Price (1000's)")
 plt.show()
 ```
-![](2023-11-26-17-35-01.png)
+![](./img/2023-11-26-17-35-01.png)
 Plotting each feature vs. the target, price, provides some indication of which features have the strongest influence on price. Above:
 - increasing size also increases price
 - bedrooms and floors don't seem to have a strong impact on price
@@ -306,7 +306,7 @@ It appears the learning rate is too high.  The solution does not converge. Cost 
 ```py
 plot_cost_i_w(X_train, y_train, hist)
 ```
-![](2023-11-26-17-38-01.png)
+![](./img/2023-11-26-17-38-01.png)
 The plot on the right shows the value of one of the parameters, $w_0$. At each iteration, it is overshooting the optimal value and as a result, cost ends up *increasing* rather than approaching the minimum. Note that this is not a completely accurate picture as there are 4 parameters being modified each pass rather than just one. 
 
 (This plot is only showing $w_0$ with the other parameters fixed at benign values. In this and later plots you may notice the blue and orange lines being slightly off.)
@@ -336,7 +336,7 @@ Cost is decreasing throughout the run showing that alpha is not too large.
 ```py
 plot_cost_i_w(X_train, y_train, hist)
 ```
-![](2023-11-26-17-40-15.png)
+![](./img/2023-11-26-17-40-15.png)
 On the left, you see that cost is decreasing as it should. On the right, you can see that $w_0$ is still oscillating around the minimum, but it is decreasing each iteration rather than increasing. Note above that `dj_dw[0]` changes sign with each iteration as `w[0]` jumps over the optimal value.
 **This alpha value will converge.** You can vary the number of iterations to see how it behaves.
 
@@ -366,7 +366,7 @@ Cost is decreasing throughout the run, showing that $\alpha$ is not too large.
 ```py
 plot_cost_i_w(X_train, y_train, hist)
 ```
-![](2023-11-26-17-43-36.png)
+![](./img/2023-11-26-17-43-36.png)
 
 On the left, you see that cost is decreasing as it should. On the right you can see that $w_0$ is decreasing without crossing the minimum. Note above that `dj_w0` is negative throughout the run. This solution will also converge, though not quite as quickly as the previous example.
 
@@ -376,19 +376,19 @@ The lectures described the importance of rescaling the dataset so the features h
 
 Let's look again at the situation with **$\alpha$ = 9e-7**. This is pretty close to the maximum value we can set $\alpha$  to without diverging. This is a short run showing the first few iterations:
 
-![](2023-11-26-17-50-18.png)
+![](./img/2023-11-26-17-50-18.png)
 
 Above, while cost is being decreased, its clear that $w_0$ is making more rapid progress than the other parameters due to its much larger gradient.
 
 The graphic below shows the result of a very long run with $\alpha$ = 9e-7. This takes several hours.
 
-![](2023-11-26-18-00-13.png)
+![](./img/2023-11-26-18-00-13.png)
 
 Above, you can see cost decreased slowly after its initial reduction. Notice the difference between `w0` and `w1`,`w2`,`w3` as well as  `dj_dw0` and `dj_dw1-3`. `w0` reaches its near final value very quickly and `dj_dw0` has quickly decreased to a small value showing that `w0` is near the final value. The other parameters were reduced much more slowly.
 
 Why is this?  Is there something we can improve? See below:
 
-![](2023-11-26-18-01-45.png)
+![](./img/2023-11-26-18-01-45.png)
 
 The figure above shows why $w$'s are updated unevenly. 
 - $\alpha$ is shared by all parameter updates ($w$'s and $b$).
@@ -480,7 +480,7 @@ fig.suptitle("distribution of features before, during, after normalization")
 plt.show()
 ```
 
-![](2023-11-26-18-07-19.png)
+![](./img/2023-11-26-18-07-19.png)
 The plot above shows the relationship between two of the training set parameters, "age" and "size(sqft)". *These are plotted with equal scale*. 
 - Left: Unnormalized: The range of values or the variance of the 'size(sqft)' feature is much larger than that of age
 - Middle: The first step removes the mean or average value from each feature. This leaves features that are centered around zero. It's difficult to see the difference for the 'age' feature, but 'size(sqft)' is clearly around zero.
@@ -520,7 +520,7 @@ fig.suptitle("distribution of features after normalization")
 
 plt.show()
 ```
-![](2023-11-26-18-10-37.png)
+![](./img/2023-11-26-18-10-37.png)
 
 Notice, above, the range of the normalized data (x-axis) is centered around zero and roughly +/- 2. Most importantly, the range (x-axis) is similar for each feature.
 
@@ -567,7 +567,7 @@ fig.suptitle("target versus prediction using z-score normalized model")
 plt.show()
 ```
 
-![](2023-11-26-18-15-04.png)
+![](./img/2023-11-26-18-15-04.png)
 
 The results look good. A few points to note:
 - with multiple features, we can no longer have a single plot showing results versus features.
@@ -598,7 +598,7 @@ In the plot below, the scale of the parameters is matched. The left plot is the 
 ```py
 plt_equal_scale(X_train, X_norm, y_train)
 ```
-![](2023-11-26-18-18-39.png)
+![](./img/2023-11-26-18-18-39.png)
 
 ## Feature engineering
 
@@ -618,7 +618,7 @@ Assuming a rectangular shape for the plot, we can simply build a model where the
 
 $$ f_{\vec{w},b} = w_1 x_1 + w_2 x_2 + b $$
 
-![](2023-12-03-14-39-27.png)
+![](./img/2023-12-03-14-39-27.png)
 
 But notice that the area of the plot can be calculated by multiplying $x_1$ and $x_2$.
 
@@ -632,7 +632,7 @@ $$ f_{\vec{w},b} = w_1 x_1 + w_2 x_2 + w_3 x_3 + b $$
 
 So **the model can now choose (calculate) parameters $w_1$, $w_2$ and $w_3$ depending on whether the data shows that the frontage, the depth or the are of the lot is the most important factor for predicting the price of the house.**
 
-![](2023-12-03-14-44-34.png)
+![](./img/2023-12-03-14-44-34.png)
 
 This is an example of **feature engineering**: using intuition or knowledge of the data to design new features, by transforming or combining original features, to make it easier for the learning algorithm to make accurate predictions.
 
@@ -643,13 +643,13 @@ So far, we have only fitted **straight lines** to our data. Let's now take the d
 
 If we have a housing data set that looks like this:
 
-![](2023-12-03-14-52-58.png)
+![](./img/2023-12-03-14-52-58.png)
 
 It doesn't look like a straight line fits this data very well. So maybe we want to fit a curve, maybe a **quadratic** function to the data, like this:
 
 $$ f_{\vec{w},b} = w_1 x + w_2 x^2 + b $$
 
-![](2023-12-03-14-54-20.png)
+![](./img/2023-12-03-14-54-20.png)
 
 Notice that this includes as features a size $x$ and also $x^2$, which is the size of the house **squared**. Maybe this could give use a better fit to the data.
 
@@ -659,7 +659,7 @@ So we then choose a **cubic** function, where we not only have $x^2$, we also ha
 
 $$ f_{\vec{w},b} = w_1 x + w_2 x^2 + w_3 x^3 + b $$
 
-![](2023-12-03-15-04-47.png)
+![](./img/2023-12-03-15-04-47.png)
 
 We can see in the graph the curve that this model produces, which is a somewhat better fir to the data because the price does eventually come up again as the size increases.
 
@@ -812,7 +812,7 @@ Iteration      8000, Cost: 2.10884e-01
 Iteration      9000, Cost: 2.08962e-01
 w,b found by gradient descent: w: [1.], b: 0.0490
 ```
-![](2023-12-04-22-36-24.png)
+![](./img/2023-12-04-22-36-24.png)
 
 Great! near perfect fit. Notice the values of $\mathbf{w}$ and b printed right above the graph: `w,b found by gradient descent: w: [1.], b: 0.0490`. Gradient descent modified our initial values of $\mathbf{w},b $ to be (1.0,0.049) or a model of $y=1*x_0^2+0.049$, very close to our target of $y=1*x_0^2+1$. If you ran it longer, it could be a better match. 
 
@@ -849,7 +849,7 @@ Iteration      9000, Cost: 9.26132e+01
 w,b found by gradient descent: w: [0.08 0.54 0.03], b: 0.0106
 ```
 
-![](2023-12-04-22-39-28.png)
+![](./img/2023-12-04-22-39-28.png)
 
 Note the value of $\mathbf{w}$, `[0.08 0.54 0.03]` and b is `0.0106`.This implies the model after fitting/training is:
 $$ y = 0.08x + 0.54x^2 + 0.03x^3 + 0.0106 $$
@@ -904,7 +904,7 @@ for i in range(len(ax)):
 ax[0].set_ylabel("y")
 plt.show()
 ```
-![](2023-12-04-22-47-26.png)
+![](./img/2023-12-04-22-47-26.png)
 
 Above, it is clear that the $x^2$ feature mapped against the target value $y$ is linear. Linear regression can then easily generate a model using that feature.
 
@@ -952,7 +952,7 @@ Iteration     80000, Cost: 3.63004e-09
 Iteration     90000, Cost: 2.58497e-10
 w,b found by gradient descent: w: [5.27e-05 1.13e+02 8.43e-05], b: 123.5000
 ```
-![](2023-12-04-22-51-50.png)
+![](./img/2023-12-04-22-51-50.png)
 
 Feature scaling allows this to converge much faster.   
 Note again the values of $\mathbf{w}$. The $w_1$ term, which is the $x^2$ term is the most emphasized. Gradient descent has all but eliminated the $x^3$ term.
@@ -1100,4 +1100,4 @@ fig.suptitle("target versus prediction using z-score normalized model")
 plt.show()
 ```
 
-![](2023-12-12-22-18-44.png)
+![](./img/2023-12-12-22-18-44.png)
