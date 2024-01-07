@@ -105,3 +105,45 @@ This is because our algorithm would be predicting that there is only a 10% chanc
 So, when $y^{(i)} = 1$, the loss function incentivizes, or nudges, pushed the algorithm to make more accurate predictions, because the **loss is lowest when $f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)})$ predicts values close to the true label $y^{(i)}$ close to `1`.**
 
 #### Graph when $y^{(i)} = 0$
+
+In this case, the loss function is:
+
+$$  -\log{(1 - f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}))} $$
+In this case, the range of $f$ is limited to `0` to `1` (again, because logistic regression only outputs values between those two numbers). And if we zoom in to that part, it looks like so:
+
+![](2024-01-04-23-47-28.png)
+
+In the graph above, the $y$ axis shows the value of the loss $L$ for different values of $f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)})$. So when $f$ is 0 or very close to 0, the loss is also going to be very small: if the true label $y$ is $0$ and the model's prediction is also 0, then we nearly got it right.
+
+Instead, the larger the value of $f$ gets, the larger the loss, since the prediction will be further away from the true label 0. In fact, as the prediction approaches 1, the loss approaches infinity.
+
+Going back to the tumor prediction example, this says that if our model predicts that a tumor is almost certain, with 99,9% probability, of being malignat, but the true label shows that it is not malignant ($y = 0$), then we penalize the model with a very high loss.
+
+
+---
+So, for both cases, **the further the prediction $f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)})$ is from target $y^{(i)}$, the higher the loss.**
+
+---
+So now, we have redefined our cost function as:
+
+$$J(\vec{\mathbf{w}},\mathbf{b}) = \frac{1}{m} \sum\limits_{i = 1}^{m} L(f_{\mathbf{w},b}(\vec{\mathbf{x}}^{(i)}), y^{(i)})$$
+
+and defined the loss for a single training examples as: 
+
+$$L(f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}), y^{(i)})  $$
+
+which is what is summed up per example in the summation above.
+
+And we came up for a new definition for **the loss function for logistic regression**:
+
+$$   
+L(f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}), y^{(i)}) = 
+     \begin{cases}
+       -\log{(f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}))} &\quad\text{if } y^{(i)} = 1\\
+       -\log{(1 - f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}))} &\quad\text{if } y^{(i)} = 0\\
+     \end{cases}
+$$
+
+**With this choice of loss function, the overall cost function $J(w,b)$ will be convex, and can thus reliably use gradient descent to take us to the global minimum.**
+
+So, if we can find the values for $w$ and $b$ that minimize the cost function, then we have found great values for our logistic regression model.
