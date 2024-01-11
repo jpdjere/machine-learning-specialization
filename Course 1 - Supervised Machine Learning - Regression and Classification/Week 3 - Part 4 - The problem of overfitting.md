@@ -207,7 +207,7 @@ Now we'll build on that intuition and develop a modified cost function for our l
 
 Recall our previous example where we had the same data, once fitted with a second order polynomial and another one with a fourth order polynomial. The quadratic fit is really good, but the fourth order ends up overfitting the data:
 
-![](2024-01-10-23-35-03.png)]
+![](2024-01-10-23-35-03.png)
 
 But now uppose that we had a way to make the parameters $w_3$ and $w_4$ really, really small, close to 0. So, instead of minimizing the normal cost objective function, i.e. a cost function for linear regression as seen below, we could modify the cost function and add to it 1000 times $w_3^2$ and 1000 times $w_4^2. 
 
@@ -223,7 +223,119 @@ $$\min_{\mathbf{\vec{w}},b} \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w
 
 because in this way, the only way to minimize this new modified this cost function is **if $w_3$ and $w_4$** are both small. So when we minimize this function we'll end up with $w_3$ and $w_4$ very close to 0.
 
-So we're effectively nearly canceling out the effects of the features execute and extra power of 4 and getting rid of these two terms over here. And if we do that, then we end up with a fit to the data that's much closer to the quadratic function, including maybe just tiny contributions from the features x cubed and extra 4. And this is good because it's a much better fit to the data compared to if all the parameters could be large and we end up with this weekly quadratic function more generally, here's the idea behind regularization. The idea is that if there are smaller values for the parameters, then that's a bit like having a simpler model. Maybe one with fewer features, which is therefore less prone to overfitting. On the last slide we penalize or we say we regularized only W3 and W4. But more generally, the way that regularization tends to be implemented is if we have a lot of features, say a 100 features, we may not know which are the most important features and which ones to penalize. So the way regularization is typically implemented is to penalize all of the features or more precisely, we penalize all the WJ parameters and it's possible to show that this will usually result in fitting a smoother simpler, less weekly function that's less prone to overfitting. So for this example, if we have data with 100 features for each house, it may be hard to pick an advance which features to include and which ones to exclude. So let's build a model that uses all 100 features. So we have these 100 parameters W1 through W100, as well as 100 and first parameter B. Because we don't know which of these parameters are going to be the important ones. Let's penalize all of them a bit and shrink all of them by adding this new term lambda times the sum from J equals 1 through n where n is 100. The number of features of wj squared. This value lambda here is the Greek alphabet lambda and it's also called a regularization parameter. So similar to picking a learning rate alpha, we now also have to choose a number for lambda. A couple of things I would like to point out by convention, instead of using lambda times the sum of wj squared. We also divide lambda by 2m so that both the 1st and 2nd terms here are scaled by 1 over 2m. It turns out that by scaling both terms the same way it becomes a little bit easier to choose a good value for lambda. And in particular we find that even if our training set size growth, say we find more training examples. So m the training set size is now bigger. The same value of lambda that we've picked previously is now also more likely to continue to work if we have this extra scaling by 2m. Also by the way, by convention we're not going to penalize the parameter b for being large. In practice, it makes very little difference whether we do or not. And some machine learning engineers and actually some learning algorithm implementations will also include lambda over 2m times the b squared term. But this makes very little difference in practice and the more common convention which was used in this course is to regularize only the parameters w rather than the parameter b. So to summarize in this modified cost function, we want to minimize the original cost, which is the mean squared error cost plus additionally, the second term which is called the regularization term. And so this new cost function trades off two goals that we might have. Trying to minimize this first term encourages the algorithm to fit the training data well by minimizing the squared differences of the predictions and the actual values. And try to minimize the second term. The algorithm also tries to keep the parameters wj small, which will tend to reduce overfitting. The value of lambda that we choose, specifies the relative importance or the relative trade off or how we balance between these two goals. Let's take a look at what different values of lambda will cause we're learning algorithm to do. Let's use the housing price prediction example using linear regression. So F of X is the linear regression model. If lambda was set to be 0, then we're not using the regularization term at all because the regularization term is multiplied by 0. And so if lambda was 0, we end up fitting this overly wiggly, overly complex curve and it over fits. So that was one extreme of if lambda was 0. Let's now look at the other extreme. If we said lambda to be a really, really, really large number, say lambda equals 10 to the power of 10, then we're placing a very heavy weight on this regularization term on the right. And the only way to minimize this is to be sure that all the values of w are pretty much very close to 0. So if lambda is very, very large, the learning algorithm will choose W1, W2, W3 and W4 to be extremely close to 0 and thus F of X is basically equal to b and so the learning algorithm fits a horizontal straight line and under fits. To recap if lambda is 0 this model will over fit If lambda is enormous like 10 to the power of 10. This model will under fit. And so what we want is some value of lambda that is in between that more appropriately balances these first and second terms of trading off, minimizing the mean squared error and keeping the parameters small. And when the value of lambda is not too small and not too large, but just right, then hopefully we end up able to fit a 4th order polynomial, keeping all of these features, but with a function that looks like this. So that's how regularization works. When we talk about model selection, later into specialization will also see a variety of ways to choose good values for lambda. In the next two videos will flesh out how to apply regularization to linear regression and logistic regression, and how to train these models with great in dissent with that, we'll be able to avoid overfitting with both of these algorithms.
-(Required)
-en
-​
+So we're effectively nearly canceling out the effects of the features $x_3$ and $x_4$ and getting rid of tthose terms. 
+
+![](2024-01-11-12-01-39.png)
+
+
+If we do that,  we end up with a fit to the data that's much closer to the quadratic function, including  just tiny contributions from the features $x_3$ and $x_4$.
+
+More generally, here's the idea behind regularization: **if we have smaller values for the parameters $w_j$, then is like having a simpler model.**  A model with smaller values for the its paremeters is more similar to a model with fewer features, which is therefore less prone to overfitting. 
+
+Generally, if we have a lot of features, for example, a 100 features, we may not know which are the most important features and which ones to penalize. 
+
+**So regularization is typically implemented by penalizing all of the features or, more precisely, we penalize all the $w_j$ parameters.** This will usually result in fitting a smoother, simpler, less "wiggly" function that is less prone to overfitting. 
+
+So for the example of houses prices, if we have data with 100 features for each house, it may be hard to pick an advance which features to include and which ones to exclude. So let's build a model that uses all 100 features.
+
+![](2024-01-11-12-09-25.png)
+
+Because we don't know which of these parameters are going to be the important ones, we penalize all of them and shrink all of them by adding this new second term to the cost function:
+
+$$J(\mathbf{w},b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - y^{(i)})^2 \color{red} + \frac{\lambda}{2m} \sum\limits_{j = 0}^{n-1} w_j^2$$ 
+
+The $\lambda$ parameter is called the **regularization parameter**, which has to be chosen in a similar way as the learning rate $\alpha$.
+
+Notice that:
+- $\lambda$ is scaled over $2m$ in a similar way as the squared error cost is. This makes it easier to choose a good value for lambda.
+- we don't penalize $b$. Some ML engineers do it, but it doesn't make much of a difference for the cost function
+
+In this new function we want to minimize the original term, the mean squared error, and the second term, called the regularization term. This new cost function makes a trade-off of two goals that we have:
+
+1. minimizing the first term encourages the algoruthm to fit the training data well by minimizing the squared differences of the predictions and the acutal values
+2. minimizing the second term, the algorithm tries to keep the parameters $w_j$ small, which will tend to reduce overfitting.
+
+The value of lambda $\lambda$ that we choose **specifies the relative importance or the relative trade off or how we balance between these two goals.** 
+
+Let's take a look at what different values of lambda will cause we're learning algorithm to do, using the housing price prediction example using linear regression, where $f(x)$ is the linear regression model. 
+
+**If lambda was set to be 0,** then we're not using the regularization term at all because it is multiplied by 0. And so if lambda was 0, we end up fitting this overly wiggly, overly complex curve causing the model to overfit:
+
+![](2024-01-11-12-32-27.png)
+
+Let's now look at the other extreme: **if we set lambda to be a really large number, like $10^10$.** So now we're placing a very heavy weight on the regularization term on cost function. 
+
+And the only way to minimize this is to be sure that all the values of $w$ are pretty much very close to 0. So if lambda is very, very large, the learning algorithm will choose $w_1$, $w_2$, $w_3$ and $w_4$ to be extremely close to `0`` and thus $f(x)$ weill be basically equal to $b$.
+
+This means that the learning algorithm fits a horizontal straight line and underfits:
+
+![](2024-01-11-12-36-30.png)
+
+So what we want is some value of lambda that is somewhere in between that more appropriately balances these first and second terms of trading off, minimizing the mean squared error and keeping the parameters small. 
+
+When the value of lambda is not too small and not too large, but just right, then hopefully we end up able to fit a 4th order polynomial, keeping all of these features, but with a function that looks like this (in purple): 
+
+![](2024-01-11-12-38-30.png)
+
+## Regularized linear regression
+
+Let's now see how to get gradient descent to work with regularized linear regression. Let's see again our new const function with the regularization parameter:
+
+$$J(\mathbf{w},b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)})^2 + \frac{\lambda}{2m} \sum\limits_{j = 0}^{n-1} w_j^2$$
+
+Since we have this new term, the gradient descent algorithm will have a small change: while the algorithm and its formula stay the same:
+
+$$\begin{align*}
+&\text{repeat until convergence:} \; \lbrace \\
+&  \; \; \;w_j = w_j -  \alpha \frac{\partial J(\mathbf{\vec{w}},b)}{\partial w_j}\; & \text{for j := 0..n-1} \\ 
+&  \; \; \;  \; \;b = b -  \alpha \frac{\partial J(\mathbf{\vec{w}},b)}{\partial b} \\
+&\rbrace
+\end{align*}$$
+
+But notice now that the partial derivatives of the cost function, with respect to $w$ and $b$ will now be applying over this new term, so they will change:
+
+$$\frac{\partial J(\mathbf{\vec{w}},b)}{\partial w_j} =  \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)}) x_j^{(i)} \color{red} + \frac{\lambda}{m} w_j $$
+
+$$\frac{\partial J(\mathbf{\vec{w}},b)}{\partial b_j} =  \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)})$$
+
+Notice that since we are not trying to regularize the parameter $b$, and is thus not included in the cost function, its partial derivate with respect to $b$ stays the same.
+
+So putting these new values in the gradient descent algorithm we get:
+
+$$\begin{align*}
+&\text{repeat until convergence:} \; \lbrace \\
+&  \; \; \;w_j = w_j -  \alpha [\frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)}) x_j^{(i)}  + \frac{\lambda}{m} w_j] \\ 
+&  \; \; \;  \; \;b = b -  \alpha \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)}) \\
+&\rbrace
+\end{align*}$$
+
+
+Let's now try to see some material to convey a slightly deeper intuition about what this formula is actually doing:
+
+
+Let's rewrite the formula for $w_j$ in gradient descent the following way:
+
+$$ w_j = 1 w_j -  \alpha \frac{\lambda}{m} w_j - \alpha \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)}) x_j^{(i)}  $$
+
+$$ w_j = w_j (1 -  \alpha \frac{\lambda}{m} w_j ) - \color{red} \alpha \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{\vec{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)}) x_j^{(i)}  $$
+
+Notice that now, the second term, marked in red, is the normal update $w_j$ in the gradient algorithm when we don't have regularization, i.e. what we substracted from $w_j$ in each term.
+
+And so now we can see that the only difference with the original formula for updating $w_j$ is that the first term $w_j$ is multiplied by $(1 - \alpha \frac{\lambda}{m})$.
+
+So what is **$(1 - \alpha \frac{\lambda}{m})$**?
+
+Let's see with an example:
+
+- we know that **$\alpha$** is a small number, let's say, `0.01`
+- **$\lambda$** is usually a small number, around the magnitude of `1` or `10`. Let's pick 1.
+
+If we replace the numbers we get:
+
+$$ \alpha  \frac{\lambda}{m} = 0.01 * \frac{1}{50} = 0.0002 $$
+
+where $m$, the training set size is `50`. And:
+
+$$(1 - \alpha \frac{\lambda}{m}) = (1 - 0.0002) = 0.9998$$
+
+So, on every single iteration of gradient descent, we're taking $w_j$ and multypling it by `0.9998`, which makes it smaller on every step, before carrying out the usual update.
