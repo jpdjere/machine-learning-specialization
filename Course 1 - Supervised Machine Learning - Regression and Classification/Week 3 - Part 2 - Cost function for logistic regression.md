@@ -6,7 +6,7 @@ Remember: **the cost function gives you a way to measure how well a specific set
 
 We'll see first how the sqaured error cost function is **not an ideal cost function for logistic regression.** And we'll choose a better cost function.
 
-![](2024-01-04-09-48-47.png)
+![](./img/2024-01-04-09-48-47.png)
 
 Above we see the training set for a logistic regression model.
 
@@ -41,7 +41,7 @@ However, in **logistic regression**:
 - we have the model $ f_{\vec{\mathbf{w}}, b} (\vec{\mathbf{x}})= \frac{1}{1 + e^{-(\vec{\mathbf{w}} \cdot \vec{\mathbf{x}} + b)}}$
 - if we plot the cost function using this values of $f(x)$, we get a **non-convex** line, and if we tried to use gradient descent, there are lots of local minima that we can get stuck in and never find the global minimum.
 
-![](2024-01-04-10-12-14.png)
+![](./img/2024-01-04-10-12-14.png)
 
 So for **logistic regression**, the squared error cost function is not a good choice.
 
@@ -81,17 +81,17 @@ Remember that the loss function measures **how well you are doing on one example
 
 So if we plot $\log(f)$ and $-\log(f)$, we get:
 
-![](2024-01-04-23-29-44.png)
+![](./img/2024-01-04-23-29-44.png)
 
 Notice that both curves intersect the $x$ axis on 1, and this is important for us in $-\log(f)$, since after 1, all values of the curve are negative.
 
 Now, $f$ is the output of a logistic regression. This it is always between `0` and `1`. Therefor the only part of the curve that is relevant is what's between `0` and `1`, marked in the following graph:
 
-![](2024-01-04-23-33-06.png)
+![](./img/2024-01-04-23-33-06.png)
 
 Now, let's zoom in and take a closer look at that part of the graph:
 
-![](2024-01-04-23-34-25.png)
+![](./img/2024-01-04-23-34-25.png)
 
 #### Graph when $y^{(i)} = 1$
 If the algorithm predicts a probability close to `1`, and the true label $y^{(i)} = 1$, then the loss is very small, approaches `0`, **because we are very close to the right answer.**.
@@ -100,7 +100,7 @@ Now, continuing with the example of the true label being `1`, $y^{(i)} = 1$, - t
 
 This is because our algorithm would be predicting that there is only a 10% chance of the tumor being malignant, when the true value actually says that tumor is indeed malignat. That is why the loss is so high:
 
-![](2024-01-04-23-39-54.png)
+![](./img/2024-01-04-23-39-54.png)
 
 So, when $y^{(i)} = 1$, the loss function incentivizes, or nudges, pushed the algorithm to make more accurate predictions, because the **loss is lowest when $f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)})$ predicts values close to the true label $y^{(i)}$ close to `1`.**
 
@@ -111,7 +111,7 @@ In this case, the loss function is:
 $$  -\log{(1 - f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)}))} $$
 In this case, the range of $f$ is limited to `0` to `1` (again, because logistic regression only outputs values between those two numbers). And if we zoom in to that part, it looks like so:
 
-![](2024-01-04-23-47-28.png)
+![](./img/2024-01-04-23-47-28.png)
 
 In the graph above, the $y$ axis shows the value of the loss $L$ for different values of $f_{\mathbf{\vec{w}},b}(\vec{\mathbf{x}}^{(i)})$. So when $f$ is 0 or very close to 0, the loss is also going to be very small: if the true label $y$ is $0$ and the model's prediction is also 0, then we nearly got it right.
 
@@ -181,7 +181,7 @@ Recall, the squared error cost had the nice property that following the derivati
 ```py
 soup_bowl()
 ```
-![](2024-01-07-15-25-00.png)
+![](./img/2024-01-07-15-25-00.png)
 
 This cost function worked well for linear regression, it is natural to consider it for logistic regression as well. However, as the slide above points out, $f_{wb}(x)$ now has a non-linear component, the sigmoid function:   $f_{w,b}(x^{(i)}) = sigmoid(wx^{(i)} + b )$.   Let's try a squared error cost on the example from an earlier lab, now including the sigmoid.
 
@@ -192,7 +192,7 @@ x_train = np.array([0., 1, 2, 3, 4, 5],dtype=np.longdouble)
 y_train = np.array([0,  0, 0, 1, 1, 1],dtype=np.longdouble)
 plt_simple_example(x_train, y_train)
 ```
-![](2024-01-07-15-25-52.png)
+![](./img/2024-01-07-15-25-52.png)
 
 Now, let's get a surface plot of the cost using a *squared error cost*:
   $$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2 $$ 
@@ -206,7 +206,7 @@ plt_logistic_squared_error(x_train,y_train)
 plt.show()
 ```
 
-![](2024-01-07-15-26-50.png)
+![](./img/2024-01-07-15-26-50.png)
 
 While this produces a pretty interesting plot, the surface above not nearly as smooth as the 'soup bowl' from linear regression!    
 
@@ -242,7 +242,7 @@ Combined, these curves provide the behavior useful for a loss function, namely, 
 
 Consider the curves below:
 
-![](2024-01-07-18-33-38.png)
+![](./img/2024-01-07-18-33-38.png)
 
 Combined, the curves are similar to the quadratic curve of the squared error loss. Note, the x-axis is $f_{\mathbf{w},b}$ which is the output of a sigmoid. The sigmoid output is strictly between 0 and 1.
 
@@ -272,7 +272,7 @@ plt.close('all')
 cst = plt_logistic_cost(x_train,y_train)
 ```
 
-![](2024-01-07-18-39-15.png)
+![](./img/2024-01-07-18-39-15.png)
 
 This curve is well suited to gradient descent! It does not have plateaus, local minima, or discontinuities. Note, it is not a bowl as in the case of squared error. Both the cost and the log of the cost are plotted to illuminate the fact that the curve, when the cost is small, has a slope and continues to decline.
 
@@ -364,7 +364,7 @@ y_train = np.array([0, 0, 0, 1, 1, 1])                                          
 
 We will use a helper function to plot this data. The data points with label $y=1$ are shown as red crosses, while the data points with label $y=0$ are shown as blue circles.
 
-![](2024-01-07-21-03-14.png)
+![](./img/2024-01-07-21-03-14.png)
 
 **Cost function**
 
@@ -470,7 +470,7 @@ plt.title("Decision Boundary")
 plt.show()
 ```
 
-![](2024-01-07-21-08-43.png)
+![](./img/2024-01-07-21-08-43.png)
 
 You can see from this plot that `b = -4, w = np.array([1,1])` (in magenta) is a worse model for the training data. Let's see if the cost function implementation reflects this.
 

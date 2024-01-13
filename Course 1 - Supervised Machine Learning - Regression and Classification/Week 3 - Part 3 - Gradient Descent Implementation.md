@@ -6,7 +6,7 @@ To fit the parameters of a **logistic regression model**, we're going to try to 
 
 Now we'll focus on how to find a good choice of the parameters $w$ and $b$. After you've done so, if you give the model a new input, $x$, say a new patients at the hospital with a certain tumor size and age, then these are diagnosis. The model can then make a prediction, or it can try to estimate the probability that the label $y$ is one:
 
-![](2024-01-07-21-18-05.png)
+![](./img/2024-01-07-21-18-05.png)
 
 The algorithm we can use to minimize the cost function is, again, **gradient descent.**
 
@@ -87,7 +87,7 @@ ax.set_ylabel('$x_1$', fontsize=12)
 ax.set_xlabel('$x_0$', fontsize=12)
 plt.show()
 ```
-![](2024-01-07-22-40-31.png)
+![](./img/2024-01-07-22-40-31.png)
 
 **Logistic Gradient Descent**
 
@@ -266,7 +266,7 @@ ax.plot([0,x0],[x1,0], c=dlc["dlblue"], lw=1)
 plt.show()
 ```
 
-![](2024-01-07-22-50-26.png)
+![](./img/2024-01-07-22-50-26.png)
 
 In the plot above:
  - the shading reflects the probability y=1 (result prior to decision boundary)
@@ -285,7 +285,7 @@ fig,ax = plt.subplots(1,1,figsize=(4,3))
 plt_tumor_data(x_train, y_train, ax)
 plt.show()
 ```
-![](2024-01-07-22-51-37.png)
+![](./img/2024-01-07-22-51-37.png)
 
 In the plot below, try:
 - changing $w$ and $b$ by clicking within the contour plot on the upper right.
@@ -302,7 +302,7 @@ w_range = np.array([-1, 7])
 b_range = np.array([1, -14])
 quad = plt_quad_logistic( x_train, y_train, w_range, b_range )
 ```
-![](2024-01-07-22-53-35.png)
+![](./img/2024-01-07-22-53-35.png)
 
 You have:
 - examined the formulas and implementation of calculating the gradient for logistic regression
