@@ -262,4 +262,736 @@ initial_w = np.zeros(n)
 initial_b = 0.
 cost = compute_cost(X_train, y_train, initial_w, initial_b)
 print('Cost at initial w and b (zeros): {:.3f}'.format(cost))
+
+# Cost at initial w and b (zeros): 0.693  --- CORRECT!
+```
+
+```py
+# Compute and display cost with non-zero w and b
+test_w = np.array([0.2, 0.2])
+test_b = -24.
+cost = compute_cost(X_train, y_train, test_w, test_b)
+
+print('Cost at test w and b (non-zeros): {:.3f}'.format(cost))
+
+
+# UNIT TESTS
+compute_cost_test(compute_cost)
+
+# Cost at test w and b (non-zeros): 0.218
+# All tests passed!
+```
+
+<a name="2.5"></a>
+### 2.5 Gradient for logistic regression
+
+In this section, you will implement the gradient for logistic regression.
+
+Recall that the gradient descent algorithm is:
+
+$$\begin{align*}& \text{repeat until convergence:} \; \lbrace \newline \; & b := b -  \alpha \frac{\partial J(\mathbf{w},b)}{\partial b} \newline       \; & w_j := w_j -  \alpha \frac{\partial J(\mathbf{w},b)}{\partial w_j} \tag{1}  \; & \text{for j := 0..n-1}\newline & \rbrace\end{align*}$$
+
+where, parameters $b$, $w_j$ are all updated simultaniously.
+
+
+<a name='ex-03'></a>
+### Exercise 3
+
+Please complete the `compute_gradient` function to compute $\frac{\partial J(\mathbf{w},b)}{\partial w}$, $\frac{\partial J(\mathbf{w},b)}{\partial b}$ from equations (2) and (3) below.
+
+$$
+\frac{\partial J(\mathbf{w},b)}{\partial b}  = \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - \mathbf{y}^{(i)}) \tag{2}
+$$
+$$
+\frac{\partial J(\mathbf{w},b)}{\partial w_j}  = \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - \mathbf{y}^{(i)})x_{j}^{(i)} \tag{3}
+$$
+* m is the number of training examples in the dataset
+
+    
+*  $f_{\mathbf{w},b}(x^{(i)})$ is the model's prediction, while $y^{(i)}$ is the actual label
+
+
+- **Note**: While this gradient looks identical to the linear regression gradient, the formula is actually different because linear and logistic regression have different definitions of $f_{\mathbf{w},b}(x)$.
+
+As before, you can use the sigmoid function that you implemented above and if you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C3
+# GRADED FUNCTION: compute_gradient
+def compute_gradient(X, y, w, b, *argv): 
+    """
+    Computes the gradient for logistic regression 
+ 
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      *argv : unused, for compatibility with regularized version below
+    Returns
+      dj_dw : (ndarray Shape (n,)) The gradient of the cost w.r.t. the parameters w. 
+      dj_db : (scalar)             The gradient of the cost w.r.t. the parameter b. 
+    """
+    m, n = X.shape
+    dj_dw = np.zeros(w.shape)
+    dj_db = 0.
+
+    ### START CODE HERE ### 
+    for i in range(m):
+        z_wb = 0
+        # Loop over each feature
+        for j in range(n): 
+            # aca estoy multiplicando dos escalares! no hace falta dot product, aunque daria lo mismo
+            z_wb += w[j] * X[i,j]
+        # recien despues de iterar por todos los features n, sumo el bias b
+        z_wb = z_wb + b
+        f_wb = sigmoid(z_wb)
+        
+        # dj_db es un escalar, asique puedo ir sumando los valores (cada iteracion de la sumatoria)
+        # y voy a tener como resultado un escalar
+        dj_db_i = f_wb - y[i]
+        dj_db += dj_db_i
+        
+        # en cambio, dj_dw es un array (de tamaño n), y tengo que calcular el valor para cada uno
+        # de esos elementos. Por eso, itero sobre n, con el indice j, y hago el mismo calculo que
+        # para dj_db (pero aca multiplicando por X_j), y sumando todo en cada dj_dw[j]
+        for j in range(n):
+            dj_dw_ij = (f_wb - y[i])* X[i,j]
+            dj_dw[j] += dj_dw_ij
+            
+    dj_dw = dj_dw / m
+    dj_db = dj_db / m
+    ### END CODE HERE ###
+
+        
+    return dj_db, dj_dw
+```
+
+Run the cells below to check your implementation of the `compute_gradient` function with two different initializations of the parameters $w$ and $b$.
+
+```py
+# Compute and display gradient with w and b initialized to zeros
+initial_w = np.zeros(n)
+initial_b = 0.
+
+dj_db, dj_dw = compute_gradient(X_train, y_train, initial_w, initial_b)
+print(f'dj_db at initial w and b (zeros):{dj_db}' )
+print(f'dj_dw at initial w and b (zeros):{dj_dw.tolist()}' )
+
+# dj_db at initial w and b (zeros):-0.1
+# dj_dw at initial w and b (zeros):[-12.00921658929115, -11.262842205513591]
+# CORRECT!
+```
+
+```py
+# Compute and display cost and gradient with non-zero w and b
+test_w = np.array([ 0.2, -0.5])
+test_b = -24
+dj_db, dj_dw  = compute_gradient(X_train, y_train, test_w, test_b)
+
+print('dj_db at test w and b:', dj_db)
+print('dj_dw at test w and b:', dj_dw.tolist())
+
+# UNIT TESTS    
+compute_gradient_test(compute_gradient)
+
+# dj_db at test w and b: -0.5999999999991071
+# dj_dw at test w and b: [-44.831353617873795, -44.37384124953978]
+# All tests passed!
+```
+
+<a name="2.6"></a>
+### 2.6 Learning parameters using gradient descent 
+
+Similar to the previous assignment, you will now find the optimal parameters of a logistic regression model by using gradient descent. 
+- You don't need to implement anything for this part. Simply run the cells below. 
+
+- A good way to verify that gradient descent is working correctly is to look
+at the value of $J(\mathbf{w},b)$ and check that it is decreasing with each step. 
+
+- Assuming you have implemented the gradient and computed the cost correctly, your value of $J(\mathbf{w},b)$ should never increase, and should converge to a steady value by the end of the algorithm.
+
+```py
+def gradient_descent(X, y, w_in, b_in, cost_function, gradient_function, alpha, num_iters, lambda_): 
+    """
+    Performs batch gradient descent to learn theta. Updates theta by taking 
+    num_iters gradient steps with learning rate alpha
+    
+    Args:
+      X :    (ndarray Shape (m, n) data, m examples by n features
+      y :    (ndarray Shape (m,))  target value 
+      w_in : (ndarray Shape (n,))  Initial values of parameters of the model
+      b_in : (scalar)              Initial value of parameter of the model
+      cost_function :              function to compute cost
+      gradient_function :          function to compute gradient
+      alpha : (float)              Learning rate
+      num_iters : (int)            number of iterations to run gradient descent
+      lambda_ : (scalar, float)    regularization constant
+      
+    Returns:
+      w : (ndarray Shape (n,)) Updated values of parameters of the model after
+          running gradient descent
+      b : (scalar)                Updated value of parameter of the model after
+          running gradient descent
+    """
+    
+    # number of training examples
+    m = len(X)
+    
+    # An array to store cost J and w's at each iteration primarily for graphing later
+    J_history = []
+    w_history = []
+    
+    for i in range(num_iters):
+
+        # Calculate the gradient and update the parameters
+        dj_db, dj_dw = gradient_function(X, y, w_in, b_in, lambda_)   
+
+        # Update Parameters using w, b, alpha and gradient
+        w_in = w_in - alpha * dj_dw               
+        b_in = b_in - alpha * dj_db              
+       
+        # Save cost J at each iteration
+        if i<100000:      # prevent resource exhaustion 
+            cost =  cost_function(X, y, w_in, b_in, lambda_)
+            J_history.append(cost)
+
+        # Print cost every at intervals 10 times or as many iterations if < 10
+        if i% math.ceil(num_iters/10) == 0 or i == (num_iters-1):
+            w_history.append(w_in)
+            print(f"Iteration {i:4}: Cost {float(J_history[-1]):8.2f}   ")
+        
+    return w_in, b_in, J_history, w_history #return w and J,w history for graphing
+```
+
+Now let's run the gradient descent algorithm above to learn the parameters for our dataset.
+
+**Note**
+The code block below takes a couple of minutes to run, especially with a non-vectorized version. You can reduce the `iterations` to test your implementation and iterate faster. If you have time later, try running 100,000 iterations for better results.
+
+```py
+np.random.seed(1)
+initial_w = 0.01 * (np.random.rand(2) - 0.5)
+initial_b = -8
+
+# Some gradient descent settings
+iterations = 10000
+alpha = 0.001
+
+w,b, J_history,_ = gradient_descent(X_train ,y_train, initial_w, initial_b, 
+                                   compute_cost, compute_gradient, alpha, iterations, 0)
+
+# Iteration    0: Cost     0.96   
+# Iteration 1000: Cost     0.31   
+# Iteration 2000: Cost     0.30   
+# Iteration 3000: Cost     0.30   
+# Iteration 4000: Cost     0.30   
+# Iteration 5000: Cost     0.30   
+# Iteration 6000: Cost     0.30   
+# Iteration 7000: Cost     0.30   
+# Iteration 8000: Cost     0.30   
+# Iteration 9000: Cost     0.30   
+# Iteration 9999: Cost     0.30  
+```
+
+<a name="2.7"></a>
+### 2.7 Plotting the decision boundary
+
+We will now use the final parameters from gradient descent to plot the linear fit. If you implemented the previous parts correctly, you should see a plot similar to the following plot:   
+
+![](./img/2024-01-14-19-05-48.png)
+
+We will use a helper function in the `utils.py` file to create this plot.
+
+```py
+plot_decision_boundary(w, b, X_train, y_train)
+# Set the y-axis label
+plt.ylabel('Exam 2 score') 
+# Set the x-axis label
+plt.xlabel('Exam 1 score') 
+plt.legend(loc="upper right")
+plt.show()
+```
+
+![](./img/2024-01-14-21-41-29.png)
+
+<a name="2.8"></a>
+### 2.8 Evaluating logistic regression
+
+We can evaluate the quality of the parameters we have found by seeing how well the learned model predicts on our training set. 
+
+You will implement the `predict` function below to do this.
+
+<a name='ex-04'></a>
+### Exercise 4
+
+Please complete the `predict` function to produce `1` or `0` predictions given a dataset and a learned parameter vector $w$ and $b$.
+- First you need to compute the prediction from the model $f(x^{(i)}) = g(w \cdot x^{(i)} + b)$ for every example 
+    - You've implemented this before in the parts above
+- We interpret the output of the model ($f(x^{(i)})$) as the probability that $y^{(i)}=1$ given $x^{(i)}$ and parameterized by $w$.
+- Therefore, to get a final prediction ($y^{(i)}=0$ or $y^{(i)}=1$) from the logistic regression model, you can use the following heuristic -
+
+  if $f(x^{(i)}) >= 0.5$, predict $y^{(i)}=1$
+  
+  if $f(x^{(i)}) < 0.5$, predict $y^{(i)}=0$
+    
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C4
+# GRADED FUNCTION: predict
+
+def predict(X, w, b): 
+    """
+    Predict whether the label is 0 or 1 using learned logistic
+    regression parameters w
+    
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+
+    Returns:
+      p : (ndarray (m,)) The predictions for X using a threshold at 0.5
+    """
+    # number of training examples
+    m, n = X.shape   
+    p = np.zeros(m)
+   
+    ### START CODE HERE ### 
+    # Loop over each example
+    for i in range(m):   
+        z_wb = 0
+        # Loop over each feature
+        for j in range(n): 
+            # Add the corresponding term to z_wb
+            z_wb += w[j]*X[i,j]
+        
+        # Add bias term 
+        z_wb += b
+        
+        # Calculate the prediction for this example
+        f_wb = sigmoid(z_wb)
+
+        # Apply the threshold
+        p[i] = 1 if f_wb >= 0.5 else 0
+        
+    ### END CODE HERE ### 
+    return p
+```
+
+Once you have completed the function `predict`, let's run the code below to report the training accuracy of your classifier by computing the percentage of examples it got correct.
+
+```py
+# Test your predict code
+np.random.seed(1)
+tmp_w = np.random.randn(2)
+tmp_b = 0.3    
+tmp_X = np.random.randn(4, 2) - 0.5
+
+tmp_p = predict(tmp_X, tmp_w, tmp_b)
+print(f'Output of predict: shape {tmp_p.shape}, value {tmp_p}')
+
+# UNIT TESTS        
+predict_test(predict)
+
+# Output of predict: shape (4,), value [0. 1. 1. 1.]
+# All tests passed!
+```
+
+Now let's use this to compute the accuracy on the training set:
+
+```py
+#Compute accuracy on our training set
+p = predict(X_train, w,b)
+print('Train Accuracy: %f'%(np.mean(p == y_train) * 100))
+
+# Train Accuracy: 92.000000
+```
+
+<a name="3"></a>
+## 3 - Regularized Logistic Regression
+
+In this part of the exercise, you will implement regularized logistic regression to predict whether microchips from a fabrication plant passes quality assurance (QA). During QA, each microchip goes through various tests to ensure it is functioning correctly. 
+
+<a name="3.1"></a>
+### 3.1 Problem Statement
+
+Suppose you are the product manager of the factory and you have the test results for some microchips on two different tests. 
+- From these two tests, you would like to determine whether the microchips should be accepted or rejected. 
+- To help you make the decision, you have a dataset of test results on past microchips, from which you can build a logistic regression model.
+
+<a name="3.2"></a>
+### 3.2 Loading and visualizing the data
+
+Similar to previous parts of this exercise, let's start by loading the dataset for this task and visualizing it. 
+
+- The `load_dataset()` function shown below loads the data into variables `X_train` and `y_train`
+  - `X_train` contains the test results for the microchips from two tests
+  - `y_train` contains the results of the QA  
+      - `y_train = 1` if the microchip was accepted 
+      - `y_train = 0` if the microchip was rejected 
+  - Both `X_train` and `y_train` are numpy arrays.
+
+```py
+# load dataset
+X_train, y_train = load_data("data/ex2data2.txt")
+```
+
+#### View the variables
+
+The code below prints the first five values of `X_train` and `y_train` and the type of the variables:
+
+```py
+# print X_train
+print("X_train:", X_train[:5])
+print("Type of X_train:",type(X_train))
+# X_train: [[ 0.051267  0.69956 ]
+#  [-0.092742  0.68494 ]
+#  [-0.21371   0.69225 ]
+#  [-0.375     0.50219 ]
+#  [-0.51325   0.46564 ]]
+# Type of X_train: <class 'numpy.ndarray'>
+
+# print y_train
+print("y_train:", y_train[:5])
+print("Type of y_train:",type(y_train))
+# y_train: [1. 1. 1. 1. 1.]
+# Type of y_train: <class 'numpy.ndarray'>
+```
+
+#### Check the dimensions of your variables
+
+Another useful way to get familiar with your data is to view its dimensions. Let's print the shape of `X_train` and `y_train` and see how many training examples we have in our dataset.
+
+```py
+print ('The shape of X_train is: ' + str(X_train.shape))
+print ('The shape of y_train is: ' + str(y_train.shape))
+print ('We have m = %d training examples' % (len(y_train)))
+
+# The shape of X_train is: (118, 2)
+# The shape of y_train is: (118,)
+# We have m = 118 training examples
+```
+
+#### Visualize your data
+
+The helper function `plot_data` (from `utils.py`) is used to generate a figure like Figure 3, where the axes are the two test scores, and the positive (y = 1, accepted) and negative (y = 0, rejected) examples are shown with different markers.
+
+![](./img/2024-01-14-21-49-25.png)
+
+```py
+# Plot examples
+plot_data(X_train, y_train[:], pos_label="Accepted", neg_label="Rejected")
+
+# Set the y-axis label
+plt.ylabel('Microchip Test 2') 
+# Set the x-axis label
+plt.xlabel('Microchip Test 1') 
+plt.legend(loc="upper right")
+plt.show()
+```
+
+![](./img/2024-01-14-21-49-39.png)
+
+Figure 3 shows that our dataset cannot be separated into positive and negative examples by a straight-line through the plot. Therefore, a straight forward application of logistic regression will not perform well on this dataset since logistic regression will only be able to find a linear decision boundary.
+
+<a name="3.3"></a>
+### 3.3 Feature mapping
+
+One way to fit the data better is to create more features from each data point. In the provided function `map_feature`, we will map the features into all polynomial terms of $x_1$ and $x_2$ up to the sixth power.
+
+$$\mathrm{map\_feature}(x) = 
+\left[\begin{array}{c}
+x_1\\
+x_2\\
+x_1^2\\
+x_1 x_2\\
+x_2^2\\
+x_1^3\\
+\vdots\\
+x_1 x_2^5\\
+x_2^6\end{array}\right]$$
+
+As a result of this mapping, our vector of two features (the scores on two QA tests) has been transformed into a 27-dimensional vector. 
+
+- A logistic regression classifier trained on this higher-dimension feature vector will have a more complex decision boundary and will be nonlinear when drawn in our 2-dimensional plot. 
+- We have provided the `map_feature` function for you in utils.py. 
+
+```py
+print("Original shape of data:", X_train.shape)
+
+mapped_X =  map_feature(X_train[:, 0], X_train[:, 1])
+print("Shape after feature mapping:", mapped_X.shape)
+
+# Original shape of data: (118, 2)
+# Shape after feature mapping: (118, 27)
+```
+
+Let's also print the first elements of `X_train` and `mapped_X` to see the tranformation.
+
+```py
+print("X_train[0]:", X_train[0])
+print("mapped X_train[0]:", mapped_X[0])
+
+# X_train[0]: [0.051267 0.69956 ]
+# mapped X_train[0]: [5.12670000e-02 6.99560000e-01 2.62830529e-03 3.58643425e-02
+#  4.89384194e-01 1.34745327e-04 1.83865725e-03 2.50892595e-02
+#  3.42353606e-01 6.90798869e-06 9.42624411e-05 1.28625106e-03
+#  1.75514423e-02 2.39496889e-01 3.54151856e-07 4.83255257e-06
+#  6.59422333e-05 8.99809795e-04 1.22782870e-02 1.67542444e-01
+#  1.81563032e-08 2.47750473e-07 3.38066048e-06 4.61305487e-05
+#  6.29470940e-04 8.58939846e-03 1.17205992e-01]
+```
+
+While the feature mapping allows us to build a more expressive classifier, it is also more susceptible to overfitting. In the next parts of the exercise, you will implement regularized logistic regression to fit the data and also see for yourself how regularization can help combat the overfitting problem.
+
+<a name="3.4"></a>
+### 3.4 Cost function for regularized logistic regression
+
+In this part, you will implement the cost function for regularized logistic regression.
+
+Recall that for regularized logistic regression, the cost function is of the form
+$$J(\mathbf{w},b) = \frac{1}{m}  \sum_{i=0}^{m-1} \left[ -y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) - \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) \right] + \frac{\lambda}{2m}  \sum_{j=0}^{n-1} w_j^2$$
+
+Compare this to the cost function without regularization (which you implemented above), which is of the form 
+
+$$ J(\mathbf{w}.b) = \frac{1}{m}\sum_{i=0}^{m-1} \left[ (-y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) - \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right)\right]$$
+
+The difference is the regularization term, which is $$\frac{\lambda}{2m}  \sum_{j=0}^{n-1} w_j^2$$ 
+Note that the $b$ parameter is not regularized.
+
+<a name='ex-05'></a>
+### Exercise 5
+
+Please complete the `compute_cost_reg` function below to calculate the following term for each element in $w$ 
+$$\frac{\lambda}{2m}  \sum_{j=0}^{n-1} w_j^2$$
+
+The starter code then adds this to the cost without regularization (which you computed above in `compute_cost`) to calculate the cost with regulatization.
+
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C5
+def compute_cost_reg(X, y, w, b, lambda_ = 1):
+    """
+    Computes the cost over all examples
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      lambda_ : (scalar, float) Controls amount of regularization
+    Returns:
+      total_cost : (scalar)     cost 
+    """
+
+    m, n = X.shape
+    
+    # Calls the compute_cost function that you implemented above
+    cost_without_reg = compute_cost(X, y, w, b) 
+    
+    # You need to calculate this value
+    reg_cost = 0.
+    
+    ### START CODE HERE ###
+    # Notice that the regularization term doesn't depend on X (or m), so we only loop over n
+    for j in range(n):
+        reg_cost += w[j] ** 2
+    
+    reg_cost = reg_cost * (lambda_ / (2*m))
+        
+    
+    ### END CODE HERE ### 
+    
+    # Add the regularization cost to get the total cost
+    total_cost = cost_without_reg + reg_cost
+
+    return total_cost
+```
+
+Run the cell below to check your implementation of the `compute_cost_reg` function.
+
+```py
+X_mapped = map_feature(X_train[:, 0], X_train[:, 1])
+np.random.seed(1)
+initial_w = np.random.rand(X_mapped.shape[1]) - 0.5
+initial_b = 0.5
+lambda_ = 0.5
+cost = compute_cost_reg(X_mapped, y_train, initial_w, initial_b, lambda_)
+
+print("Regularized cost :", cost)
+
+# UNIT TEST    
+compute_cost_reg_test(compute_cost_reg)
+
+# Regularized cost : 0.6618252552483948
+# All tests passed!
+```
+
+<a name="3.5"></a>
+### 3.5 Gradient for regularized logistic regression
+
+In this section, you will implement the gradient for regularized logistic regression.
+
+
+The gradient of the regularized cost function has two components. The first, $\frac{\partial J(\mathbf{w},b)}{\partial b}$ is a scalar, the other is a vector with the same shape as the parameters $\mathbf{w}$, where the $j^\mathrm{th}$ element is defined as follows:
+
+$$\frac{\partial J(\mathbf{w},b)}{\partial b} = \frac{1}{m}  \sum_{i=0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - y^{(i)})  $$
+
+$$\frac{\partial J(\mathbf{w},b)}{\partial w_j} = \left( \frac{1}{m}  \sum_{i=0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - y^{(i)}) x_j^{(i)} \right) + \frac{\lambda}{m} w_j  \quad\, \text{for $j=0...(n-1)$}$$
+
+Compare this to the gradient of the cost function without regularization (which you implemented above), which is of the form 
+$$
+\frac{\partial J(\mathbf{w},b)}{\partial b}  = \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - \mathbf{y}^{(i)}) \tag{2}
+$$
+$$
+\frac{\partial J(\mathbf{w},b)}{\partial w_j}  = \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{\mathbf{w},b}(\mathbf{x}^{(i)}) - \mathbf{y}^{(i)})x_{j}^{(i)} \tag{3}
+$$
+
+
+As you can see,$\frac{\partial J(\mathbf{w},b)}{\partial b}$ is the same, the difference is the following term in $\frac{\partial J(\mathbf{w},b)}{\partial w}$, which is $$\frac{\lambda}{m} w_j  \quad\, \text{for $j=0...(n-1)$}$$ 
+
+<a name='ex-06'></a>
+### Exercise 6
+
+Please complete the `compute_gradient_reg` function below to modify the code below to calculate the following term
+
+$$\frac{\lambda}{m} w_j  \quad\, \mbox{for $j=0...(n-1)$}$$
+
+The starter code will add this term to the $\frac{\partial J(\mathbf{w},b)}{\partial w}$ returned from `compute_gradient` above to get the gradient for the regularized cost function.
+
+
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C6
+def compute_gradient_reg(X, y, w, b, lambda_ = 1): 
+    """
+    Computes the gradient for logistic regression with regularization
+ 
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      lambda_ : (scalar,float)  regularization constant
+    Returns
+      dj_db : (scalar)             The gradient of the cost w.r.t. the parameter b. 
+      dj_dw : (ndarray Shape (n,)) The gradient of the cost w.r.t. the parameters w. 
+
+    """
+    m, n = X.shape
+    
+    dj_db, dj_dw = compute_gradient(X, y, w, b)
+
+    ### START CODE HERE ###
+    # El regularization term se calcula para cada valor de j. Fijarse que
+    # dj_dw tambien tiene shape n, osea que hay que iterar sobre j
+    for j in range(n):
+        reg_term = (lambda_ / m) * w[j]
+        dj_dw[j] = dj_dw[j] + reg_term
+        
+    ### END CODE HERE ###         
+        
+    return dj_db, dj_dw
+```
+
+Run the cell below to check your implementation of the `compute_gradient_reg` function.
+
+```py
+X_mapped = map_feature(X_train[:, 0], X_train[:, 1])
+np.random.seed(1) 
+initial_w  = np.random.rand(X_mapped.shape[1]) - 0.5 
+initial_b = 0.5
+ 
+lambda_ = 0.5
+dj_db, dj_dw = compute_gradient_reg(X_mapped, y_train, initial_w, initial_b, lambda_)
+
+print(f"dj_db: {dj_db}", )
+print(f"First few elements of regularized dj_dw:\n {dj_dw[:4].tolist()}", )
+
+# UNIT TESTS    
+compute_gradient_reg_test(compute_gradient_reg)
+
+# dj_db: 0.07138288792343662
+# First few elements of regularized dj_dw:
+#  [-0.010386028450548701, 0.011409852883280124, 0.0536273463274574, 0.003140278267313462]
+# All tests passed!
+```
+
+<a name="3.6"></a>
+### 3.6 Learning parameters using gradient descent
+
+Similar to the previous parts, you will use your gradient descent function implemented above to learn the optimal parameters $w$,$b$. 
+- If you have completed the cost and gradient for regularized logistic regression correctly, you should be able to step through the next cell to learn the parameters $w$. 
+- After training our parameters, we will use it to plot the decision boundary. 
+
+**Note**
+
+The code block below takes quite a while to run, especially with a non-vectorized version. You can reduce the `iterations` to test your implementation and iterate faster. If you have time later, run for 100,000 iterations to see better results.
+
+```py
+# Initialize fitting parameters
+np.random.seed(1)
+initial_w = np.random.rand(X_mapped.shape[1])-0.5
+initial_b = 1.
+
+# Set regularization parameter lambda_ (you can try varying this)
+lambda_ = 0.01    
+
+# Some gradient descent settings
+iterations = 10000
+alpha = 0.01
+
+w,b, J_history,_ = gradient_descent(X_mapped, y_train, initial_w, initial_b, 
+                                    compute_cost_reg, compute_gradient_reg, 
+                                    alpha, iterations, lambda_)
+
+# Iteration    0: Cost     0.72   
+# Iteration 1000: Cost     0.59   
+# Iteration 2000: Cost     0.56   
+# Iteration 3000: Cost     0.53   
+# Iteration 4000: Cost     0.51   
+# Iteration 5000: Cost     0.50   
+# Iteration 6000: Cost     0.48   
+# Iteration 7000: Cost     0.47   
+# Iteration 8000: Cost     0.46   
+# Iteration 9000: Cost     0.45   
+# Iteration 9999: Cost     0.45  
+```
+<a name="3.7"></a>
+### 3.7 Plotting the decision boundary
+To help you visualize the model learned by this classifier, we will use our `plot_decision_boundary` function which plots the (non-linear) decision boundary that separates the positive and negative examples. 
+
+- In the function, we plotted the non-linear decision boundary by computing the classifier’s predictions on an evenly spaced grid and then drew a contour plot of where the predictions change from y = 0 to y = 1.
+
+- After learning the parameters $w$,$b$, the next step is to plot a decision boundary similar to Figure 4.
+
+![](./img/2024-01-14-22-14-22.png)
+
+```py
+plot_decision_boundary(w, b, X_mapped, y_train)
+# Set the y-axis label
+plt.ylabel('Microchip Test 2') 
+# Set the x-axis label
+plt.xlabel('Microchip Test 1') 
+plt.legend(loc="upper right")
+plt.show()
+```
+
+![](./img/2024-01-14-22-14-36.png)
+
+<a name="3.8"></a>
+### 3.8 Evaluating regularized logistic regression model
+
+You will use the `predict` function that you implemented above to calculate the accuracy of the regularized logistic regression model on the training set
+
+```py
+#Compute accuracy on the training set
+p = predict(X_mapped, w, b)
+
+print('Train Accuracy: %f'%(np.mean(p == y_train) * 100))
+
+# Train Accuracy: 82.203390
 ```
