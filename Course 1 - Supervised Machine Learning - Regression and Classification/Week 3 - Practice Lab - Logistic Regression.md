@@ -218,3 +218,48 @@ Note:
 * You can use the sigmoid function that you implemented above for this part.
 
 If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C2
+# GRADED FUNCTION: compute_cost
+def compute_cost(X, y, w, b, *argv):
+    """
+    Computes the cost over all examples
+    Args:
+      X : (ndarray Shape (m,n)) data, m examples by n features
+      y : (ndarray Shape (m,))  target value 
+      w : (ndarray Shape (n,))  values of parameters of the model      
+      b : (scalar)              value of bias parameter of the model
+      *argv : unused, for compatibility with regularized version below
+    Returns:
+      total_cost : (scalar) cost 
+    """
+
+    m, n = X.shape
+    
+    total_cost = 0
+    ### START CODE HERE ###
+    for i in range(m):
+        z = np.dot(w,X[i]) + b
+        f_x = sigmoid(z)
+        loss_f_x_y = -y[i] * np.log(f_x) - (1 - y[i]) * np.log(1 - f_x)
+        total_cost += loss_f_x_y
+        
+    total_cost = total_cost / m
+    
+    ### END CODE HERE ### 
+
+    return total_cost
+```
+
+Run the cells below to check your implementation of the `compute_cost` function with two different initializations of the parameters $w$ and $b$.
+
+```py
+m, n = X_train.shape
+
+# Compute and display cost with w and b initialized to zeros
+initial_w = np.zeros(n)
+initial_b = 0.
+cost = compute_cost(X_train, y_train, initial_w, initial_b)
+print('Cost at initial w and b (zeros): {:.3f}'.format(cost))
+```
