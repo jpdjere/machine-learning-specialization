@@ -17,12 +17,15 @@ def process_md_file(file_path):
     # Replace words with underscore or f(x) substring with $...$
     content = re.sub(r'\b(\w*_[\w\d_]+|\w*f\(x\)\w*)\b', r'$\1$', content)
 
+    # Replace tensor flow' with 'Tensorflow'
+    content = re.sub(r'tensor flow', 'Tensorflow', content)
+
     # Split the content into sentences
     sentences = re.split(r'(?<=[.!?])\s+', content)
 
     # Create a new paragraph every three sentences
     for i in range(2, len(sentences), 3):
-        sentences[i] = '\n' + sentences[i]
+        sentences[i] = '\n\n' + sentences[i]
 
     # Join the sentences back into the content
     content = ' '.join(sentences)
