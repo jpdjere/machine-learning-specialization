@@ -145,44 +145,214 @@ Let's add explanation to what each line is doing:
 
 ```py
 def dense(a_in, W, b):
-  # W is a 2rowsX3columns matrix. So the number of columns is 3.
+  # W is a "2rows X 3columns" matrix. So the number of columns is 3.
   # That is equal to the number of units in this layer. We can extract
-  # the number of columns by using (matrix).shape[1]
-  units = W.shape[1]
-  a_out = np.zeros(units)
+  # the number of columns in a  using (matrix).shape[1]
+  units = W.shape[1]  # ---> 3
+  # We initialize as the output of our layer an array with as many
+  # zeroes as there are unit. We will fill these later.
+  a_out = np.zeros(units) # ---> [0, 0, 0]
+  # We loop over the amount of units/neurons on the layer
+  # in this case, we will loop over 0, 1 and 2
   for j in range(units):
+    # We use this numpy notation to extract each of the three columns
+    # on each iteration. This will result in [1, 2], then [-3, 4 ] 
+    # and finally [5, 6]. We assign that to w.
     w = W[:, j]
+    # Calculate z using the usual dot product formula + b
     z = np.dot(w, a_in) + b[j]
-    a_out[j] = sigmoid(z)
+    # Calculate the output by applying the sigmoid (or any other)
+    # activation function to z. Assign it to each element of the output vector
+    a_out[j] = g(z) # = sigmoid(z)
   return a_out
 ```
 
-Here's the code. First, units equals W.shape,1. W here is a two-by-three matrix, and so the number of columns is three. 
+What the dense function does is it inputs the activations from the previous layer, and given the parameters for the current layer, it returns the activations for the next layer. 
 
-That's equal to the number of units in this layer. Here, units would be equal to three. Looking at the shape of w, is just a way of pulling out the number of hidden units or the number of units in this layer. 
+Given the dense function, here's how we can string together a few dense layers sequentially, in order to implement forward prop in the neural network:
 
-Next, we set a to be an array of zeros with as many elements as there are units. In this example, we need to output three activation values, so this just initializes a to be zero, zero, zero, an array of three zeros. Next, we go through a for loop to compute the first, second, and third elements of a. 
+```py
+def sequential(x):
+  a1 = dense(x, W1, b1)
+  a2 = dense(a1, W1, b1)
+  a3 = dense(a2, W1, b1)
+  a4 = dense(a3, W1, b1)
+  f_x = a3
+  return f_x
+```
+Notice that the output of a layer is the input to the next layer.
 
-For j in range units, so j goes from zero to units minus one. It goes from 0, 1, 2 indexing from zero and Python as usual. This command w equals W colon comma j, this is how we pull out the jth column of a matrix in Python. 
+Also notice that we use `W` with capital letters when referring to a matrix and `w` with lowercase when referring to a 1D vector or scalar.
 
-The first time through this loop, this will pull the first column of w, and so will pull out $w_1$,1. The second time through this loop, when we're computing the activation of the second unit, will pull out the second column corresponding to $w_1$, 2, and so on for the third time through this loop. Then we compute z using the usual formula, is a dot product between that parameter w and the activation that we have received, plus b, j. 
+## Lab: CoffeRoastingNumPy - Simple Neural Network
 
-And then we compute the activation a, j, equals g sigmoid function applied to z. Three times through this loop and we compute it, the values for all three values of this vector of activation is a. Then finally we return a. 
+In this lab, we will build a small neural network using Numpy. It will be the same "coffee roasting" network you implemented in Tensorflow.
 
-What the dense function does is it inputs the activations from the previous layer, and given the parameters for the current layer, it returns the activations for the next layer. Given the dense function, here's how we can string together a few dense layers sequentially, in order to implement forward prop in the neural network. Given the input features x, we can then compute the activations $a_1$ to be $a_1$ equals dense of x, $w_1$, $b_1$, where here $w_1$, $b_1$ are the parameters, sometimes also called the weights of the first hidden layer. 
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('./deeplearning.mplstyle')
+import tensorflow as tf
+from lab_utils_common import dlc, sigmoid
+from lab_coffee_utils import load_coffee_data, plt_roast, plt_prob, plt_layer, plt_network, plt_output_unit
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+tf.autograph.set_verbosity(0)
+```
 
-Then we can compute $a_2$ as dense of now $a_1$, which we just computed above. $W_2$, b-2 which are the parameters or weights of this second hidden layer. Then compute $a_3$ and $a_4$. 
+### Dataset
+This is the same data set as the previous lab:
+```py
+X,Y = load_coffee_data();
+print(X.shape, Y.shape)
+# (200, 2) (200, 1)
+```
 
-If this is a neural network with four layers, then define the output f of x is just equal to $a_4$, and so we return f of x. Notice that here we're using W, because under the notational conventions from linear algebra is to use uppercase or a capital alphabet is when it's referring to a matrix and lowercase refer to vectors and scalars. So because it's a matrix, this is W. 
+Let's plot the coffee roasting data below. The two features are Temperature in Celsius and Duration in minutes. [Coffee Roasting at Home](https://www.merchantsofgreencoffee.com/how-to-roast-green-coffee-in-your-oven/) suggests that the duration is best kept between 12 and 15 minutes while the temp should be between 175 and 260 degrees Celsius. Of course, as the temperature rises, the duration should shrink. 
 
-That's it. we now know how to implement forward prop yourself from scratch. we get to see all this code and run it and practice it yourself in the practice lab coming off to this as well. 
+```py
+plt_roast(X,Y)
+```
 
-I think that even when we're using powerful libraries like TensorFlow, it's helpful to know how it works under the hood. Because in case something goes wrong, in case something runs really slowly, or we have a strange result, or it looks like there's a bug, our ability to understand what's actually going on will make we much more effective when debugging our code. When I run machine learning algorithms a lot of the time, frankly, it doesn't work. 
+![](2024-01-19-23-56-44.png)
 
-Sophie, not the first time. I find that my ability to debug my code to be a TensorFlow code or something else, is really important to being an effective machine learning engineer. Even when we're using TensorFlow or some other framework, I hope that we find this deeper understanding useful for our own applications and for debugging our own machine learning algorithms as well. 
+### Normalize Data
+To match the previous lab, we'll normalize the data. Refer to that lab for more details:
 
-That's it. That's the last required video of this week with code in it. In the next video, I'd like to dive into what I think is a fun and fascinating topic, which is, what is the relationship between neural networks and AI or AGI, artificial general intelligence? 
+```py
+print(f"Temperature Max, Min pre normalization: {np.max(X[:,0]):0.2f}, {np.min(X[:,0]):0.2f}")
+print(f"Duration    Max, Min pre normalization: {np.max(X[:,1]):0.2f}, {np.min(X[:,1]):0.2f}")
+# Temperature Max, Min pre normalization: 284.99, 151.32
+# Duration    Max, Min pre normalization: 15.45, 11.51
 
-This is a controversial topic, but because it's been so widely discussed, I want to share with we some thoughts on this. When we are asked, are neural networks at all on the path to human level intelligence? we have a framework for thinking about that question. 
+norm_l = tf.keras.layers.Normalization(axis=-1)
+norm_l.adapt(X)  # learns mean, variance
+Xn = norm_l(X)
+print(f"Temperature Max, Min post normalization: {np.max(Xn[:,0]):0.2f}, {np.min(Xn[:,0]):0.2f}")
+print(f"Duration    Max, Min post normalization: {np.max(Xn[:,1]):0.2f}, {np.min(Xn[:,1]):0.2f}")
+# Temperature Max, Min post normalization: 1.66, -1.69
+# Duration    Max, Min post normalization: 1.79, -1.70
+```
 
-Let's go take a look at that fun topic, I think, in the next video.
+### Numpy Model (Forward Prop in NumPy)
+Let's build the "Coffee Roasting Network" described in lecture. There are two layers with sigmoid activations:
+
+As described in the previous lecture, it is possible to build your own dense layer using NumPy. This can then be utilized to build a multi-layer neural network.
+
+![](2024-01-20-00-00-22.png)
+
+In the first optional lab, you constructed a neuron in NumPy and in Tensorflow and noted their similarity. A layer simply contains multiple neurons/units. As described in the lecture, one can utilize a `for`-loop to visit each unit (`j`) in the layer and perform the dot product of the weights for that unit (`W[:,j]`) and sum the bias for the unit (`b[j]`) to form `z`. An activation function `g(z)` can then be applied to that result. Let's try that below to build a "dense layer" subroutine.
+
+```py
+# Define the activation function
+g = sigmoid
+```
+
+Next, you will define the `my_dense()` function which computes the activations of a dense layer:
+
+```py
+def my_dense(a_in, W, b):
+    """
+    Computes dense layer
+    Args:
+      a_in (ndarray (n, )) : Data, 1 example 
+      W    (ndarray (n,j)) : Weight matrix, n features per unit, j units
+      b    (ndarray (j, )) : bias vector, j units  
+    Returns
+      a_out (ndarray (j,))  : j units|
+    """
+    units = W.shape[1]
+    a_out = np.zeros(units)
+    for j in range(units):               
+        w = W[:,j]                                    
+        z = np.dot(w, a_in) + b[j]         
+        a_out[j] = g(z)               
+    return(a_out)
+```
+
+*Note: You can also implement the function above to accept `g` as an additional parameter (e.g. `my_dense(a_in, W, b, g)`). In this notebook though, you will only use one type of activation function (i.e. sigmoid) so it's okay to make it constant and define it outside the function. That's what you did in the code above and it makes the function calls in the next code cells simpler. Just keep in mind that passing it as a parameter is also an acceptable implementation. You will see that in this week's assignment.*
+
+The following cell builds a two-layer neural network utilizing the `my_dense` subroutine above:
+```py
+def my_sequential(x, W1, b1, W2, b2):
+    a1 = my_dense(x,  W1, b1)
+    a2 = my_dense(a1, W2, b2)
+    return(a2)
+```
+
+We can copy trained weights and biases from the previous lab in Tensorflow:
+```py
+W1_tmp = np.array( [[-8.93,  0.29, 12.9 ], [-0.1,  -7.32, 10.81]] )
+b1_tmp = np.array( [-9.82, -9.28,  0.96] )
+W2_tmp = np.array( [[-31.18], [-27.59], [-32.56]] )
+b2_tmp = np.array( [15.41] )
+```
+
+### Predictions
+
+Once you have a trained model, you can then use it to make predictions. Recall that the output of our model is a probability. In this case, the probability of a good roast. To make a decision, one must apply the probability to a threshold. In this case, we will use `0.5`
+
+Let's start by writing a routine similar to Tensorflow's `model.predict()`. This will take a matrix $X$ with all $m$ examples in the rows and make a prediction by running the model:
+
+```py
+def my_predict(X, W1, b1, W2, b2):
+    # Extract numer of rows in X
+    m = X.shape[0]
+    # Create a column vector with m rows, in the shape:
+    # p = [[0],
+    #      [0],
+    #      [0],
+    #       ... m amount of rows
+    #      [0]]
+    p = np.zeros((m,1))
+    # Loop by the indices of rows, and saved the probability
+    # in each row of the probability vector
+    for i in range(m):
+        p[i,0] = my_sequential(X[i], W1, b1, W2, b2)
+    return(p)
+```
+
+We can try this routine on two examples:
+```py
+X_tst = np.array([
+    [200,13.9],  # postive example
+    [200,17]])   # negative example
+X_tstn = norm_l(X_tst)  # remember to normalize
+predictions = my_predict(X_tstn, W1_tmp, b1_tmp, W2_tmp, b2_tmp)
+```
+To convert the probabilities to a decision, we apply a threshold:
+```py
+yhat = np.zeros_like(predictions)
+for i in range(len(predictions)):
+    if predictions[i] >= 0.5:
+        yhat[i] = 1
+    else:
+        yhat[i] = 0
+print(f"decisions = \n{yhat}")
+decisions = 
+# [[1.]
+#  [0.]]
+```
+
+This can be accomplished more succinctly:
+```py
+yhat = (predictions >= 0.5).astype(int)
+print(f"decisions = \n{yhat}")
+# decisions = 
+# [[1]
+#  [0]]
+```
+
+### Network function
+This graph shows the operation of the whole network and is identical to the Tensorflow result from the previous lab.
+
+The left graph is the raw output of the final layer represented by the blue shading. This is overlaid on the training data represented by the X's and O's.   
+
+The right graph is the output of the network after a decision threshold. The X's and O's here correspond to decisions made by the network.
+
+```py
+netf= lambda x : my_predict(norm_l(x),W1_tmp, b1_tmp, W2_tmp, b2_tmp)
+plt_network(X,Y,netf)
+```
+
+![](2024-01-20-00-13-43.png)
