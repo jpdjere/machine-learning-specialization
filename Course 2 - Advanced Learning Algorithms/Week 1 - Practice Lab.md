@@ -615,8 +615,239 @@ plt.show()
 <a name="2.6"></a>
 ### 2.6 Vectorized NumPy Model Implementation (Optional)
 The optional lectures described vector and matrix operations that can be used to speed the calculations.
+
 Below describes a layer operation that computes the output for all units in a layer on a given input example:
 
 ![](2024-01-21-15-44-11.png)
 
 We can demonstrate this using the examples `X` and the `W1`,`b1` parameters above. We use `np.matmul` to perform the matrix multiply. Note, the dimensions of x and W must be compatible as shown in the diagram above.
+
+```py
+x = X[0].reshape(-1,1)         # column vector (400,1)
+z1 = np.matmul(x.T,W1) + b1    # (1,400)(400,25) = (1,25)
+a1 = sigmoid(z1)
+
+print(a1.shape)
+# (1, 25)
+```
+
+You can take this a step further and compute all the units for all examples in one Matrix-Matrix operation.
+
+![](2024-01-21-16-29-33.png)
+
+The full operation is $\mathbf{Z}=\mathbf{XW}+\mathbf{b}$. This will utilize NumPy broadcasting to expand $\mathbf{b}$ to $m$ rows. If this is unfamiliar, a short tutorial is provided at the end of the notebook.
+
+<a name="ex03"></a>
+### Exercise 3
+
+Below, compose a new `my_dense_v` subroutine that performs the layer calculations for a matrix of examples. This will utilize `np.matmul()`.
+
+_**Note**: This function is not graded because it is discussed in the optional lectures on vectorization. If you didn't go through them, feel free to click the hints below the expected code to see the code. You can also submit the notebook even with a blank answer here._
+
+```py
+# UNQ_C3
+# UNGRADED FUNCTION: my_dense_v
+
+def my_dense_v(A_in, W, b, g):
+    """
+    Computes dense layer
+    Args:
+      A_in (ndarray (m,n)) : Data, m examples, n features each
+      W    (ndarray (n,j)) : Weight matrix, n features per unit, j units
+      b    (ndarray (1,j)) : bias vector, j units  
+      g    activation function (e.g. sigmoid, relu..)
+    Returns
+      A_out (tf.Tensor or ndarray (m,j)) : m examples, j units
+    """
+### START CODE HERE ###
+    Z = np.matmul(A_in, W) + b
+    A_out = g(Z)
+    
+    
+### END CODE HERE ### 
+    return(A_out)
+```
+
+```py
+X_tst = 0.1*np.arange(1,9,1).reshape(4,2) # (4 examples, 2 features) -> 4x3
+W_tst = 0.1*np.arange(1,7,1).reshape(2,3) # (2 input features, 3 output features) -> 2x3
+b_tst = 0.1*np.arange(1,4,1).reshape(1,3) # (1,3 features) -> 1x3
+A_tst = my_dense_v(X_tst, W_tst, b_tst, sigmoid)
+print(X_tst)
+print(A_tst)
+# [[0.54735762 0.57932425 0.61063923]
+#  [0.57199613 0.61301418 0.65248946]
+#  [0.5962827  0.64565631 0.6921095 ]
+#  [0.62010643 0.67699586 0.72908792]]
+```
+
+```py
+# UNIT TESTS
+
+test_c3(my_dense_v)
+# All tests passed!
+```
+
+The following cell builds a three-layer neural network utilizing the `my_dense_v` subroutine above:
+
+```py
+def my_sequential_v(X, W1, b1, W2, b2, W3, b3):
+    A1 = my_dense_v(X,  W1, b1, sigmoid)
+    A2 = my_dense_v(A1, W2, b2, sigmoid)
+    A3 = my_dense_v(A2, W3, b3, sigmoid)
+    return(A3)
+```
+
+We can again copy trained weights and biases from Tensorflow.
+
+```py
+W1_tmp,b1_tmp = layer1.get_weights()
+W2_tmp,b2_tmp = layer2.get_weights()
+W3_tmp,b3_tmp = layer3.get_weights()
+```
+
+Let's make a prediction with the new model. This will make a prediction on *all of the examples at once*. Note the shape of the output.
+
+```py
+Prediction = my_sequential_v(X, W1_tmp, b1_tmp, W2_tmp, b2_tmp, W3_tmp, b3_tmp )
+Prediction.shape
+# (1000, 1)
+```
+
+We'll apply a threshold of 0.5 as before, but to all predictions at once.
+
+```py
+Yhat = (Prediction >= 0.5).astype(int)
+print("predict a zero: ",Yhat[0], "predict a one: ", Yhat[500])
+# predict a zero:  [0] predict a one:  [1]
+```
+
+Run the following cell to see predictions. This will use the predictions we just calculated above. This takes a moment to run.
+
+```py
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+# You do not need to modify anything in this cell
+
+m, n = X.shape
+
+fig, axes = plt.subplots(8, 8, figsize=(8, 8))
+fig.tight_layout(pad=0.1, rect=[0, 0.03, 1, 0.92]) #[left, bottom, right, top]
+
+for i, ax in enumerate(axes.flat):
+    # Select random indices
+    random_index = np.random.randint(m)
+    
+    # Select rows corresponding to the random indices and
+    # reshape the image
+    X_random_reshaped = X[random_index].reshape((20, 20)).T
+    
+    # Display the image
+    ax.imshow(X_random_reshaped, cmap='gray')
+   
+    # Display the label above the image
+    ax.set_title(f"{y[random_index,0]}, {Yhat[random_index, 0]}")
+    ax.set_axis_off() 
+fig.suptitle("Label, Yhat", fontsize=16)
+plt.show()
+```
+
+You can see how one of the misclassified images looks:
+```py
+fig = plt.figure(figsize=(1, 1))
+errors = np.where(y != Yhat)
+random_index = errors[0][0]
+X_random_reshaped = X[random_index].reshape((20, 20)).T
+plt.imshow(X_random_reshaped, cmap='gray')
+plt.title(f"{y[random_index,0]}, {Yhat[random_index, 0]}")
+plt.axis('off')
+plt.show()
+```
+
+<a name="2.8"></a>
+### 2.8 NumPy Broadcasting Tutorial (Optional)
+
+In the last example,  $\mathbf{Z}=\mathbf{XW} + \mathbf{b}$ utilized NumPy broadcasting to expand the vector $\mathbf{b}$. If you are not familiar with NumPy Broadcasting, this short tutorial is provided.
+
+$\mathbf{XW}$  is a matrix-matrix operation with dimensions $(m,j_1)(j_1,j_2)$ which results in a matrix with dimension  $(m,j_2)$. To that, we add a vector $\mathbf{b}$ with dimension $(1,j_2)$.  $\mathbf{b}$ must be expanded to be a $(m,j_2)$ matrix for this element-wise operation to make sense. This expansion is accomplished for you by NumPy broadcasting.
+
+Broadcasting applies to element-wise operations.  
+Its basic operation is to 'stretch' a smaller dimension by replicating elements to match a larger dimension.
+
+More [specifically](https://NumPy.org/doc/stable/user/basics.broadcasting.html): 
+When operating on two arrays, NumPy compares their shapes element-wise. It starts with the trailing (i.e. rightmost) dimensions and works its way left. Two dimensions are compatible when
+- they are equal, or
+- one of them is 1   
+
+If these conditions are not met, a `ValueError: operands could not be broadcast together` exception is thrown, indicating that the arrays have incompatible shapes. The size of the resulting array is the size that is not 1 along each axis of the inputs.
+
+Here are some examples:
+
+![](2024-01-21-16-37-40.png)
+---
+**Vector-Sacalar Match**
+![](2024-01-21-16-39-17.png)
+**Vector-Scalar NO Match**
+![](2024-01-21-16-41-31.png)
+![](2024-01-21-16-43-24.png)
+
+**Vector-Vector**
+![](2024-01-21-16-39-39.png)
+
+![](2024-01-21-16-39-44.png)
+
+![](2024-01-21-16-39-53.png)
+
+![](2024-01-21-16-39-57.png)
+
+The graphic above shows NumPy expanding the arguments to match before the final operation. Note that this is a notional description. The actual mechanics of NumPy operation choose the most efficient implementation.
+
+For each of the following examples, try to guess the size of the result before running the example.
+
+```py
+a = np.array([1,2,3]).reshape(-1,1)  #(3,1)
+b = 5
+print(f"(a + b).shape: {(a + b).shape}, \na + b = \n{a + b}")
+# (a + b).shape: (3, 1), 
+# a + b = 
+# [[6]
+#  [7]
+#  [8]]
+```
+
+Note that this applies to all element-wise operations:
+```py
+a = np.array([1,2,3]).reshape(-1,1)  #(3,1)
+b = 5
+print(f"(a * b).shape: {(a * b).shape}, \na * b = \n{a * b}")
+# (a * b).shape: (3, 1), 
+# a * b = 
+# [[ 5]
+#  [10]
+#  [15]]
+```
+---
+![](2024-01-21-16-47-15.png)
+
+```py
+a = np.array([1,2,3,4]).reshape(-1,1)
+b = np.array([1,2,3]).reshape(1,-1)
+print(a)
+print(b)
+print(f"(a + b).shape: {(a + b).shape}, \na + b = \n{a + b}")
+# [[1]
+#  [2]
+#  [3]
+#  [4]]
+# [[1 2 3]]
+# (a + b).shape: (4, 3), 
+# a + b = 
+# [[2 3 4]
+#  [3 4 5]
+#  [4 5 6]
+#  [5 6 7]]
+```
+
+This is the scenario in the dense layer you built above. Adding a 1-D vector $b$ to a (m,j) matrix:
+
+![](2024-01-21-16-48-27.png)
