@@ -23,8 +23,10 @@ model = Sequential([
   Dense(units=1, activation='sigmoid')
 ])
 
+# Compile the model telling which loss function we wanna use
 model.compile(loss=BinaryCrossentropy())
 
+# Train the model with the training data and 100 iterations
 model.fit(X, Y, epochs=100)
 ```
 
@@ -38,54 +40,125 @@ As you can see above:
 
 Let's take a look at the details of what the TensorFlow code for training a neural network is actually doing. 
 
-Let's dive in. Before looking at the details of training in neural network, let's recall how we had trained a logistic regression model in the previous course. Step 1 of building a logistic regression model was we would specify how to compute the output given the input feature x and the parameters w and b. 
+Before looking at the details of training in neural network, let's recall how we had trained a logistic regression model in the previous course. 
 
-In the first course we said the logistic regression function predicts f of x is equal to G. The sigmoid function applied to W. product X plus B which was the sigmoid function applied to W.X plus B. 
+The **first step** of building a logistic regression model was to specify **how to compute the output given the input feature `x` and the parameters `w` and `b`.** 
 
-If Z is the dot product of W of X plus B, then F of X is 1 over 1 plus e to the negative z, so those first step were to specify what is the input to output function of logistic regression, and that depends on both the input x and the parameters of the model. The second step we had to do to train the literacy regression model was to specify the loss function and also the cost function, so we may recall that the loss function said, if religious regression opus f of x and the ground truth label, the actual label and a training set was y then the loss on that single training example was negative y log f of x minus one minus y times log of one minus f of x. This was a measure of how well is logistic regression doing on a single training example x comma y. 
+In the first course we said the logistic regression function predicts $f(x)$ is equal to $g(w \cdot x + b)$ where $g$ (for now) is the sigmoid function.
 
-Given this definition of a loss function, we then define the cost function, and the cost function was a function of the parameters W and B, and that was just the average that is taking an average overall M training examples of the loss function computed on the M training examples, X1, Y1 through XMYM, and remember that in the convention we're using the loss function is a function of the output of the learning algorithm and the ground truth label as computed over a single training example whereas the cost function J is an average of the loss function computed over our entire training set. That was step two of what we did when building up logistic regression. Then the third and final step to train a logistic regression model was to use an algorithm specifically gradient descent to minimize that cost function J of WB to minimize it as a function of the parameters W and B. 
+If $z = w \cdot x + b$, then $f(x) = \frac{1}{1 + e^{-z}}$. In code:
 
-We minimize the cost J as a function of the parameters using gradient descent where W is updated as W minus the learning rate alpha times the derivative of J with respect to W. And B similarly is updated as B minus the learning rate alpha times the derivative of J with respect to B. If these three steps. 
+```py
+z = np.dot(w, x) + b
 
-Step one, specifying how to compute the outputs given the input X and parameters, step 2 specify loss and costs, and step three minimize the cost function we trained logistic regression. The same three steps is how we can train a neural network in TensorFlow. Now let's look at how these three steps map to training a neural network. 
+f_x = 1 / (1+np.exp(-z))
+```
 
-We'll go over this in greater detail on the next three slides but really briefly. Step one is specify how to compute the output given the input x and parameters W and B that's done with this code snippet which should be familiar from last week of specifying the neural network and this was actually enough to specify the computations needed in forward propagation or for the inference algorithm for example. The second step is to compile the model and to tell it what loss we want to use, and here's the code that we use to specify this loss function which is the binary cross entropy loss function, and once we specify this loss taking an average over the entire training set also gives we the cost function for the neural network, and then step three is to call function to try to minimize the cost as a function of the parameters of the neural network. 
+![](2024-01-23-00-25-05.png)
 
-Let's look in greater detail in these three steps in the context of training a neural network. The first step, specify how to compute the output given the input x and parameters w and b. This code snippet specifies the entire architecture of the neural network. 
+The **second step** we had to do to train the logistic regression model was to **specify the loss function and also the cost function**.
 
-It tells we that there are 25 hidden units in the first hidden layer, then the 15 in the next one, and then one output unit and that we're using the sigmoid activation value. Based on this code snippet, we know also what are the parameters w1, v1 though the first layer parameters of the second layer and parameters of the third layer. This code snippet specifies the entire architecture of the neural network and therefore tells TensorFlow everything it needs in In order to compute the output a 3 or f of x as a function of the input x and the parameters, here we have written w l and b l. 
+We may recall that the loss function said, if logistic regression outs $f(x)$ and the ground truth label, the actual label of training set was $y$, then the **loss** on that single training example was:
 
-Let's go on to step 2. In the second step, we have to specify what is the loss function. That will also define the cost function we use to train the neural network. 
+```py
+loss = -y * np.log(f_x) - (1 - y) * np.log(1 - f_x)
+```
 
-For the handwritten digit classification problem where images are either of a zero or a one the most common by far, loss function to use is this one is actually the same loss function as what we had for logistic regression is negative y log f of x minus 1 minus y times log 1 minus f of x, where y is the ground truth label, sometimes also called the target label y, and f of x is now the output of the neural network. In TensorFlow, this is called the binary cross-entropy loss function. Where does that name come from? 
+![](2024-01-23-00-38-54.png)
 
-Well, it turns out in statistics this function on top is called the cross-entropy loss function, so that's what cross-entropy means, and the word binary just reemphasizes or points out that this is a binary classification problem because each image is either a zero or a one. The syntax is to ask TensorFlow to compile the neural network using this loss function. Another historical note, carers was originally a library that had developed independently of TensorFlow is actually totally separate project from TensorFlow. 
+And this loss was a measure of how well is logistic regression doing **on a single training example** `(x, y)`. 
 
-But eventually it got merged into TensorFlow, which is why we have tf.Keras library.losses dot the name of this loss function. By the way, I don't always remember the names of all the loss functions and TensorFlow, but I just do a quick web search myself to find the right name and then I plug that into my code. Having specified the loss with respect to a single training example, TensorFlow knows that it costs we want to minimize is then the average, taking the average over all m training examples of the loss on all of the training examples. 
+Given this definition of a loss function, we then defined the **cost function**.
 
-Optimizing this cost function will result in fitting the neural network to our binary classification data. In case we want to solve a regression problem rather than a classification problem. we can also tell TensorFlow to compile our model using a different loss function. 
+This was a function of the parameters $w$ and $b$ and it takes average of the loss function computed on the M training examples. This means the cost function J is an average of the loss function computed over our entire training set. 
 
-For example, if we have a regression problem and if we want to minimize the squared error loss. Here is the squared error loss. The loss with respect to if our learning algorithm outputs f of x with a target or ground truth label of y, that's 1/2 of the squared error. 
+![](2024-01-23-00-42-43.png)
 
-Then we can use this loss function in TensorFlow, which is to use the maybe more intuitively named mean squared error loss function. Then TensorFlow will try to minimize the mean squared error. In this expression, we're using j of capital w comma capital b to denote the cost function. 
+The **third and final step** to train a logistic regression model was to use an algorithm -specifically gradient descent- to minimize that cost function $J(w, b)$.
 
-The cost function is a function of all the parameters into neural network. we can think of capital W as including W1, W2, W3. All the W parameters and the entire new network and be as including b1, b2, and b3. 
+We minimize the cost $J(w, b)$ using gradient descent where $w$:
 
-If we are optimizing the cost function respect to w and b, if we tried to optimize it with respect to all of the parameters in the neural network. Up on top as well, I had written f of x as the output of the neural network, but we can also write f of w b if we want to emphasize that the output of the neural network as a function of x depends on all the parameters in all the layers of the neural network. That's the loss function and the cost function. 
+$w = w - α \frac{∂}{∂w} J(w, b)$
 
-Finally, we will ask TensorFlow to minimize the cross-function. we might remember the gradient descent algorithm from the first course. If we're using gradient descent to train the parameters of a neural network, then we are repeatedly, for every layer l and for every unit j, update wlj according to wlj minus the learning rate alpha times the partial derivative with respect to that parameter of the cost function j of wb and similarly for the parameters b as well. 
+$b = b - α \frac{∂}{∂b} J(w, b)$
 
-After doing, say, 100 iterations of gradient descent, hopefully, we get to a good value of the parameters. In order to use gradient descent, the key thing we need to compute is these partial derivative terms. What TensorFlow does, and, in fact, what is standard in neural network training, is to use an algorithm called backpropagation in order to compute these partial derivative terms. 
+and in code:
 
-TensorFlow can do all of these things for we. It implements backpropagation all within this function called fit. All we have to do is call model.fit, x, y as our training set, and tell it to do so for 100 iterations or 100 epochs. 
+```py
+w = w - alpha * dj_dw
+b = b - alpha * dj_db
+```
 
-In fact, what we see later is that TensorFlow can use an algorithm that is even a little bit faster than gradient descent, and we'll see more about that later this week as well. Now, I know that we're relying heavily on the TensorFlow library in order to implement a neural network. One pattern I've seen across multiple ideas is as the technology evolves, libraries become more mature, and most engineers will use libraries rather than implement code from scratch. 
+![](2024-01-23-00-46-15.png)
 
-There have been many other examples of this in the history of computing. Once, many decades ago, programmers had to implement their own sorting function from scratch, but now sorting libraries are quite mature that we probably call someone else's sorting function rather than implement it yourself, unless we're taking a computing class and I ask we to do it as an exercise. Today, if we want to compute the square root of a number, like what is the square root of seven, well, once programmers had to write their own code to compute this, but now pretty much everyone just calls a library to take square roots, or matrix operations, such as multiplying two matrices together. 
+Now let's look at how these three steps map to training a neural network, for each step:
 
-When deep learning was younger and less mature, many developers, including me, were implementing things from scratch using Python or C++ or some other library. But today, deep learning libraries have matured enough that most developers will use these libraries, and, in fact, most commercial implementations of neural networks today use a library like TensorFlow or PyTorch. But as I've mentioned, it's still useful to understand how they work under the hood so that if something unexpected happens, which still does with today's libraries, we have a better chance of knowing how to fix it. 
+![](2024-01-23-00-47-01.png)
 
-Now that we know how to train a basic neural network, also called a multilayer perceptron, there are some things we can change about the neural network that will make it even more powerful. In the next video, let's take a look at how we can swap in different activation functions as an alternative to the sigmoid activation function we've been using. This will make our neural networks work even much better. 
+Let's look in greater detail in these three steps in the context of training a neural network. 
 
-Let's go take a look at that in the next video.
+In the **first step**, we specify how to compute the output given the input `x` and parameters `w` and `b`. This code snippet specifies the entire architecture of the neural network:
+
+![](2024-01-23-00-48-56.png)
+
+The code above specifies that there are 25 hidden units in the first hidden layer, then the 15 in the next one, and then one output unit and that we're using the sigmoid activation value. 
+
+Based on this code snippet, we know also what are the parameters $$\mathbf{\vec{W}}$ and $\mathbf{\vec{b}}$, for each of the first, second and third layer. So this code snippet specifies the entire architecture of the neural network and therefore tells TensorFlow everything it needs in in order to compute the output $f(x)$ as a function of the input $x$ and the parameters, $\mathbf{\vec{W}^{[l]}}$ and $\mathbf{\vec{b}^{[l]}}$
+
+Let's go on to step 2, where we have to **specify what is the loss function**. That will also **define the cost function** we use to train the neural network. 
+
+For the handwritten digit classification problem where images are either of a zero or a one the most common loss function to use:
+
+  $$L(f_{\mathbf{w},b}(\mathbf{x}^{(i)}), y^{(i)}) = (-y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) - \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right)$$
+
+where $y$ is the ground truth label, sometimes also called the target label $y$, and $f(x)$ is now the output of the neural network. 
+
+**In TensorFlow, this is called the binary cross-entropy loss function.** 
+
+```py
+from tensorflow.keras.losses import BinaryCrossentropy
+model.compile(loss=BinaryCrossentropy())
+```
+
+Having specified the loss with respect to a single training example, TensorFlow knows that it costs we want to minimize is then the average: taking the average over all $M$ training examples of the loss on all of the training examples. Optimizing this cost function will result in fitting the neural network to our binary classification data.
+
+![](2024-01-23-00-58-55.png)
+
+**In case we wanted to solve a regression problem rather than a classification problem, we can also tell TensorFlow to compile our model using a different loss function.**
+
+For example, if we have a regression problem and if we want to minimize the squared error loss then we can use the more intuitively named **mean squared error loss function**. Then TensorFlow will try to m**inimize the mean squared error.** 
+
+![](2024-01-23-01-01-50.png)
+
+```py
+from tensorflow.keras.losses import MeanSquaredError
+model.compile(loss=MeanSquaredError())
+```
+--- 
+The cost function $J(\mathbf{\vec{W}}, \mathbf{B})$ is a function of all the parameters in the entire neural network, in all layers. So $\mathbf{\vec{W}}$ includes $\mathbf{\vec{w}^{[1]}}$, $\mathbf{\vec{w}^{[2]}}$ and $\mathbf{\vec{w}^{[3]}}$. And the same for $\mathbf{\vec{B}}$
+
+![](2024-01-23-01-04-52.png)
+
+Finally, **the third step, we will ask TensorFlow to minimize the cost function**.
+
+If we're using gradient descent to train the parameters of a neural network, then we are repeatedly, for every layer $l$ and for every unit $j$, updating $w_j^{[l]}$ and $b_j^{[l]}$ according to the formula of gradient descent: 
+
+
+$w_j^{[l]} = w_j^{[l]} - α \frac{∂}{∂} J(\vec{w}, b)$
+
+$b_j^{[l]} = b_j^{[l]} - α \frac{∂}{∂b} J(\vec{w}, b)$
+
+![](2024-01-23-01-08-56.png)
+
+After doing, say, 100 iterations of gradient descent, hopefully, we get to a good value of the parameters. 
+
+**In order to use gradient descent, the key thing we need to compute is the partial derivative terms. What TensorFlow does, and, in fact, what is standard in neural network training, is to use an algorithm called backpropagation in order to compute these partial derivative terms.**
+
+But TensorFlow does all of these things for us. It implements backpropagation all within the function called `fit`. All we have to do is call `model.fit()` with our training set, input `x` and labels `y` and assign a number of epochs:
+
+```py
+model.fit(X, y, epochs=100)
+```
+![](2024-01-23-01-10-53.png)
+
+In fact, we'll later is that **TensorFlow can use an algorithm that is even a little bit faster than gradient descent**.

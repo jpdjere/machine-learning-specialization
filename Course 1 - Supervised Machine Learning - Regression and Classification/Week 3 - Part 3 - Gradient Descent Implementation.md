@@ -180,7 +180,7 @@ dj_db: 0.49861806546328574
 dj_dw: [0.498333393278696, 0.49883942983996693]
 ```
 
-**Gradient Descent Code **
+**Gradient Descent Code**
 The code implementing equation (1) above is implemented below. Take a moment to locate and compare the functions in the routine to the equations above.
 
 ```py
