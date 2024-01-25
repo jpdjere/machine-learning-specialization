@@ -287,6 +287,9 @@ model.predict(X_new)
 
 ## Lab: Coffee Roasting in Tensorflow - Simple neural network
 
+[LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/reSfw/coffee-roasting-in-tensorflow)
+[Internal Link](./labs/Week%201/C2_W1_Lab02_CoffeeRoasting_TF.ipynb)
+
 In this lab we will build a small neural network using Tensorflow.
 
 ```py

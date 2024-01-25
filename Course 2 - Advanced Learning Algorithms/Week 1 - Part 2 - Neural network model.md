@@ -182,7 +182,7 @@ Also, this type of neural network architecture where we have** more hidden units
 
 [LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/hH4VM/neurons-and-layers/lab?path=%2Fnotebooks%2FC2_W1_Lab01_Neurons_and_Layers.ipynb)
 
-[Internal Link](./labs/C2_W1_Lab01_Neurons_and_Layers.ipynb)
+[Internal Link](./labs/Week%201/C2_W1_Lab01_Neurons_and_Layers.ipynb)
 
 In this lab we will explore the inner workings of neurons/units and layers. In particular, the lab will draw parallels to the models you have mastered in Course 1, the regression/linear model and the logistic model. The lab will introduce Tensorflow and demonstrate how these models are implemented in that framework.
 

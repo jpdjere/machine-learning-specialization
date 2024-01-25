@@ -186,6 +186,9 @@ Also notice that we use `W` with capital letters when referring to a matrix and 
 
 ## Lab: CoffeRoastingNumPy - Simple Neural Network
 
+[LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/Nyxpz/coffeeroastingnumpy)
+[Internal Link](./labs/Week%201/C2_W1_Lab03_CoffeeRoasting_Numpy.ipynb)
+
 In this lab, we will build a small neural network using Numpy. It will be the same "coffee roasting" network you implemented in Tensorflow.
 
 ```py
