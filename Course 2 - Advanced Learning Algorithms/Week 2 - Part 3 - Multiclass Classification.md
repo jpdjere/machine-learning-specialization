@@ -166,99 +166,639 @@ Notice that in this loss function, **$y$ in each training example can take on on
 
 ## Neural Network with Softmax output
 
-In order to build a Neural Network that can carry out multi class classification, we're going to take the Softmax regression model and put it into essentially the output layer of a Neural Network. Let's take a look at how to do that. 
+In order **to build a neural network that can carry out multi class classification, we're going to take the Softmax regression model and put it into the output layer of a neural network**.
 
-Previously, when we were doing handwritten digit recognition with just two classes. We use a new Neural Network with this architecture. If we now want to do handwritten digit classification with 10 classes, all the digits from zero to nine, then we're going to change this Neural Network to have 10 output units like so. 
+Previously, when we were doing handwritten digit recognition with just two classes, we used a new neural network with an architecture of three hidden layers, with the output layer being just 1 neuron or unit:
 
-And this new output layer will be a Softmax output layer. So sometimes we'll say this Neural Network has a Softmax output or that this upper layer is a Softmax layer. And the way forward propagation works in this Neural Network is given an input X A1 gets computed exactly the same as before. 
+![](2024-01-28-15-37-38.png)
 
-And then A2, the activations for the second hidden layer also get computed exactly the same as before. And we now have to compute the activations for this output layer, that is a3. This is how it works. 
+If we now want to do handwritten digit classification with 10 classes, all the digits from zero to nine, then we're going to **change this neural network to have 10 output units nd this new output layer will be a Softmax output layer**. 
 
-If we have 10 output classes, we will compute Z1, Z2 through Z10 using these expressions. So this is actually very similar to what we had previously for the formula we're using to compute Z. Z1 is W1.product with a2, the activations from the previous layer plus b1 and so on for Z1 through Z10. 
+![](2024-01-28-15-38-22.png)
 
-Then a1 is equal to e to the Z1 divided by e to the Z1 plus up to e to the Z10. And that's our estimate of the chance that y is equal to 1. And similarly for a2 and similarly all the way up to a10. 
+And the way forward propagation works in this neural network is:
 
-And so this gives we our estimates of the chance of y being good to one, two and so on up through the 10th possible label for y. And just for completeness, if we want to indicate that these are the quantities associated with layer three, technically, I should add these super strip three's there. It does make the notation a little bit more cluttered. 
+- $a_1$ and $a_2$, the activation for the first and second layers, gets computed exactly the same as before.
+- $a_3$, the output layer is computed by first computing $z_1$ through $z_10$, and then for each calculate $a_1$ through $a_10$:
 
-But this makes explicit that this is, for example, the Z(3), 1 value and this is the parameters associated with the first unit of layer three of this Neural Network. And with this, our Softmax open layer now gives we estimates of the chance of y being any of these 10 possible output labels. I do want to mention that the Softmax layer will sometimes also called the Softmax activation function, it is a little bit unusual in one respect compared to the other activation functions we've seen so far, like sigma, radial and linear, which is that when we're looking at sigmoid or value or linear activation functions, a1 was a function of Z1 and a2 was a function of Z2 and only Z2. 
 
-In other words, to obtain the activation values, we could apply the activation function g be it sigmoid or rarely or something else element wise to Z1 and Z2 and so on to get a1 and a2 and a3 and a4. But with the Softmax activation function, notice that a1 is a function of Z1 and Z2 and Z3 all the way up to Z10. So each of these activation values, it depends on all of the values of Z. 
+$$
+\begin{align*}
+z_1 = \mathbf{\vec{w}}_1 \cdot \mathbf{\vec{a}}^{[2]} + b_1 \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space a_1 &= \frac{e^{z_1}}{e^{z_1} + ... + e^{z_{10}}} = P(y = 1 | \mathbf{\vec{x}}) \\
+\vdots \\
+z_{10} = \mathbf{\vec{w}}_{10} \cdot \mathbf{\vec{a}}^{[2]} + b_{10} \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space  a_{10} &= \frac{e^{z_{10}}}{e^{z_1} + ... + e^{z_{10}}} = P(y = 10 | \mathbf{\vec{x}})
+\end{align*}
+$$
 
-And this is a property that's a bit unique to the Softmax output or the Softmax activation funct tion or stated differently if we want to compute a1 through a10,hat is a function of Z1 all the way up to Z 10 simultaneously. And this is unlike the other activation functions we've seen so far. Finally, let's look at how we would implement this in tensorflow. 
 
-If we want to implement the neural network that I've shown here on this slide, this is the code to do so. Similar as before there are three steps to specifying and training the model. The first step is to tell tensorflow to sequentially string together three layers. 
+This gives us our estimates of the chance of $y$ being 1, 2, 3 and up to 10.
 
-First layer, is this 25 units with rail we activation function. Second layer, 15 units of rally activation function. And then the third layer, because there are now 10 output units, we want to output a1 through a10, so they're now 10 output units. 
+And just for completeness, if we want to indicate that these are the quantities associated with layer three, technically, we should add the superscript for the layer:
 
-And we'll tell tensorflow to use the Softmax activation function. And the cost function that we saw in the last video, tensorflow calls that the SparseCategoricalCrossentropy function. So I know this name is a bit of a mouthful, whereas for logistic regression we had the BinaryCrossentropy function, here we're using the SparseCategoricalCrossentropy function. 
+$$
+\begin{align*}
+z_1^{[3]} = \mathbf{\vec{w}}_1^{[3]} \cdot \mathbf{\vec{a}}^{[2]} + b_1^{[3]} \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space a_1^{[3]} &= \frac{e^{z_1}}{e^{z_1^{[3]}} + ... + e^{z_{10}^{[3]}}} = P(y = 1 | \mathbf{\vec{x}}) \\
+\vdots \\
+z_{10}^{[3]} = \mathbf{\vec{w}}_{10}^{[3]} \cdot \mathbf{\vec{a}}^{[2]} + b_{10}^{[3]} \space\space\space\space\space\space\space\space\space\space\space\space\space\space\space  a_{10}^{[3]} &= \frac{e^{z_{10^{[3]}}}}{e^{z_1^{[3]}} + ... + e^{z_{10^{[3]}}}} = P(y = 10 | \mathbf{\vec{x}})
+\end{align*}
+$$
 
-And what sparse categorical refers to is that we're still classified y into categories. So it's categorical. This takes on values from 1 to 10. 
+![](2024-01-28-15-51-59.png)
 
-And sparse refers to that y can only take on one of these 10 values. So each image is either 0 or 1 or 2 or so on up to 9. we're not going to see a picture that is simultaneously the number two and the number seven so sparse refers to that each digit is only one of these categories. 
+The Softmax layer, sometimes also called **the Softmax activation function** is a little bit unusual in one respect compared to the other activation functions we've seen so far, like sigma, radial and linear, because it is a function of function all other parameters in the layer: $a_1$ is not only a function of $z_1$, but of $z_1$, $z_2$, up to 10:
 
-But so that's why the loss function that we saw in the last video, it's called intensive though the sparse categorical cross entropy loss function. And then the code for training the model is just the same as before. And if we use this code, we can train a neural network on a multi class classification problem. 
+![](2024-01-28-15-54-18.png)
 
-Just one important note, if we use this code exactly as I've written here, it will work, but don't actually use this code because it turns out that in tensorflow, there's a better version of the code that makes tensorflow work better. So even though the code shown in this slide works. Don't use this code the way I've written it here, because in a later video this week we see a different version that's actually the recommended version of implementing this, that will work better. 
+Let's look at how we would implement this in Tensorflow:
 
-But we'll take a look at that in a later video. So now, we know how to train a neural network with a softmax output layer with one caveal. There's a different version of the code that will make tensorflow able to compute these probabilities much more accurately. 
+```py
+import tensorflow as tf
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import Dense
 
-Let's take a look at that in the next video, we should also show we the actual code that I recommend we use if we're training a Softmax neural network. Let's go on to the next video. ## Improved implementation of softmax
+# STEP 1 - Specify the model
+model = Sequential([
+  Dense(units=25, activation='relu'),
+  Dense(units=15, activation='relu'),
+  Dense(units=10, activation='softmax')
+])
 
-The implementation that we saw in the last video of a neural network with a softmax layer will work okay. 
+# STEP 2 - Specify loss and cost. SparseCategoricalentropy refers to the fact
+# that we still classify y into categories, and sparse means that y can only 
+# take on one of these 10 values, and not two or more simulatenously
+from tensorflow.keras.losses import SparseCategoricalentropy
+model.compile(loss=SparseCategoricalentropy())
 
-But there's an even better way to implement it. Let's take a look at what can go wrong with that implementation and also how to make it better. Let me show we two different ways of computing the same quantity in a computer. 
+# STEP 3 - Train on data to minimize cost function
+model.fit(X, Y, epochs=100)
+```
 
-Option 1, we can set x equals to 2/10,000. Option 2, we can set x equals 1 plus 1/10,000 minus 1 minus 1/10,000, which we first compute this, and then compute this, and we take the difference. If we simplify this expression, this turns out to be equal to 2/10,000. 
+Just one important note, if we use this code exactly as I've written here, it will work, but **don't actually use this code because it turns out that in tensorflow, there's a better version of the code that makes Tensorflow work better**. 
 
-Let me illustrate this in this notebook. First, let's set x equals 2/10,000 and print the result to a lot of decimal points of accuracy. That looks pretty good. 
+## Improved implementation of softmax
 
-Second, let me set x equals, we're going to insist on computing 1/1 plus 10,000 and then subtract from that 1 minus 1/10,000. Let's print that out. It just looks a little bit off this as if there's some round-off error. 
+The implementation that we saw in the last video of a neural network with a softmax layer will work okay, but there's an even better way to implement it. 
 
-Because the computer has only a finite amount of memory to store each number, called a floating-point number in this case, depending on how we decide to compute the value 2/10,000, the result can have more or less numerical round-off error. It turns out that while the way we have been computing the cost function for softmax is correct, there's a different way of formulating it that reduces these numerical round-off errors, leading to more accurate computations within TensorFlow. Let me first explain this a little bit more detail using logistic regression. 
+Let's take a look at what can go wrong with that implementation and also how to make it better. Let's see two different ways of computing the same quantity in a computer:
 
-Then we will show how these ideas apply to improving our implementation of softmax. First, let me illustrate these ideas using logistic regression. Then we'll move on to show how to improve our implementation of softmax as well. 
+![](2024-01-28-16-32-21.png)
 
-Recall that for logistic regression, if we want to compute the loss function for a given example, we would first compute this output activation a, which is g of z or 1/1 plus e to the negative z. Then we will compute the loss using this expression over here. In fact, this is what the codes would look like for a logistic output layer with this binary cross entropy loss. 
+![](2024-01-28-16-32-52.png)
 
-For logistic regression, this works okay, and usually the numerical round-off errors aren't that bad. But it turns out that if we allow TensorFlow to not have to compute a as an intermediate term. But instead, if we tell TensorFlow that the loss this expression down here. 
+The second result looks a little off: **because the computer has only a finite amount of memory to store each number, called a floating-point number in this case, depending on how we decide to compute the value 2/10,000, the result can have more or less numerical round-off error**. 
 
-All I've done is I've taken a and expanded it into this expression down here. Then TensorFlow can rearrange terms in this expression and come up with a more numerically accurate way to compute this loss function. Whereas the original procedure was like insisting on computing as an intermediate value, 1 plus 1/10,000 and another intermediate value, 1 minus 1/10,000, then manipulating these two to get 2/10,000. 
+While the way we have been computing the cost function for softmax is correct, there's a different way of formulating it that reduces these numerical round-off errors, leading to more accurate computations within TensorFlow. 
 
-This partial implementation was insisting on explicitly computing a as an intermediate quantity. But instead, by specifying this expression at the bottom directly as the loss function, it gives TensorFlow more flexibility in terms of how to compute this and whether or not it wants to compute a explicitly. The code we can use to do this is shown here and what this does is it sets the output layer to just use a linear activation function and it puts both the activation function, 1/1 plus to the negative z, as well as this cross entropy loss into the specification of the loss function over here. 
+Let's first explain this in a little bit more detail using logistic regression:
 
-That's what this from logits equals true argument causes TensorFlow to do. In case we're wondering what the logits are, it's basically this number z. TensorFlow will compute z as an intermediate value, but it can rearrange terms to make this become computed more accurately. 
+![](2024-01-28-16-35-17.png)
 
-One downside of this code is it becomes a little bit less legible. But this causes TensorFlow to have a little bit less numerical roundoff error. Now in the case of logistic regression, either of these implementations actually works okay, but the numerical roundoff errors can get worse when it comes to softmax. 
+For logistic regression, this works okay, and usually the numerical round-off errors aren't that bad. But, instead, we can enable TensorFlow to not have to compute $a$ as an intermediate term, simply by replacing the value of $a$ in the loss function:
 
-Now let's take this idea and apply to softmax regression. Recall what we saw in the last video was we compute the activations as follows. The activations is g of $z_1$, through $z_10$ where $a_1$, for example, is e to the $z_1$ divided by the sum of the e to the $z_j$'s, and then the loss was this depending on what is the actual value of y is negative log of aj for one of the aj's and so this was the code that we had to do this computation in two separate steps. 
+![](2024-01-28-16-36-57.png)
 
-But once again, if we instead specify that the loss is if y is equal to 1 is negative log of this formula, and so on. If y is equal to 10 is this formula, then this gives TensorFlow the ability to rearrange terms and compute this integral numerically accurate way. Just to give we some intuition for why TensorFlow might want to do this, it turns out if one of the z's really small than e to negative small number becomes very, very small or if one of the z's is a very large number, then e to the z can become a very large number and by rearranging terms, TensorFlow can avoid some of these very small or very large numbers and therefore come up with more actress computation for the loss function. 
+We can tell TensorFlow to do this, and it will be able to rearrange terms in this expression and come up with a more numerically accurate way to compute the loss function. 
 
-The code for doing this is shown here in the output layer, we're now just using a linear activation function so the output layer just computes $z_1$ through $z_10$ and this whole computation of the loss is then captured in the loss function over here, where again we have the $from_logists$ equals true parameter. Once again, these two pieces of code do pretty much the same thing, except that the version that is recommended is more numerically accurate, although unfortunately, it is a little bit harder to read as well. If we're reading someone else's code and we see this and we're wondering what's going on is actually equivalent to the original implementation, at least in concept, except that is more numerically accurate. 
+The code we can use to do this is shown below: what this does is:
+1. **it sets the output layer to just use a linear activation function** 
+2. it puts both the **activation function**, $1 + \frac{1}{1+e^{-z}}$, as well as the **cross entropy loss** into the specification of the loss function within `model.compile`, by passing the `from_logits=True` argyment to the loss function method.
 
-The numerical roundoff errors $for_logist$ regression aren't that bad, but it is recommended that we use this implementation down to the bottom instead, and conceptually, this code does the same thing as the first version that we had previously, except that it is a little bit more numerically accurate. Although the downside is maybe just a little bit harder to interpret as well. Now there's just one more detail, which is that we've now changed the neural network to use a linear activation function rather than a softmax activation function. 
+```py
+model = Sequential([
+  Dense(units=25, activation='relu'),
+  Dense(units=15, activation='relu'),
+  Dense(units=10, activation='linear') # replaced from 'sigmoid' (we're in logistic regression)
+])
 
-The neural network's final layer no longer outputs these probabilities $A_1$ through $A_10$. It is instead of putting $z_1$ through $z_10$. I didn't talk about it in the case of logistic regression, but if we were combining the output's logistic function with the loss function, then for logistic regressions, we also have to change the code this way to take the output value and map it through the logistic function in order to actually get the probability. 
+from tensorflow.keras.losses import BinaryCrossEntropy
+model.compile(loss=BinaryCrossEntropy(from_logits=True)) #added from_logits argument
+```
 
-we now know how to do multi-class classification with a softmax output layer and also how to do it in a numerically stable way. Before wrapping up multi-class classification, I want to share with we one other type of classification problem called a multi-label classification problem. Let's talk about that in the next video. 
+`logits` is basically the number $z$. TensorFlow will compute $z$ as an intermediate value, but it can rearrange terms to make this become computed more accurately. 
 
-## Classification with multiple outputs
+One downside of this code is it becomes a little bit less legible, but this causes TensorFlow to have a little bit less numerical roundoff error. 
 
-we've learned about multi-class classification, where the output label Y can be any one of two or potentially many more than two possible categories. There's a different type of classification problem called a multi-label classification problem, which is where associate of each image, they could be multiple labels. Let me show we what I mean by that. 
+![](2024-01-28-16-43-04.png)
 
-If we're building a self-driving car or maybe a driver assistance system, then given a picture of what's in front of our car, we may want to ask a question like, is there a car or at least one car? Or is there a bus, or is there a pedestrian or are there any pedestrians? In this case, there is a car, there is no bus, and there is at least one pedestrian or in this second image, no cars, no buses and yes to pedestrians and yes car, yes bus and no pedestrians. 
+Now in the case of logistic regression, either of these implementations actually works okay, but the numerical roundoff errors can get worse when it comes to softmax. 
 
-These are examples of multi-label classification problems because associated with a single input, image X are three different labels corresponding to whether or not there are any cars, buses, or pedestrians in the image. In this case, the target of the Y is actually a vector of three numbers, and this is as distinct from multi-class classification, where for, say handwritten digit classification, Y was just a single number, even if that number could take on 10 different possible values. How do we build a neural network for multi-label classification? 
+Now let's take this idea and see how it applies to softmax regression. 
 
-One way to go about it is to just treat this as three completely separate machine learning problems. we could build one neural network to decide, are there any cars? The second one to detect buses and the third one to detect pedestrians. 
 
-That's actually not an unreasonable approach. Here's the first neural network to detect cars, second one to detect buses, third one to detect pedestrians. But there's another way to do this, which is to train a single neural network to simultaneously detect all three of cars, buses, and pedestrians, which is, if our neural network architecture, looks like this, there's input X. 
 
-First hidden layer offers a^1, second hidden layer offers a^2, and then the final output layer, in this case, we'll have three output neurals and we'll output a^3, which is going to be a vector of three numbers. Because we're solving three binary classification problems, so is there a car? Is there a bus? 
+Recall what we saw in the last video for the calculation of the output $a_1$ to $a_10$ and the loss function, as well as the code implementation:
 
-Is there a pedestrian? we can use a sigmoid activation function for each of these three nodes in the output layer, and so a^3 in this case will be $a_1$^3, $a_2$^3, and $a_3$^3, corresponding to whether or not the learning [inaudible] as a car and no bus, and no pedestrians in the image. Multi-class classification and multi-label classification are sometimes confused with each other, and that's why in this video I want to share with we just a definition of multi-label classification problems as well, so that depending on our application, we could choose the right one for the job we want to do. 
+![](2024-01-28-16-44-40.png)
 
-So that's it for multi-label classification. I find that sometimes multi-class classification and multi-label classification are confused with other, which is why I wanted to expressively, in this video, share with we what is multi-label classification, so that depending on our application we can choose to write to for the job that we want to do. And that wraps up the section on multi-class and multi-label classification. 
+But once again, if we the loss function in terms of $z$, the `logits`, instead of $a$, this this gives TensorFlow the ability to rearrange terms and compute this integral numerically accurate way. Just to give we some intuition for why TensorFlow might want to do this, it turns out if one of the z's really small than $e$ to the power of a negative small number becomes very, very small, or if one of the $z$'s is a very large number, then $e$ to the power of $z$ can become a very large number. By rearranging terms, TensorFlow can avoid some of these very small or very large numbers and therefore come up with more accuarate computation for the loss function. 
 
-In the next video, we'll start to look at some more advanced neural network concepts, including an optimization algorithm that is even better than gradient descent. Let's take a look at that algorithm in the next video, because it'll help we to get our learning algorithms to learn much faster. Let's go on to the next video. 
+The code for doing this is:
 
+```py
+model = Sequential([
+  Dense(units=25, activation='relu'),
+  Dense(units=15, activation='relu'),
+  Dense(units=10, activation='linear') # replaced from 'softmax' (we're in multiclass classification)
+])
+
+from tensorflow.keras.losses import SparseCategoricalentropy
+model.compile(loss=SparseCategoricalentropy(from_logits=True))
+```
+
+![](2024-01-28-16-48-16.png)
+
+One more detail: since we updated our code to use `linear` as the activation function of our output layer, this final layer no longer outputs these probabilities $a_1$ through $a_10$. It is instead of putting $z_1$ through $z_{10}$. So we need to take that output and map it with the softmax function (for multiclass) or the sigmoid function (for binary linear regression):
+
+**Binary linear regression**
+```py
+model = Sequential([
+  Dense(units=25, activation='relu'),
+  Dense(units=15, activation='relu'),
+  Dense(units=10, activation='linear') # replaced from 'sigmoid' (we're in logistic regression)
+])
+
+from tensorflow.keras.losses import BinaryCrossEntropy
+model.compile(loss=BinaryCrossEntropy(from_logits=True)) #added from_logits argument
+logits = model(X)
+f_x = tf.nn.sigmoid(logits)
+```
+
+**Multi-class classification with softmax**
+```py
+model = Sequential([
+  Dense(units=25, activation='relu'),
+  Dense(units=15, activation='relu'),
+  Dense(units=10, activation='linear') # replaced from 'softmax' (we're in multiclass classification)
+])
+
+from tensorflow.keras.losses import SparseCategoricalentropy
+model.compile(loss=SparseCategoricalentropy(from_logits=True))
+logits = model(X)
+f_x = tf.nn.softmax(logits)
+```
+
+## Classification with multiple outputs (multi-label classification)
+
+We've learned about **multi-class classification**, where the output label $y$ can be any one of two or potentially many more than two possible categories. 
+
+However, there's a different type of classification problem called a **multi-label classification problem**, which is where for each input image, we can have multiple output labels.
+
+If we're building a self-driving car or maybe a driver assistance system, then given a picture of what's in front of our car, we may want to ask a question like, is there a car or at least one car? Or is there a bus, or is there a pedestrian or are there any pedestrians? Let's see three examples:
+
+![](2024-01-28-16-58-24.png)
+
+These are examples of multi-label classification problems because, associated with a single input, image $X$, there are three different labels corresponding to whether or not there are any cars, buses, or pedestrians in the image. 
+
+So this case, the target $Y$ is actually a vector of three numbers, and **this is distinct from multi-class classification**, where for, say handwritten digit classification, **$Y$ was just a single number, even if that number could take on 10 different possible values**. 
+
+![](2024-01-28-17-00-16.png)
+
+**How do we build a neural network for multi-label classification?**
+
+One **first approach** is to just treat this as three completely separate machine learning problems. we could build one neural network to decide, are there any cars? The second one to detect buses and the third one to detect pedestrians. 
+
+That's actually a reasonable approach. Here's the first neural network to detect cars, second one to detect buses, third one to detect pedestrians:
+
+![](2024-01-28-17-05-37.png)
+
+
+But there's **a second approach**, which is to train a single neural network to simultaneously detect all three of cars, buses, and pedestrians. It will have a similar architecture, than the first approach, but the final output layer, instead, will have three output neurals and will output $a^{[3]}$, which is going to be a vector of three numbers (is there a car? Is there a bus? is there a pedestrian?) 
+
+And since these are the question that we are answering, **we can use a sigmoid activation function for each of these three nodes in the output layer**, and so $a^{[3]}$ in this case will be $a_1^{[3]}$, $a_2^{[3]}$, and $a_3^{[3]}$, corresponding to whether or not the learning algorithm thinks there is a car, a bus, or pedestrians in the image. 
+
+**Multi-class classification and multi-label classification are sometimes confused with each other**, but it's important to know the distinction with them so that we can choose the right one for the job we want to do.
+
+## Optional Lab: Softmax function
+
+[LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/7oaSL/softmax/lab)
+
+[Internal Link](./labs/Week%202/C2_W2_SoftMax.ipynb)
+
+
+In this lab, we will explore the softmax function. This function is used in both Softmax Regression and in Neural Networks when solving Multiclass Classification problems.
+
+> **Note**: Normally, in this course, the notebooks use the convention of starting counts with 0 and ending with N-1,  $\sum_{i=0}^{N-1}$, while lectures start with 1 and end with N,  $\sum_{i=1}^{N}$. This is because code will typically start iteration with 0 while in lecture, counting 1 to N leads to cleaner, more succinct equations. This notebook has more equations than is typical for a lab and thus  will break with the convention and will count 1 to N.
+
+### Softmax Function
+In both softmax regression and neural networks with Softmax outputs, N outputs are generated and one output is selected as the predicted category. In both cases a vector $\mathbf{z}$ is generated by a linear function which is applied to a softmax function. The softmax function converts $\mathbf{z}$  into a probability distribution as described below. After applying softmax, each output will be between 0 and 1 and the outputs will add to 1, so that they can be interpreted as probabilities. The larger inputs  will correspond to larger output probabilities.
+ 
+ <img  src="./labs/Week 2/images/C2_W2_SoftmaxReg_NN.png" width="900" /> 
+
+The softmax function can be written:
+
+$$a_j = \frac{e^{z_j}}{ \sum_{k=1}^{N}{e^{z_k} }} \tag{1}$$
+
+The output $\mathbf{a}$ is a vector of length N, so for softmax regression, you could also write:
+
+\[
+  \begin{align}
+    \mathbf{a}(x) =
+    \begin{bmatrix}
+        P(y = 1 | \mathbf{x}; \mathbf{w}, b) \\
+        \vdots \\
+        P(y = N | \mathbf{x}; \mathbf{w}, b)
+    \end{bmatrix}
+    =
+    \frac{1}{\sum_{k=1}^{N} e^{z_k}}
+    \begin{bmatrix}
+        e^{z_1} \\
+        \vdots \\
+        e^{z_N}
+    \end{bmatrix} \tag{2}
+  \end{align}
+\]
+
+Which shows the output is a vector of probabilities. The first entry is the probability the input is the first category given the input $\mathbf{x}$ and parameters $\mathbf{w}$ and $\mathbf{b}$.  
+Let's create a NumPy implementation:
+
+```py
+def my_softmax(z):
+    ez = np.exp(z)              #element-wise exponenial
+    sm = ez/np.sum(ez)
+    return(sm)
+```
+
+Below, vary the values of the `z` inputs using the sliders:
+
+```py
+plt.close("all")
+plt_softmax(my_softmax)
+```
+
+![](2024-01-28-17-23-03.png)
+![](2024-01-28-17-23-23.png)
+
+As you are varying the values of the z's above, there are a few things to note:
+* the exponential in the numerator of the softmax magnifies small differences in the values 
+* the output values sum to one
+* the softmax spans all of the outputs. A change in `z0` for example will change the values of `a0`-`a3`. Compare this to other activations such as ReLU or Sigmoid which have a single input and single output.
+
+### Cost
+
+<center> <img  src="./labs/Week 2/images/C2_W2_SoftMaxCost.png" width="900" />    </center>
+
+The loss function associated with Softmax, the cross-entropy loss, is:
+
+\[
+\begin{equation}
+  L(\mathbf{a},y)=\begin{cases}
+    -log(a_1), & \text{if $y=1$}.\\
+        &\vdots\\
+     -log(a_N), & \text{if $y=N$}
+  \end{cases} \tag{3}
+\end{equation}
+\]
+
+Where $y$ is the target category for this example and $\mathbf{a}$ is the output of a softmax function. In particular, the values in $\mathbf{a}$ are probabilities that sum to one.
+
+>**Recall:** In this course, Loss is for one example while Cost covers all examples. 
+ 
+ 
+Note in **(3)** above, only the line that corresponds to the target contributes to the loss, other lines are zero. To write the cost equation we need an 'indicator function' that will be 1 when the index matches the target and zero otherwise. 
+
+\[
+\mathbf{1}\{y == n\} = =\begin{cases}
+1, & \text{if $y==n$}.\\
+0, & \text{otherwise}.
+  \end{cases}
+\]
+Now the cost is:
+
+$$
+\begin{align}
+J(\mathbf{w},b) = -\frac{1}{m} \left[ \sum_{i=1}^{m} \sum_{j=1}^{N}  1\left\{y^{(i)} == j\right\} \log \frac{e^{z^{(i)}_j}}{\sum_{k=1}^N e^{z^{(i)}_k} }\right] \tag{4}
+\end{align}
+$$
+
+Where $m$ is the number of examples, $N$ is the number of outputs. This is the average of all the losses.
+
+### Tensorflow
+This lab will discuss two ways of implementing the softmax, cross-entropy loss in Tensorflow, the 'obvious' method and the 'preferred' method. The former is the most straightforward while the latter is more numerically stable.
+
+Let's start by creating a dataset to train a multiclass classification model.
+
+```py
+# make  dataset for example
+centers = [[-5, 2], [-2, -2], [1, 2], [5, -2]]
+X_train, y_train = make_blobs(n_samples=2000, centers=centers, cluster_std=1.0,random_state=30)
+```
+
+#### The *Obvious* organization
+
+The model below is implemented with the softmax as an activation in the final `Dense` layer.
+
+The loss function is separately specified in the `compile` directive. 
+
+The loss function is `SparseCategoricalCrossentropy`. This loss is described in (3) above. In this model, the softmax takes place in the last layer. The loss function takes in the softmax output which is a vector of probabilities.
+
+```py
+model = Sequential(
+    [ 
+        Dense(25, activation = 'relu'),
+        Dense(15, activation = 'relu'),
+        Dense(4, activation = 'softmax')    # < softmax activation here
+    ]
+)
+model.compile(
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(),
+    optimizer=tf.keras.optimizers.Adam(0.001),
+)
+
+model.fit(
+    X_train,y_train,
+    epochs=10
+)
+
+Epoch 1/10
+63/63 [==============================] - 0s 981us/step - loss: 0.7882
+Epoch 2/10
+63/63 [==============================] - 0s 939us/step - loss: 0.3239
+Epoch 3/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.1362
+Epoch 4/10
+63/63 [==============================] - 0s 978us/step - loss: 0.0822
+Epoch 5/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0643
+Epoch 6/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0536
+Epoch 7/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0475
+Epoch 8/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0434
+Epoch 9/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0407
+Epoch 10/10
+63/63 [==============================] - 0s 1ms/step - loss: 0.0374       
+```
+
+Because the softmax is integrated into the output layer, the output is a vector of probabilities:
+
+```py
+p_nonpreferred = model.predict(X_train)
+print(p_nonpreferred [:2])
+
+# [[1.01e-03 1.21e-03 9.77e-01 2.08e-02]
+#  [9.93e-01 6.51e-03 3.57e-05 1.10e-07]]
+
+print("largest value", np.max(p_nonpreferred), "smallest value", np.min(p_nonpreferred))
+# largest value 0.99999857 smallest value 2.2256241e-14
+
+```
+
+#### Preferred 
+
+<img src="./labs/Week 2/images/C2_W2_softmax_accurate.png"  style=" width:900px; padding: 10px 20px ; "/>
+
+Recall from lecture, more stable and accurate results can be obtained if the softmax and loss are combined during training.   This is enabled by the 'preferred' organization shown here.
+
+In the preferred organization the final layer has a linear activation. For historical reasons, the outputs in this form are referred to as *logits*. The loss function has an additional argument: `from_logits = True`. This informs the loss function that the softmax operation should be included in the loss calculation. This allows for an optimized implementation.
+
+```py
+preferred_model = Sequential(
+    [ 
+        Dense(25, activation = 'relu'),
+        Dense(15, activation = 'relu'),
+        Dense(4, activation = 'linear')   #<-- Note that it is linear
+    ]
+)
+preferred_model.compile(
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),  #<-- Note
+    optimizer=tf.keras.optimizers.Adam(0.001),
+)
+
+preferred_model.fit(
+    X_train,y_train,
+    epochs=10
+)
+     
+```
+
+#### Output Handling
+Notice that in the **preferred** model, the outputs are not probabilities, but can range from large negative numbers to large positive numbers. The output must be sent through a softmax when performing a prediction that expects a probability.
+
+Let's look at the preferred model outputs:
+
+```py
+p_preferred = preferred_model.predict(X_train)
+
+print(f"two example output vectors:\n {p_preferred[:2]}")
+# two example output vectors:
+#  [[-5.38 -2.48  3.07 -1.25]
+#  [ 6.16  0.89 -1.58 -2.31]]
+
+print("largest value", np.max(p_preferred), "smallest value", np.min(p_preferred))
+# largest value 12.131775 smallest value -12.847427
+```
+
+The output predictions are not probabilities!
+If the desired output are probabilities, the output should be be processed by a [softmax](https://www.tensorflow.org/api_docs/python/tf/nn/softmax).
+
+```py
+sm_preferred = tf.nn.softmax(p_preferred).numpy()
+
+print(f"two example output vectors:\n {sm_preferred[:2]}")
+# two example output vectors:
+#  [[2.10e-04 3.82e-03 9.83e-01 1.31e-02]
+#  [9.94e-01 5.11e-03 4.35e-04 2.09e-04]]
+
+print("largest value", np.max(sm_preferred), "smallest value", np.min(sm_preferred))
+# largest value 0.9999993 smallest value 5.488847e-11
+```
+To select the most likely category, the softmax is not required. One can find the index of the largest output using [np.argmax()](https://numpy.org/doc/stable/reference/generated/numpy.argmax.html):
+
+```py
+for i in range(5):
+    print( f"{p_preferred[i]}, category: {np.argmax(p_preferred[i])}")
+
+# [-5.38 -2.48  3.07 -1.25], category: 2
+# [ 6.16  0.89 -1.58 -2.31], category: 0
+# [ 4.43  1.1  -1.16 -1.9 ], category: 0
+# [-2.43  4.61 -0.23 -0.5 ], category: 1
+# [-1.64 -2.85  4.53 -4.27], category: 2
+```
+
+### `SparseCategorialCrossentropy` or `CategoricalCrossEntropy`
+Tensorflow has two potential formats for target values and the selection of the loss defines which is expected.
+- `SparseCategorialCrossentropy`: expects the target to be an integer corresponding to the index. For example, if there are 10 potential target values, $y$ would be between 0 and 9. 
+- `CategoricalCrossEntropy`: Expects the target value of an example to be one-hot encoded where the value at the target index is 1 while the other N-1 entries are zero. An example with 10 potential target values, where the target is 2 would be [0,0,1,0,0,0,0,0,0,0].
+
+## Optional Lab: Multiclass Classification
+
+[LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/DAt44/multiclass/lab?path=%2Fnotebooks%2FC2_W2_Multiclass_TF.ipynb)
+
+[Internal Link](./labs/Week%202/C2_W2_Multiclass_TF.ipynb)
+
+### 1.1 Goals
+In this lab, you will explore an example of multi-class classification using neural networks.
+
+### 1.2 Tools
+You will use some plotting routines. These are stored in `lab_utils_multiclass_TF.py` in this directory.
+
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib widget
+from sklearn.datasets import make_blobs
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+np.set_printoptions(precision=2)
+from lab_utils_multiclass_TF import *
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
+tf.autograph.set_verbosity(0)
+```
+
+### 2.0 Multi-class Classification
+Neural Networks are often used to classify data. Examples are neural networks:
+- take in photos and classify subjects in the photos as {dog,cat,horse,other}
+- take in a sentence and classify the 'parts of speech' of its elements: {noun, verb, adjective etc..}  
+
+A network of this type will have multiple units in its final layer. Each output is associated with a category. When an input example is applied to the network, the output with the highest value is the category predicted. If the output is applied to a softmax function, the output of the softmax will provide probabilities of the input being in each category. 
+
+In this lab you will see an example of building a multiclass network in Tensorflow. We will then take a look at how the neural network makes its predictions.
+
+Let's start by creating a four-class data set.
+
+#### 2.1 Prepare and visualize our data
+We will use Scikit-Learn `make_blobs` function to make a training data set with 4 categories as shown in the plot below.
+
+```py
+# make 4-class dataset for classification
+classes = 4
+m = 100
+centers = [[-5, 2], [-2, -2], [1, 2], [5, -2]]
+std = 1.0
+X_train, y_train = make_blobs(n_samples=m, centers=centers, cluster_std=std,random_state=30)
+```
+
+```py
+plt_mc(X_train,y_train,classes, centers, std=std)
+```
+
+![](2024-01-28-17-44-03.png)
+
+Each dot represents a training example. The axis (x0,x1) are the inputs and the color represents the class the example is associated with. Once trained, the model will be presented with a new example, (x0,x1), and will predict the class.  
+
+While generated, this data set is representative of many real-world classification problems. There are several input features (x0,...,xn) and several output categories. The model is trained to use the input features to predict the correct output category.
+
+```py
+# show classes in data set
+print(f"unique classes {np.unique(y_train)}")
+unique classes [0 1 2 3]
+
+# show how classes are represented
+print(f"class representation {y_train[:10]}")
+# class representation [3 3 3 0 3 3 3 3 2 0]
+
+# show shapes of our dataset
+print(f"shape of X_train: {X_train.shape}, shape of y_train: {y_train.shape}")
+# shape of X_train: (100, 2), shape of y_train: (100,)
+```
+
+## 2.2 Model
+<img src="./images/C2_W2_mclass_lab_network.PNG"  style=" width:900px; padding: 10px 20px ; ">
+
+This lab will use a 2-layer network as shown above.
+
+Unlike the binary classification networks, this network has four outputs, one for each class. Given an input example, the output with the highest value is the predicted class of the input.   
+
+Below is an example of how to construct this network in Tensorflow. Notice the output layer uses a `linear` rather than a `softmax` activation. While it is possible to include the softmax in the output layer, it is more numerically stable if linear outputs are passed to the loss function during training. If the model is used to predict probabilities, the softmax can be applied at that point.
+
+```py
+tf.random.set_seed(1234)  # applied to achieve consistent results
+model = Sequential(
+    [
+        Dense(2, activation = 'relu',   name = "L1"),
+        Dense(4, activation = 'linear', name = "L2")
+    ]
+)
+```
+
+The statements below compile and train the network. Setting `from_logits=True` as an argument to the loss function specifies that the output activation was linear rather than a softmax.
+
+```py
+model.compile(
+    loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+    optimizer=tf.keras.optimizers.Adam(0.01),
+)
+
+model.fit(
+    X_train,y_train,
+    epochs=200
+)
+```
+
+With the model trained, we can see how the model has classified the training data:
+```py
+plt_cat_mc(X_train, y_train, model, classes)
+```
+![](2024-01-28-17-48-49.png)
+
+Above, the decision boundaries show how the model has partitioned the input space.  This very simple model has had no trouble classifying the training data. How did it accomplish this? Let's look at the network in more detail. 
+
+Below, we will pull the trained weights from the model and use that to plot the function of each of the network units. Further down, there is a more detailed explanation of the results. You don't need to know these details to successfully use neural networks, but it may be helpful to gain more intuition about how the layers combine to solve a classification problem.
+
+```py
+# gather the trained parameters from the first layer
+l1 = model.get_layer("L1")
+W1,b1 = l1.get_weights()
+```
+
+```py
+# plot the function of the first layer
+plt_layer_relu(X_train, y_train.reshape(-1,), W1, b1, classes)
+```
+
+![](2024-01-28-17-49-56.png)
+
+```py
+# gather the trained parameters from the output layer
+l2 = model.get_layer("L2")
+W2, b2 = l2.get_weights()
+# create the 'new features', the training examples after L1 transformation
+Xl2 = np.maximum(0, np.dot(X_train,W1) + b1)
+
+plt_output_layer_linear(Xl2, y_train.reshape(-1,), W2, b2, classes,
+                        x0_rng = (-0.25,np.amax(Xl2[:,0])), x1_rng = (-0.25,np.amax(Xl2[:,1])))
+```
+
+![](2024-01-28-17-50-42.png)
+
+### Explanation
+
+#### Layer 1 
+
+<img src="./images/C2_W2_mclass_layer1.png"  style=" width:900px; padding: 10px 20px ; ">
+
+These plots show the function of Units 0 and 1 in the first layer of the network. The inputs are ($x_0,x_1$) on the axis. The output of the unit is represented by the color of the background. This is indicated by the color bar on the right of each graph. Notice that since these units are using a ReLu, the outputs do not necessarily fall between 0 and 1 and in this case are greater than 20 at their peaks. 
+
+The contour lines in this graph show the transition point between the output, $a^{[1]}_j$ being zero and non-zero. Recall the graph for a ReLu :
+
+<center><img align="center" src="./images/C2_W2_mclass_relu.png"  style=" width:200px; padding: 10px 20px ; "> </center>
+
+The contour line in the graph is the inflection point in the ReLu.
+
+- Unit 0 has separated classes 0 and 1 from classes 2 and 3. Points to the left of the line (classes 0 and 1) will output zero, while points to the right will output a value greater than zero.
+
+- Unit 1 has separated classes 0 and 2 from classes 1 and 3. Points above the line (classes 0 and 2 ) will output a zero, while points below will output a value greater than zero. 
+
+Let's see how this works out in the next layer!
+
+#### Layer 2, the output layer  
+
+<center><img src="./images/C2_W2_mclass_layer2.png"  style=" width:900px; padding: 10px 20px ; "></center>
+
+The dots in these graphs are the training examples translated by the first layer. **One way to think of this is the first layer has created a new set of features for evaluation by the 2nd layer.**
+
+The axes in these plots are the outputs of the previous layer $a^{[1]}_0$ and $a^{[1]}_1$. As predicted above, classes 0 and 1 (blue and green) have  $a^{[1]}_0 = 0$ while classes 0 and 2 (blue and orange) have $a^{[1]}_1 = 0$. 
+
+Once again, the intensity of the background color indicates the highest values.  
+- Unit 0 will produce its maximum value for values near (0,0), where class 0 (blue) has been mapped.    
+- Unit 1 produces its highest values in the upper left corner selecting class 1 (green).  
+- Unit 2 targets the lower right corner where class 2 (orange) resides.  
+- Unit 3 produces its highest values in the upper right selecting our final class (purple).  
+
+One other aspect that is not obvious from the graphs is that **the values have been coordinated between the units**. It is not sufficient for a unit to produce a maximum value for the class it is selecting for, it must also be the highest value of all the units for points in that class. This is done by the implied softmax function that is part of the loss function (`SparseCategoricalCrossEntropy`). Unlike other activation functions, the softmax works across all the outputs.
+
+You can successfully use neural networks without knowing the details of what each unit is up to, but hopefully, this example has provided some intuition about what is happening under the hood.
