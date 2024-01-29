@@ -756,7 +756,7 @@ $$J(\mathbf{w},b) = \frac{1}{m}  \sum_{i=0}^{m-1} \left[ -y^{(i)} \log\left(f_{\
 
 Compare this to the cost function without regularization (which you implemented above), which is of the form 
 
-$$ J(\mathbf{w}.b) = \frac{1}{m}\sum_{i=0}^{m-1} \left[ (-y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) - \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right)\right]$$
+$$ J(\mathbf{w},b) = \frac{1}{m}\sum_{i=0}^{m-1} \left[ (-y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) - \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right)\right]$$
 
 The difference is the regularization term, which is $$\frac{\lambda}{2m}  \sum_{j=0}^{n-1} w_j^2$$ 
 Note that the $b$ parameter is not regularized.
@@ -855,9 +855,9 @@ As you can see,$\frac{\partial J(\mathbf{w},b)}{\partial b}$ is the same, the di
 <a name='ex-06'></a>
 ### Exercise 6
 
-Please complete the `compute_gradient_reg` function below to modify the code below to calculate the following term
+Please complete the `compute_gradient_reg` function below to modify the code below to calculate the following term:
 
-$$\frac{\lambda}{m} w_j  \quad\, \mbox{for $j=0...(n-1)$}$$
+$$\frac{\lambda}{m} w_j  \quad \text{for $j=0...(n-1)$}$$
 
 The starter code will add this term to the $\frac{\partial J(\mathbf{w},b)}{\partial w}$ returned from `compute_gradient` above to get the gradient for the regularized cost function.
 
