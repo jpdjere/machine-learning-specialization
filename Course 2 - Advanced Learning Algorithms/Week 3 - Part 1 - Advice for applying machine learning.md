@@ -117,37 +117,69 @@ Since we can have the algorithm make a prediction 1 or 0 on every test example, 
 
 ## Model selection and training/cross validation/test sets
 
-In the last video, we saw how to use the test set to evaluate the performance of a model. Let's make one further refinement to that idea in this video, which allow we to use the technique, to automatically choose a good model for our machine learning algorithm. One thing we've seen is that once the model's parameters w and b have been fit to the training set. 
+In the last section, we saw how to use the **test set** to evaluate the performance of a model. Let's make one further refinement to that idea in this section, which allow us to use the technique **to automatically choose a good model for our machine learning algorithm**. 
 
-The training error may not be a good indicator of how well the algorithm will do or how well it will generalize to new examples that were not in the training set, and in particular, for this example, the training error will be pretty much zero. That's likely much lower than the actual generalization error, and by that I mean the average error on new examples that were not in the training set. What we saw on the last video is that J test the performance of the algorithm on examples, is not trained on, that will be a better indicator of how well the model will likely do on new data. 
+We saw first that once the model's parameters $w$ and $b$ have been fit to the training set, the **training error may not be a good indicator** of how well the algorithm will do or how well it will generalize to new examples that were not in the training set. For the example in the image below, the training error will be pretty much zero.
 
-By that I mean other data that's not in the training set. Let's take a look at how this affects, how we might use a test set to choose a model for a given machine learning application. If a fitting a function to predict housing prices or some other regression problem, one model we might consider is to fit a linear model like this. 
+![](2024-01-31-12-04-56.png)
 
-This is a first-order polynomial and we're going to use d equals 1 on this slide to denote fitting a one or first-order polynomial. If we were to fit a model like this to our training set, we get some parameters, w and b, and we can then compute J tests to estimate how well does this generalize to new data? On this slide, we're going to use w^1, b^1 to denote that these are the parameters we get if we were to fit a first order polynomial, a degree one, d equals 1 polynomial. 
+That's likely **much lower than the actual generalization error**, that is, the average error on new examples that were not in the training set. 
 
-Now, we might also consider fitting a second-order polynomial or quadratic model, so this is the model. If we were to fit this to our training set, we would get some parameters, w^2, b^2, and we can then similarly evaluate those parameters on our test set and get J test w^2, b^2, and this will give we a sense of how well the second-order polynomial does. we can go on to try d equals 3, that's a third order or a degree three polynomial that looks like this, and fit parameters and similarly get J test. 
+We saw on the last section is that **$J_{test}$, the performance of the algorithm on examples the algorithm is not trained on,  will be a better indicator of how well the model will likely do on new data**. 
 
-we might keep doing this until, say we try up to a 10th order polynomial and we end up with J test of w^10, b^10. That gives we a sense of how well the 10th order polynomial is doing. One procedure we could try, this turns out not to be the best procedure, but one thing we could try is, look at all of these J tests, and see which one gives we the lowest value. 
+![](2024-01-31-12-06-44.png)
 
-Say, we find that, J test for the fifth order polynomial for w^5, b^5 turns out to be the lowest. If that's the case, then we might decide that the fifth order polynomial d equals 5 does best, and choose that model for our application. If we want to estimate how well this model performs, one thing we could do, but this turns out to be a slightly flawed procedure, is to report the test set error, J test w^5, b^5. 
+Let's take a look at **how we might use a test set to choose a model for a given machine learning application**:
 
-The reason this procedure is flawed is J test of w^5, b^5 is likely to be an optimistic estimate of the generalization error. In other words, it is likely to be lower than the actual generalization error, and the reason is, in the procedure we talked about on this slide with basic fits, one extra parameter, which is d, the degree of polynomial, and we chose this parameter using the test set. On the previous slide, we saw that if we were to fit w, b to the training data, then the training data would be an overly optimistic estimate of generalization error. 
+When developing a model to fit to some data, we might develop a whole range of model function, which go from something linear, to a function of, for example, a 10th order polynomial:
 
-It turns out too, that if we want to choose the parameter d using the test set, then the test set J test is now an overly optimistic, that is lower than actual estimate of the generalization error. The procedure on this particular slide is flawed and I don't recommend using this. Instead, if we want to automatically choose a model, such as decide what degree polynomial to use. 
+![](2024-01-31-12-08-58.png)
 
-Here's how we modify the training and testing procedure in order to carry out model selection. Whereby model selection, I mean choosing amongst different models, such as these 10 different models that we might contemplate using for our machine learning application. The way we'll modify the procedure is instead of splitting our data into just two subsets, the training set and the test set, we're going to split our data into three different subsets, which we're going to call the training set, the cross-validation set, and then also the test set. 
+So, just a hand-up, the following is not the best procedure, but it looks that we could try is to look at all of $J_{test}$ values for each of the models and see which one gives we the lowest value:
 
-Using our example from before of these 10 training examples, we might split it into putting 60 percent of the data into the training set and so the notation we'll use for the training set portion will be the same as before, except that now M train, the number of training examples will be six and we might put 20 percent of the data into the cross-validation set and a notation we're going to use is $x_cv$ of one, $y_cv$ of one for the first cross-validation example. So cv stands for cross-validation, all the way down to $x_cv$ of $m_cv$ and $y_cv$ of $m_cv$. Where here, $m_cv$ equals 2 in this example, is the number of cross-validation examples. 
+![](2024-01-31-12-11-13.png)
 
-Then finally we have the test set same as before, so x1 through x m tests and y1 through y m, where m tests equal to 2. This is the number of test examples. We'll see we on the next slide how to use the cross-validation set. 
+If for example, we found that the model with the 5th order polynomial reports the lowest $J_{test}$, the we would choose that model and report that test set error $J_{test}$ as a measure of how well the model performs.
 
-The way we'll modify the procedure is we've already seen the training set and the test set and we're going to introduce a new subset of the data called the cross-validation set. The name cross-validation refers to that this is an extra dataset that we're going to use to check or cross check the validity or really the accuracy of different models. I don t think it's a great name, but that is what people in machine learning have gotten to call this extra dataset. 
+![](2024-01-31-12-12-56.png)
 
-we may also hear people call this the validation set for short, it's just fewer syllables than cross-validation or in some applications, people also call this the development set. Means basically the same thing or for short. Sometimes we hear people call this the dev set, but all of these terms mean the same thing as cross-validation set. 
+But this is a flawed procedure: and the reason for thatis that $J_{test}(w^{<5>},b^{<5>})$ is likely to be an optimistic estimate of the generalization error. In other words, it is likely to be lower than the actual generalization error.
 
-I personally use the term dev set the most often because it's the shortest, fastest way to say it but cross-validation is pretty used a little bit more often by machine learning practitioners. Onto these three subsets of the data training set, cross-validation set, and test set, we can then compute the training error, the cross-validation error, and the test error using these three formulas. Whereas usual, none of these terms include the regularization term that is included in the training objective, and this new term in the middle, the cross-validation error is just the average over our $m_cv$ cross-validation examples of the average say, squared error. 
+**And the reason is, in the procedure we just mentioned we are choosing one extra parameter, which is $d$, the degree of polynomial, using the test set.** 
 
-This term, in addition to being called cross-validation error, is also commonly called the validation error for short, or even the development set error, or the dev error. Armed with these three measures of learning algorithm performance, this is how we can then go about carrying out model selection. we can, with the 10 models, same as earlier on this slide, with d equals 1, d equals 2, all the way up to a 10th degree or the 10th order polynomial, we can then fit the parameters $w_1$, $b_1$. 
+We know that if we were to fit $w$, $b$ to the training data, then the training data would be an overly optimistic estimate of generalization error. **So analogously, if we want to choose the parameter $d$ using the test set, then the test set error $J_{test} is now overly optimistic - is lower than actual estimate of the generalization error.**
+
+![](2024-01-31-12-18-38.png)
+
+So, instead, if we want to automatically choose a model, and decide what degree polynomial to use, we need to modify the training and testing procedure in order to carry out model selection. Here's how to do it.
+
+Instead of splitting our data into just two subsets, the **training set** and the **test set**, we're going to split our data into three different subsets, which we're going to call:
+- **the training set**
+- **the cross-validation set**
+- **the test set**
+
+![](2024-01-31-12-20-33.png)
+
+**The name cross-validation refers to that this is an extra dataset that we're going to use to check or cross check the validity or really the accuracy of different models.**
+
+The cross validation set is also called:
+- the validation set 
+- the development set
+- the dev set
+
+So, having these three subsets of the data training set, cross-validation set, and test set, we can then compute the training error,he cross-validation error, and the test error using these three formulas:
+
+$$J_{train}(\vec{\mathbf{w}},b) = \frac{1}{2m_{train}} \sum\limits_{i = 1}^{m_{train}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}_{train}^{(i)}) - y^{(i)}_{train})^2  $$
+
+$$J_{cv}(\vec{\mathbf{w}},b) = \frac{1}{2m_{cv}} \sum\limits_{i = 1}^{m_{cv}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}_{cv}^{(i)}) - y^{(i)}_{cv})^2  $$
+
+$$J_{test}(\vec{\mathbf{w}},b) = \frac{1}{2m_{test}} \sum\limits_{i = 1}^{m_{test}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}_{test}^{(i)}) - y^{(i)}_{test})^2  $$
+
+As usual, none of these terms include the regularization term that is included in the training objective.
+
+![](2024-01-31-12-24-55.png)
+
+Armed with these three measures of learning algorithm performance, this is how we can then go about carrying out model selection. we can, with the 10 models, same as earlier on this slide, with d equals 1, d equals 2, all the way up to a 10th degree or the 10th order polynomial, we can then fit the parameters $w_1$, $b_1$. 
 
 But instead of evaluating this on our test set, we will instead evaluate these parameters on our cross-validation sets and compute $J_cv$ of w1, b1, and similarly, for the second model, we get $J_cv$ of w2, v2, and all the way down to $J_cv$ of w10, b10. Then, in order to choose a model, we will look at which model has the lowest cross-validation error, and concretely, let's say that $J_cv$ of w4, b4 as low as, then what that means is we pick this fourth-order polynomial as the model we will use for this application. Finally, if we want to report out an estimate of the generalization error of how well this model will do on new data. 
 
@@ -163,4 +195,4 @@ It's only after we've come up with one model as our final model to only then eva
 
 Earlier this week, I mentioned running diagnostics to decide how to improve the performance of a learning algorithm. Now that we have a way to evaluate learning algorithms and even automatically choose a model, let's dive more deeply into examples of some diagnostics. The most powerful diagnostic that I know of and that I used for a lot of machine learning applications is one called bias and variance. 
 
-Let's take a look at what that means in the next video.
+Let's take a look at what that means in the next section.
