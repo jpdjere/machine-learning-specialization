@@ -22,11 +22,19 @@ def process_md_file(file_path):
     # Use regex to replace standalone "b"
     content = re.sub(r'\b(b)\b', r'$\1$', content)
 
+    # Replace "w1" with "$w_{1}$", "B12" with "$b_{}12$", etc
+    content = re.sub(r'\b([wbWB])(\d+)\b', lambda match: f"${match.group(1).lower()}_{match.group(2)}$", content)
+
     # Replace tensor flow' with 'Tensorflow'
     content = re.sub(r'tensor flow', 'Tensorflow', content)
 
     # Replace video with 'section'
     content = re.sub(r'video', 'section', content)
+
+    # Repalce error expressions (train, cv, test) with subscripts
+    content = re.sub(r'\bJ train\b', r'$J_{train}$', content)
+    content = re.sub(r'\bJ cv\b', r'$J_{cv}$', content)
+    content = re.sub(r'\bJ test\b', r'$J_{test}$', content)
 
     # Split the content into sentences
     sentences = re.split(r'(?<=[.!?])\s+', content)
