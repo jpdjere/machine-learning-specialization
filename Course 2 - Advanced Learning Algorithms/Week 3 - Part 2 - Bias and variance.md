@@ -312,98 +312,404 @@ One downside of the plotting learning curves like this is something I've done, b
 
 ## Deciding what to try next revisited
 
-we've seen how by looking at $J_{train}$ and  $J_{cv}$, that is the training error and cross-validation error, or maybe even plotting a learning curve. we can try to get a sense of whether our learning algorithm has high bias or high variance. This is the procedure I routinely do when we're training a learning algorithm more often look at the training error and cross-validation error to try to decide if my algorithm has high bias or high variance. 
+W've seen how by looking at $J_{train}$ and  $J_{cv}$, that is the training error and cross-validation error, or maybe even plotting a learning curve, we can try to get a sense of whether our learning algorithm has high bias or high variance.
 
- this will help we make better decisions about what to try next in order to improve the performance of our learning algorithm. Let's look at an example. This is actually the example that we have seen earlier. 
+This will help we make better decisions about what to try next in order to improve the performance of our learning algorithm. Let's look at an example:
 
-If we've implemented regularized linear regression on predicting housing prices, but our algorithm makes unacceptably large errors in its predictions, what do we try next? These were the six ideas that we had when we had looked over this slide earlier. Getting more training examples, try small set of features, additional features, and so on. 
+![](2024-02-04-17-09-04.png)
 
- that each of these six items either helps fix a high variance or a high bias problem. In particular, if our learning algorithm has high bias, three of these techniques will be useful. If our learning algorithm has high variance than a different three of these techniques will be useful. 
+If we've implemented regularized linear regression on predicting housing prices, but our algorithm makes unacceptably large errors in its predictions, what do we try next? 
 
-Let's see if we can figure out which is which. First one is get more training examples. We saw in the last section that if our algorithm has high bias, then if the only thing we do is get more training data, that by itself probably won't help that much. 
+We already came up with six ideas that we had when we had looked over this slide earlier. Each of these six items either helps fix a high variance or a high bias problem.
 
-But in contrast, if our algorithm has high variance, say it was overfitting to a very small training set, then getting more training examples will help a lot. This first option or getting more training examples helps to fix a high variance problem. How about the other five? 
+### Get more training examples
 
-Do we think we can figure out which of the remaining five fix high bias or high variance problems? we're going to go through the rest of them in this section in a minute but if we want it, we're free to pause the section and see if we can think through these five other things by yourself. Feel free to pause the section. 
+**Helps when we have high variance**
 
-Just kidding, that was me pausing and not our section pausing. But seriously, if we want it, go ahead and pause the section and think through that we want or not and we'll go over these review in a minute. How about trying a smaller set of features? 
+We saw in the last section that if our algorithm has high bias, then if the only thing we do is get more training data, that by itself probably won't help. But if our model was overfitting to a very small training set, then getting more training examples will help a lot. 
 
-Sometimes if our learning algorithm has too many features, then it gives our algorithm too much flexibility to fit very complicated models. This is a little bit like if we had x, x squared, x cubed, x^4, x^5, and so on. If only we were to eliminate a few of these, then our model won't be so complex and won't have such high variance. 
+### Try smaller sets of features
 
-If we suspect that our algorithm has a lot of features that are not actually relevant or helpful to predicting housing price, or if we suspect that we had even somewhat redundant features, then eliminating or reducing the number of features will help reduce the flexibility of our algorithm to overfit the data. This is a tactic that will help we to fix high variance. Conversing, getting additional features, that's just adding additional features is the opposite of going to a smaller set of features. 
+**Helps when we have high variance**
 
-This will help we to fix a high bias problem. As a concrete example, if we're trying to predict the price of the house just based on the size, but  that the price of house also really depends on the number of bedrooms and on the number of floors and on the age of the house, then the algorithm will never do that well unless we add in those additional features. That's a high bias problem because we just can't do that well on the training set when only the size, is only when we tell the algorithm how many bedrooms are there, how many floors are there? 
+Sometimes if our learning algorithm has too many features, then it gives our algorithm too much flexibility to fit very complicated models, and thus **easily overfit our data**. If only we were to eliminate a few of these, then our model won't be so complex and won't have such high variance. 
 
-What's the age of the house that it finally has enough information to even do better on the training set. Adding additional features is a way to fix a high bias problem. Adding polynomial features is a little bit like adding additional features. 
+If we suspect that our algorithm has a lot of features that are not actually relevant or helpful to predicting housing price, or if we suspect that we had even somewhat redundant features, then eliminating or reducing the number of features will help reduce the flexibility of our algorithm to overfit the data. 
 
-If we're linear functions, three-line can fit the training set that well, then adding additional polynomial features can help we do better on the training set, and helping we do better on the training set is a way to fix a high bias problem. Then decreasing Lambda means to use a lower value for the regularization parameter. That means we're going to pay less attention to this term and pay more attention to this term to try to do better on the training set. 
+### Try getting additional features
 
-Again, that helps we to fix a high bias problem. Finally, increasing Lambda, well that's the opposite of this, but that says we're overfitting the data. Increasing Lambda will make sense if is overfitting the training set, just putting too much attention to fit the training set, but at the expense of generalizing to new examples, and so increasing Lambda would force the algorithm to fit a smoother function, may be less wiggly function and use this to fix a high variance problem. 
+**Helps when we have high bias**
 
-I realized that this was a lot of stuff on this slide. But the takeaways I hope we have are, if we find that our algorithm has high variance, then the two main ways to fix that are; neither get more training data or simplify our model. By simplifying model I mean, either get a smaller set of features or increase the regularization parameter Lambda. 
+The oppostice case as before: this will help we to fix a high bias problem. As a concrete example, if we're trying to predict the price of the house just based on the size, but the price of house also really depends on the number of bedrooms and on the number of floors and on the age of the house, then the algorithm will never do that well unless we add in those additional features.
 
-our algorithm has less flexibility to fit very complex, very wiggly curves. Conversely, if our algorithm has high bias, then that means is not doing well even on the training set. If that's the case, the main fixes are to make our model more powerful or to give them more flexibility to fit more complex or more wiggly functions. 
+Adding additional features is a way to fix a high bias problem. 
 
-Some ways to do that are to give it additional features or add these polynomial features, or to decrease the regularization parameter Lambda. Anyway, in case we're wondering if we should fix high bias by reducing the training set size, that doesn't actually help. If we reduce the training set size, we will fit the training set better, but that tends to worsen our cross-validation error and the performance of our learning algorithm, so don't randomly throw away training examples just to try to fix a high bias problem. 
+### Try adding polynomial features ($x_1^2$, $x_2^2$, $x_1x_2$, etc)
 
-One of my PhD students from Stanford, many years after he'd already graduated from Stanford, once said to me that while he was studying at Stanford, he learned about bias and variance and felt like he got it, he understood it. But that subsequently, after many years of work experience in a few different companies, he realized that bias and variance is one of those concepts that takes a short time to learn, but takes a lifetime to master. Those were his exact words. 
+**Helps when we have high bias**
 
-Bias and variance is one of those very powerful ideas. When we're training learning algorithms, I almost always try to figure out if it is high bias or high variance. But the way we go about addressing that systematically is something that we will keep on getting better at through repeated practice. 
+Adding polynomial features is similar to adding additional features. If you currently have a linear function, and it can't fit the data well, **adding polynomial features to increase the degree of you model** and it can help to fit better the training set, and thus help fix a high bias problem. 
 
-But we'll find that understanding these ideas will help we be much more effective at how we decide what to try next when developing a learning algorithm. Now, I know that we did go through a lot in this section and if we feel like, boy, this is a lot of stuff here, it's okay, don't worry about it. Later this week in the practice labs and practice quizzes will have also additional opportunities to go over these ideas so that we can get additional practice. 
 
-We're thinking about bias and variance of different learning algorithms. If it seems like a lot right now is okay, we get to practice these ideas later this week and hopefully deepen our understanding of them at that time. Before moving on, bias and variance also are very useful when thinking about how to train a neural network. 
+### Try decreasing lambda ($\lambda$)
 
-In the next section, let's take a look at these concepts applied to neural network training. Let's go on to the next section. 
+**Helps when we have high bias**
+
+Decreasing $\lambda$ means to use a lower value for the regularization parameter. That means we're going to pay less attention to that term and pay more attention to $J_{train}$ term, and thus try to do better on the training set. That helps we to fix a high bias problem. 
+
+### Try increase lambda ($\lambda$)
+
+**Helps when we have high variance**
+
+Increasing $\lambda$ is the opposite as the last case: increasing $\lambda$ will make sense if is overfitting the training set, that is, putting too much attention to fit the training set, but at the expense of generalizing to new examples.
+
+So increasing $\lambda$ would force the algorithm to fit a smoother function, fix a high variance problem. 
+
+---
+
+**Can we fix high bias by reducing the training set size?** That doesn't actually help. If we reduce the training set size, we will fit the training set better, but that tends to worsen our cross-validation error and the performance of our learning algorithm, so don't randomly throw away training examples just to try to fix a high bias problem.
 
 ## Bias/Variance in neural networks
 
 Was seen that high bias or high variance are both bad in the sense that they hurt the performance of our algorithm. 
 
-One of the reasons that neural networks have been so successful is because our networks, together with the idea of big data or hopefully having large data sets. It's given us a new way of new ways to address both high bias and high variance. Let's take a look. 
+**One of the reasons that neural networks have been so successful is because our networks** -together with the idea of big data or hopefully having large data sets- **have given us a new way of new ways to address both high bias and high variance.** 
 
-we saw that if we're fitting different order polynomial is to a data set, then if we were to fit a linear model like this on the left. we have a pretty simple model that can have high bias whereas we were to fit a complex model, then we might suffer from high variance. And there's this tradeoff between bias and variance, and in our example it was choosing a second order polynomial that helps we make a tradeoff and pick a model with lowest possible cross validation error. 
+### The bias-variance tradeoff
 
-And so before the days of neural networks, machine learning engineers talked a lot about this bias variance tradeoff in which we have to balance the complexity that is the degree of polynomial. Or the regularization parameter longer to make bias and variance both not be too high. And if we hear machine learning engineers talk about the bias variance tradeoff. 
+We saw there's a tradeoff between bias and variance: in our example, we overcame it by choosing a second order polynomial that helps by making a tradeoff and picking a model with lowest possible cross validation error - not too much bias, not too much variance:
 
-This is what they're referring to where if we have too simple a model, we have high bias, too complex a model high variance. And we have to find a tradeoff between these two bad things to find probably the best possible outcome. But  that neural networks offer us a way out of this dilemma of having to tradeoff bias and variance with some caveats. 
+![](2024-02-04-17-24-41.png)
 
-And  that large neural networks when trained on small term moderate sized datasets are low bias machines. And what I mean by that is, if we make our neural network large enough, we can almost always fit our training set well. So long as our training set is not enormous. 
+And so before the days of neural networks, **machine learning engineers talked a lot about the bias-variance tradeoff** in which we had **to balance the complexity or the degree of polynomial of our model**, or the size of our regularization parameter to make bias and variance both not be too high. 
 
-And what this means is this gives us a new recipe to try to reduce bias or reduce variance as needed without needing to really trade off between the two of them. So let me share with we a simple recipe that isn't always applicable. But if it applies can be very powerful for getting an accurate model using a neural network which is first train our algorithm on our training set and then asked does it do well on the training set. 
+But **neural networks offer us a way out of this dilemma of having to tradeoff bias and variance - with some caveats.** 
 
-So measure Jtrain and see if it is high and by high, I mean for example, relative to human level performance or some baseline level of performance and if it is not doing well then we have a high bias problem, high trains error. And one way to reduce bias is to just use a bigger neural network and by bigger neural network, I mean either more hidden layers or more hidden units per layer. And we can then keep on going through this loop and make our neural network bigger and bigger until it does well on the training set. 
+> **Large neural networks**, when trained on small term moderate sized datasets, **are low bias machines**: if we make our neural network large enough, we can almost always fit our training set well, as long as our training set is not enormous. 
 
-Meaning that achieves the level of error in our training set that is roughly comparable to the target level of error we hope to get to, which could be human level performance. After it does well on the training set, so the answer to that question is yes. we then ask does it do well on the cross validation set? 
+**This gives us a new recipe to try to reduce bias or reduce variance as needed without needing to really trade off between the two of them**.
 
-In other words, does it have high variance and if the answer is no, then we can conclude that the algorithm has high variance because it doesn't want to train set does not do on the cross validation set. So that big gap in  $J_{cv}$ and Jtrain indicates we probably have a high variance problem, and if we have a high variance problem, then one way to try to fix it is to get more data. To get more data and go back and retrain the model and just double-check, do we just want the training set? 
+So, let's see a simple recipe, that isn't always applicable, but if it applies can be very powerful for getting an accurate model using a neural network:
 
-If not, have a bigger network, or it does see if it does when the cross validation set and if not get more data. And if we can keep on going around and around and around this loop until eventually it does well in the cross validation set. Then we're probably done because now we have a model that does well on the cross validation set and hopefully will also generalize to new examples as well. 
+**1. Train our algorithm on dataset and ask if it dow well on it (high or low $J_{train}$)**
 
-Now, of course there are limitations of the application of this recipe training bigger neural network doesn't reduce bias but at some point it does get computationally expensive. That's why the rise of neural networks has been really assisted by the rise of very fast computers, including especially GPUs or graphics processing units. Hardware traditionally used to speed up computer graphics, but  has been very useful for speeding on neural networks as well. 
+![](2024-02-04-17-30-55.png)
 
-But even with hardware accelerators beyond a certain point, the neural networks are so large, it takes so long to train, it becomes infeasible. And then of course the other limitation is more data. Sometimes we can only get so much data, and beyond a certain point it's hard to get much more data. 
+**2. If $J_{train}$ is high (high bias), use a bigger neural network with more hidden layers or more hidden units per layer**
 
-But I think this recipe explains a lot of the rise of deep learning in the last several years, which is for applications where we do have access to a lot of data. Then being able to train large neural networks allows we to eventually get pretty good performance on a lot of applications. One thing that was implicit in this slide that may not have been obvious is that as we're developing a learning algorithm, sometimes we find that we have high bias, in which case we do things like increase our neural network. 
+![](2024-02-04-17-32-11.png)
 
-But then after we increase our neural network we may find that we have high variance, in which case we might do other things like collect more data. And during the hours or days or weeks, we're developing a machine learning algorithm at different points, we may have high bias or high variance. And it can change but it's depending on whether our algorithm has high bias or high variance at that time. 
+And we can then keep on going through this loop and make our neural network bigger and bigger until it does well on the training set (achieves the level of error in our training set that is roughly comparable to the target level of error we hope to get to).
 
-Then that can help give guidance for what we should be trying next. When we train our neural network, one thing that people have asked me before is, hey Andrew, what if my neural network is too big? Will that create a high variance problem? 
+After it does well on the training set, the answer to our question is yes. So then we ask: 
 
- that a large neural network with well-chosen regularization, well usually do as well or better than a smaller one. And so for example, if we have a small neural network like this, and we were to switch to a much larger neural network like this, we would think that the risk of overfitting goes up significantly. But  that if we were to regularize this larger neural network appropriately, then this larger neural network usually will do at least as well or better than the smaller one. 
+**3. Ask: does it do well on the cross validation set (high-variance)?**
 
-So long as the regularization has chosen appropriately. So another way of saying this is that it almost never hurts to go to a larger neural network so long as we regularized appropriately with one caveat, which is that when we train the larger neural network, it does become more computational e expensive. So the main way it hurts, it will slow down our training and our inference process and very briefly to regularize a neural network. 
+![](2024-02-04-17-34-20.png)
 
-This is what we do if the cost function for our neural network is the average loss and so the loss here could be squared error or logistic loss. Then the regularization term for a neural network looks like pretty much what we'd expect is lambda over two m times the sum of $w$ squared where this is a sum over all weights W in the neural network and similar to regularization for linear regression and logistic regression, we usually don't regularize the parameters be in the neural network although in practice it makes very little difference whether we do so or not. And the way we would implement regularization in tensorflow is recall that this was the code for implementing an unregulated Rised handwritten digit classification model. 
+If the answer is no, then we can conclude that the algorithm has high variance. The big gap in $J_{cv}$ and $J_{train}$ indicates we probably have a high variance problem and **we can try to fix it is to get more data**. 
 
-We create three layers like so with a number of fitting units activation And then create a sequential model with the three layers. If we want to add regularization then we would just add this extra term colonel regularize A equals l. two and then 0.01 where that's the value of longer in terms of though actually lets we choose different values of lambda for different layers although for simplicity we can choose the same value of lambda for all the weights and all of the different layers as follows. 
+**4. After getting more data: loop and ask if we have low $J_{train}$**
 
-And then this will allow we to implement regularization in our neural network. So to summarize two Takeaways, I hope we have from this section are one. It hardly ever hurts to have a larger neural network so long as we regularize appropriately. 
+**5. If answer is yes: ask again, is $J_{cv} low?$ If answer is yes, we are done!**
 
-one caveat being that having a larger neural network can slow down our algorithm. So maybe that's the one way it hurts, but it shouldn't hurt our algorithm's performance for the most part and in fact it could even help it significantly. And second so long as our training set isn't too large. 
+We can keep on going around and around in this loop until eventually it does well on both the train set and the cross validation set.
 
-Then a neural network, especially large neural network is often a low bias machine. It just fits very complicated functions very well, which is why when we're training neural networks, I find that we're often fighting variance problems rather than bias problems, at least if the neural network is large enough. So the rise of deep learning has really changed the way that machine learning practitioners think about bias and variance. 
+Now, of course there are limitations of the application of this recipe: training bigger neural network does reduce bias but **at some point it does get computationally expensive**. That's why the rise of neural networks has been really assisted by the rise of very fast computers, especially GPUs or graphics processing units -hardware traditionally used to speed up computer graphics, but  has been very useful for speeding on neural networks as well. 
 
-Having said that even when we're training a neural network measuring bias and variance and using that to guide what we do next is often a very helpful thing to do. So that's it for bias and variance. Let's go on to the next section. 
+But even with hardware accelerators beyond a certain point, the neural networks are so large, it takes so long to train, it becomes infeasible. 
 
-We will take all the ideas we've learned and see how they fit in to the development process of machine learning systems. And I hope that we'll tie a lot of these pieces together to give we practical advice for how to quickly move forward in the development of our machine learning systems
+And then of course **the other limitation is: getting more data**. Sometimes we can only get so much data, and beyond a certain point it's hard to get more.
+
+This recipe explains a lot of** the rise of deep learning in the last several years, which is for applications where we do have access to a lot of data**: being able to train large neural networks allows us to eventually get pretty good performance on a lot of applications. 
+
+--- 
+ When we train our neural network, **can my neural network get too big?** Will that creat**e a high variance problem?** 
+
+The answer is that **a large neural network with well-chosen regularization will usually do as well or better than a smaller one**. 
+
+![](2024-02-04-17-42-27.png)
+
+If we have a small neural network like the one on the left, and we were to switch to a much larger neural network like the one on the right, we could think that the risk of overfitting goes up significantly. 
+
+But: **if we properly regularize the larger neural network, then this network usually will do at least as well or better than the smaller one** as long as the regularization has chosen appropriately. 
+
+In other words: **it almost never hurts to go to a larger neural network as long as we regularize appropriately**. With the same caveat as before: when we train the larger neural network, it does become more computationally expensive.
+
+To regularize a neural network in Tensorflow, we need to add the `kernel_regularization` parameter to the `Dense` function:
+
+![](2024-02-04-17-47-47.png)
+
+```py
+layer_1 = Dense(units=25, activation="relu", kernel_regularizer=L2(0.01))
+layer_2 = Dense(units=15, activation="relu", kernel_regularizer=L2(0.01))
+layer_3 = Dense(units=1, activation="sigmoid", kernel_regularizer=L2(0.01))
+
+model = Sequential([layer_1, layer_2, layer_3])
+```
+
+Two takesaways from this section:
+**1. It hardly ever hurts to have a larger neural network so long as we regularize appropriately.**
+
+(One caveat being that having a larger neural network can slow down our algorithm, but it shouldn't hurt our algorithm's performance)
+
+**2. a neural network, especially large neural network is often a low bias machine.** 
+
+It just fits very complicated functions very well. This is why **when we're training neural networks,we're often fighting variance problems rather than bias problems**, at least if the neural network is large enough. 
+
+So the rise of deep learning has really changed the way that machine learning practitioners think about bias and variance.
+
+## Optional Lab: Diagnosing Bias and Variance
+
+In the previous optional lab, you saw how to evaluate a learning algorithm's performance by measuring its training and cross validation error. Given these values, you are able to quantify how well a model is doing and this helps you make a decision on which one to use for a given application. In this lab, you will build upon this process and explore some tips to improve the performance of your models. As it turns out, the training and cross validation errors can tell you what to try next to improve your models. Specifically, it will show if you have a high bias (underfitting) or high variance (overfitting) problem. This lecture slide shown below gives an example:
+
+![](2024-02-04-17-53-14.png)
+
+The leftmost figure shows a high bias problem where the model is not capturing the patterns in the training data. As a result, you will have a high training and cross validation error. The rightmost figure, on the other hand, shows a high variance problem where the model has overfit the training set. Thus, even though it has a low training error, it will perform poorly on new examples. That is indicated by a high cross validation error. The ideal model would be the figure in the middle, where it successfully learns from the training set and also generalizes well to unseen data. The lectures gave some tips on what to do next to achieve this "just right" model. 
+
+To fix a high bias problem, you can:
+* try adding polynomial features
+* try getting additional features
+* try decreasing the regularization parameter
+
+To fix a high variance problem, you can:
+* try increasing the regularization parameter
+* try smaller sets of features
+* get more training examples
+
+You will try all these tips in this lab. Let's begin!
+
+### Establishing Baseline Level of Performance
+
+Before you can diagnose a model for high bias or high variance, it is usually helpful to first have an idea of what level of error you can reasonably get to. As mentioned in class, you can use any of the following to set a baseline level of performance.
+
+* human level performance
+* competing algorithm's performance
+* guess based on experience
+
+Real-world data can be very noisy and it's often infeasible to get to 0% error. For example, you might think that you have a high bias problem because you're getting 10% training and 15% cross validation error on a computer vision application. However, you later found out that even humans can't perform better than 10% error. If you consider this the baseline level, then you now instead have a high variance problem because you've prioritized minimizing the gap between cross validation and training error.
+
+With this in mind, let's begin exploring the techniques to address these issues.
+
+### Imports and Lab Setup
+
+Aside from a couple of [linear regressors](https://scikit-learn.org/stable/modules/classes.html#classical-linear-regressors) from scikit-learn, all other functions used in this lab are found in the `utils.py` file outside this notebook. You will mostly use the same code as the last lab so you don't need to see each line here again. It mostly contains functions to split your data, as well as functions that loop over a list of parameters (e.g. degree of polynomial, regularization parameter) and plots the training and cross validation error for each one. Feel free to explore the code in the said file to see the implementation.
+
+```py
+# for building linear regression models
+from sklearn.linear_model import LinearRegression, Ridge
+
+# import lab utility functions in utils.py
+import utils 
+```
+
+### Fixing High Bias
+
+You will first look at things to try when your model is underfitting. In other words, when the training error is far worse than the baseline level of performance.
+
+#### Try adding polynomial features
+
+You've already seen this in the previous lab. Adding polynomial features can help your model learn more complex patterns in your data. Here again is an example of a plot showing how the training and cross validation errors change as you add more polynomial features. You will be using a synthetic dataset for a regression problem with one feature and one target. In addition, you will also define an arbitrary baseline performance and include it in the plot.
+
+```py
+# Split the dataset into train, cv, and test
+x_train, y_train, x_cv, y_cv, x_test, y_test = utils.prepare_dataset('data/c2w3_lab2_data1.csv')
+
+print(f"the shape of the training set (input) is: {x_train.shape}")
+print(f"the shape of the training set (target) is: {y_train.shape}\n")
+print(f"the shape of the cross validation set (input) is: {x_cv.shape}")
+print(f"the shape of the cross validation set (target) is: {y_cv.shape}\n")
+
+# the shape of the training set (input) is: (60, 1)
+# the shape of the training set (target) is: (60,)
+
+# the shape of the cross validation set (input) is: (20, 1)
+# the shape of the cross validation set (target) is: (20,)
+
+# Preview the first 5 rows
+print(f"first 5 rows of the training inputs (1 feature):\n {x_train[:5]}\n")
+# first 5 rows of the training inputs (1 feature):
+#  [[3757.57575758]
+#  [2878.78787879]
+#  [3545.45454545]
+#  [1575.75757576]
+#  [1666.66666667]]
+
+# Instantiate the regression model class
+model = LinearRegression()
+
+# Train and plot polynomial regression models
+utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=10, baseline=400)
+```
+
+![](2024-02-04-17-56-59.png)
+
+As you can see, the more polynomial features you add, the better the model fits to the training data. In this example, it even performed better than the baseline. At this point, you can say that the models with degree greater than 4 are low-bias because they perform close to or better than the baseline.
+
+However, if the baseline is defined lower (e.g. you consulted an expert regarding the acceptable error), then the models are still considered high bias. You can then try other methods to improve this.
+
+```py
+# Train and plot polynomial regression models. Bias is defined lower.
+utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=10, baseline=250)
+```
+
+![](2024-02-04-17-57-52.png)
+
+#### Try getting additional features
+
+Another thing you can try is to acquire other features. Let's say that after you got the results above, you decided to launch another data collection campaign that captures another feature. Your dataset will now have 2 columns for the input features as shown below.
+
+```py
+x_train, y_train, x_cv, y_cv, x_test, y_test = utils.prepare_dataset('data/c2w3_lab2_data2.csv')
+
+print(f"the shape of the training set (input) is: {x_train.shape}")
+print(f"the shape of the training set (target) is: {y_train.shape}\n")
+print(f"the shape of the cross validation set (input) is: {x_cv.shape}")
+print(f"the shape of the cross validation set (target) is: {y_cv.shape}\n")
+
+# the shape of the training set (input) is: (60, 2)
+# the shape of the training set (target) is: (60,)
+
+# the shape of the cross validation set (input) is: (20, 2)
+# the shape of the cross validation set (target) is: (20,)
+
+
+# Preview the first 5 rows
+print(f"first 5 rows of the training inputs (2 features):\n {x_train[:5]}\n")
+# first 5 rows of the training inputs (2 features):
+#  [[3.75757576e+03 5.49494949e+00]
+#  [2.87878788e+03 6.70707071e+00]
+#  [3.54545455e+03 3.71717172e+00]
+#  [1.57575758e+03 5.97979798e+00]
+#  [1.66666667e+03 1.61616162e+00]]
+```
+
+Now see what this does to the same training process as before. You'll notice that the training error is now closer to (or even better than) the baseline.
+
+```py
+# Instantiate the model class
+model = LinearRegression()
+
+# Train and plot polynomial regression models. Dataset used has two features.
+utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=6, baseline=250)
+```
+
+![](2024-02-04-17-59-43.png)
+
+#### Try decreasing the regularization parameter
+
+At this point, you might want to introduce regularization to avoid overfitting. One thing to watch out for is you might make your models underfit if you set the regularization parameter too high. The cell below trains a 4th degree polynomial model using the [Ridge](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html#sklearn.linear_model.Ridge) class which allows you to set a regularization parameter (i.e. lambda or $\lambda$). You will try several values and compare the results.
+
+```py
+# Define lambdas to plot
+reg_params = [10, 5, 2, 1, 0.5, 0.2, 0.1]
+
+# Define degree of polynomial and train for each value of lambda
+utils.train_plot_reg_params(reg_params, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
+```
+
+![](2024-02-04-18-00-59.png)
+
+The resulting plot shows an initial $\lambda$ of `10` and as you can see, the training error is worse than the baseline at that point. This implies that it is placing a huge penalty on the `w` parameters and this prevents the model from learning more complex patterns in your data. As you decrease $\lambda$, the model loosens this restriction and the training error is able to approach the baseline performance.
+
+### Fixing High Variance
+
+You will now look at some things to try when your model has overfit the training set. The main objective is to have a model that generalizes well to new examples so you want to minimize the cross validation error.
+
+#### Try increasing the regularization parameter
+
+In contrast to the last exercise above, setting a very small value of the regularization parameter will keep the model low bias but might not do much to improve the variance. As shown below, you can improve your cross validation error by increasing the value of $\lambda$.
+
+```py
+# Define lambdas to plot
+reg_params = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
+
+# Define degree of polynomial and train for each value of lambda
+utils.train_plot_reg_params(reg_params, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
+```
+![](2024-02-04-18-02-19.png)
+
+#### Try smaller sets of features
+
+You've already seen in the last lab that having too many polynomial terms can result in overfitting. You can reduce the number of such terms and see where you get the best balance of training and cross validation error. Another scenario where reducing the number of features would be helpful is when you have irrelevant features in your data. For example, patient IDs that hospitals give will not help in diagnosing a tumor so you should make sure to remove it from your training data. 
+
+To illustrate how removing features can improve performance, you will do polynomial regression for 2 datasets: the same data you used above (2 features) and another with a random ID column (3 features). You can preview these using the cell below. Notice that 2 columns are identical and a 3rd one is added to include random numbers.
+
+```py
+# Prepare dataset with randomID feature
+x_train, y_train, x_cv, y_cv, x_test, y_test = utils.prepare_dataset('data/c2w3_lab2_data2.csv')
+
+# Preview the first 5 rows
+print(f"first 5 rows of the training set with 2 features:\n {x_train[:5]}\n")
+# first 5 rows of the training set with 2 features:
+#  [[3.75757576e+03 5.49494949e+00]
+#  [2.87878788e+03 6.70707071e+00]
+#  [3.54545455e+03 3.71717172e+00]
+#  [1.57575758e+03 5.97979798e+00]
+#  [1.66666667e+03 1.61616162e+00]]
+
+# Prepare dataset with randomID feature
+x_train, y_train, x_cv, y_cv, x_test, y_test = utils.prepare_dataset('data/c2w3_lab2_data3.csv')
+
+# Preview the first 5 rows
+print(f"first 5 rows of the training set with 3 features (1st column is a random ID):\n {x_train[:5]}\n")
+# first 5 rows of the training set with 3 features (1st column is a random ID):
+#  [[1.41929130e+07 3.75757576e+03 5.49494949e+00]
+#  [1.51868310e+07 2.87878788e+03 6.70707071e+00]
+#  [1.92662630e+07 3.54545455e+03 3.71717172e+00]
+#  [1.25222490e+07 1.57575758e+03 5.97979798e+00]
+#  [1.76537960e+07 1.66666667e+03 1.61616162e+00]]
+
+```
+
+Now you will train the models and plot the results. The solid lines in the plot show the errors for the data with 2 features while the dotted lines show the errors for the dataset with 3 features. As you can see, the one with 3 features has higher cross validation error especially as you introduce more polynomial terms. This is because the model is also trying to learn from the random IDs even though it has nothing to do with the target. 
+
+Another way to look at it is to observe the points at degree=4. You'll notice that even though the *training error* is lower with 3 features, the *gap between the training error and cross validation error* is a lot wider than when you only use 2 features. This should also warn you that the model is overfitting.
+
+```py
+# Define the model
+model = LinearRegression()
+
+# Define properties of the 2 datasets
+file1 = {'filename':'data/c2w3_lab2_data3.csv', 'label': '3 features', 'linestyle': 'dotted'}
+file2 = {'filename':'data/c2w3_lab2_data2.csv', 'label': '2 features', 'linestyle': 'solid'}
+files = [file1, file2]
+
+# Train and plot for each dataset
+utils.train_plot_diff_datasets(model, files, max_degree=4, baseline=250)
+```
+
+![](2024-02-04-18-04-26.png)
+
+#### Get more training examples
+
+Lastly, you can try to minimize the cross validation error by getting more examples. In the cell below, you will train a 4th degree polynomial model then plot the *learning curve* of your model to see how the errors behave when you get more examples.
+
+```py
+# Prepare the dataset
+x_train, y_train, x_cv, y_cv, x_test, y_test = utils.prepare_dataset('data/c2w3_lab2_data4.csv')
+print(f"the shape of the entire training set (input) is: {x_train.shape}")
+print(f"the shape of the entire training set (target) is: {y_train.shape}\n")
+print(f"the shape of the entire cross validation set (input) is: {x_cv.shape}")
+print(f"the shape of the entire cross validation set (target) is: {y_cv.shape}\n")
+
+# the shape of the entire training set (input) is: (600, 2)
+# the shape of the entire training set (target) is: (600,)
+
+# the shape of the entire cross validation set (input) is: (200, 2)
+# the shape of the entire cross validation set (target) is: (200,)
+
+# Instantiate the model class
+model = LinearRegression()
+
+# Define the degree of polynomial and train the model using subsets of the dataset.
+utils.train_plot_learning_curve(model, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
+```
+
+![](2024-02-04-18-05-06.png)
+
+From the results, it shows that the cross validation error starts to approach the training error as you increase the dataset size. Another insight you can get from this is that adding more examples will not likely solve a high bias problem. That's because the training error remains relatively flat even as the dataset increases.
+
+### Wrap Up
+
+In this lab, you were able to practice how to address high bias and high variance in your learning algorithm. By learning how to spot these issues, you have honed your intuition on what to try next when developing your machine learning models. In the next lectures, you will look deeper into the machine learning development process and explore more aspects that you need to take into account when working on your projects. See you there!
