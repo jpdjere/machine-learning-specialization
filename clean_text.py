@@ -17,13 +17,22 @@ def process_md_file(file_path):
     # Replace words with underscore or f(x) substring with $...$
     content = re.sub(r'\b(\w*_[\w\d_]+|\w*f\(x\)\w*)\b', r'$\1$', content)
 
-    # Use regex to replace standalone "w"
-    content = re.sub(r'\b(w)\b', r'$\1$', content)
-    # Use regex to replace standalone "b"
-    content = re.sub(r'\b(b)\b', r'$\1$', content)
-
-    # Replace "w1" with "$w_{1}$", "B12" with "$b_{}12$", etc
+    # Replace "w1" with "$w_{1}$", "B12" with "$b_{12}$", etc
     content = re.sub(r'\b([wbWB])(\d+)\b', lambda match: f"${match.group(1).lower()}_{match.group(2)}$", content)
+    # Replace "w_1" with "$w_{1}$", "B_12" with "$b_{12}$", etc
+    content = re.sub(r'\b([wbWB])_(\d+)\b', lambda match: f"${match.group(1).lower()}_{match.group(2)}$", content)
+    # Replace "w^1" with "$w^{1}$", "B^12" with "$b^{12}$", etc
+    content = re.sub(r'\b([wbWB])\^(\d+)\b', lambda match: f"${match.group(1).lower()}^{match.group(2)}$", content)
+
+    # Use regex to replace standalone "w"
+    content = re.sub(r'\s+(w)\s+', r'$\1$', content)
+    # Use regex to replace standalone "b"
+    content = re.sub(r'\s+(b)\s+', r'$\1$', content)
+    # Use regex to replace standalone "x"
+    content = re.sub(r'\s+(x)\s+', r'$\1$', content)
+    # Use regex to replace standalone "y"
+    content = re.sub(r'\s+(y)\s+', r'$\1$', content)
+
 
     # Replace tensor flow' with 'Tensorflow'
     content = re.sub(r'tensor flow', 'Tensorflow', content)
