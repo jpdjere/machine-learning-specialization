@@ -242,107 +242,149 @@ The images on the left are real data from real pictures taken out in the world, 
 
 ### Summary
 
+![](2024-02-06-14-25-26.png)
+
 All the techniques we've seen in this section relate to **finding ways to engineer the data used by our system**. 
 
 In the past decades, most machine learning researchers attention was on the conventional **model-centric approach**  where most researchers **would download the data set and hold the data fixed while they focus on improving the code or the algorithm or the model**. 
 
 Thanks to that paradigm of machine learning research, today we have access to many algorithms such as linear regression, logistic regression, neural networks, decision trees, etc.
 
-And so sometimes it can be more fruitful to spend more of our time taking a data centric approach in which we focus on engineering the data used by our algorithm. And this can be anything from collecting more data just on pharmaceutical spam. If that's what error analysis told we to do. 
+But it can be more fruitful to spend more of our time taking a **data-centric approach** in which **we focus on engineering the data used by our algorithm**. This can be anything from collecting more data to using data augmentation to generate more images or more audio or using data synthesis to just create more training examples. 
 
-To using data augmentation to generate more images or more audio or using data synthesis to just create more training examples. And sometimes that focus on the data can be an efficient way to help our learning algorithm improve its performance. So I hope that this section gives we a set of tools to be efficient and effective in how we add more data to get our learning algorithm to work better. 
-
-Now there are also some applications where we just don't have that much data and it's really hard to get more data. It turns out that there's a technique called transfer learning which could apply in that setting to give our learning algorithm performance a huge boost. And the key idea is to take data from a totally different barely related tasks. 
-
-But using a neural network there's sometimes ways to use that data from a very different tasks to get our algorithm to do better on our application. Doesn't apply to everything, but when it does it can be very powerful. Let's take a look in the next section and how transfer learning works. 
+Sometimes that focus on the data can be an efficient way to help our learning algorithm improve its performance.
 
 ## Transfer learning: using data from a different task
 
-For an application where we don't have that much data, transfer learning is a wonderful technique that lets we use data from a different task to help on our application. This is one of those techniques that I use very frequently. Let's take a look at how transfer learning works. 
+**Transfer learning is a technique that lets us use data from a different task to help on our application,** espeically useful for an application where we don't have that much data.
 
-Here's how transfer learning works. Let's say we want to recognize the handwritten digits from zero through nine but we don't have that much labeled data of these handwritten digits. Here's what we can do. 
+Here's how transfer learning works: let's say we want to recognize the handwritten digits from zero through nine but we don't have that much labeled data of these handwritten digits.
 
-Say we find a very large datasets of one million images of pictures of cats, dogs, cars, people, and so on, a thousand classes. we can then start by training a neural network on this large dataset of a million images with a thousand different classes and train the algorithm to take as input an image X, and learn to recognize any of these 1,000 different classes. In this process, we end up learning parameters for the first layer of the neural network $w^1$, $b^1$, for the second layer $w^2$, $b^2$, and so on, $w^3$, $b^3$, $w^4$, $b^4$, and $w^5$, $b^5$ for the output layer. 
+If we find a very large dataset of one million images of pictures of cats, dogs, cars, people, and so on, with a thousand classes, we can then start by training a neural network on this large dataset of a million images with a thousand different classes. 
 
-To apply transfer learning, what we do is then make a copy of this neural network where we would keep the parameters $w^1$, $b^1$, $w^2$, $b^2$, $w^3$, $b^3$, and $w^4$, $b^4$. But for the last layer, we would eliminate the output layer and replace it with a much smaller output layer with just 10 rather than 1,000 output units. These 10 output units will correspond to the classes zero, one, through nine that we want our neural network to recognize. 
+![](2024-02-06-18-02-36.png)
 
-Notice that the parameters $w^5$, $b^5$ they can't be copied over because the dimension of this layer has changed, so we need to come up with new parameters $w^5$, $b^5$ that we need to train from scratch rather than just copy it from the previous neural network. In transfer learning, what we can do is use the parameters from the first four layers, really all the layers except the final output layer as a starting point for the parameters and then run an optimization algorithm such as gradient descent or the Adam optimization algorithm with the parameters initialized using the values from this neural network up on top. In detail, there are two options for how we can train this neural networks parameters. 
+We can train the algorithm to take as input an image $X$, and learn to recognize any of these 1,000 different classes. In this process, we end up learning parameters for the first layer of the neural network $w^1$, $b^1$, for the second layer $w^2$, $b^2$,and so on, and finally $w^5$, $b^5$ for the output layer.
 
-Option 1 is we only train the output layers parameters. we would take the parameters $w^1$, $b^1$, $w^2$, $b^2$ through $w^4$, $b^4$ as the values from on top and just hold them fix and don't even bother to change them, and use an algorithm like Stochastic gradient descent or the Adam optimization algorithm to only update $w^5$, $b^5$ to lower the usual cost function that we use for learning to recognize these digits zero to nine from a small training set of these digits zero to nine, so this is Option 1. Option 2 would be to train all the parameters in the network including $w^1$, $b^1$, $w^2$, $b^2$ all the way through $w^5$, $b^5$ but the first four layers parameters would be initialized using the values that we had trained on top. 
+![](2024-02-06-18-03-37.png)
 
-If we have a very small training set then Option 1 might work a little bit better, but if we have a training set that's a little bit larger then Option 2 might work a little bit better. This algorithm is called transfer learning because the intuition is by learning to recognize cats, dogs, cows, people, and so on. It will hopefully, have learned some plausible sets of parameters for the earlier layers for processing image inputs. 
+To apply transfer learning, **we make a copy of this neural network where we would keep the parameters $w^1$, $b^1$, $w^2$, $b^2$, $w^3$, $b^3$, and $w^4$, $b^4$. But for the last layer, we would eliminate the output layer and replace it with a much smaller output layer with just 10 rather than 1,000 output units. These 10 output units will correspond to the classes zero, one, through nine that we want our neural network to recognize.**
 
-Then by transferring these parameters to the new neural network, the new neural network starts off with the parameters in a much better place so that we have just a little bit of further learning. Hopefully, it can end up at a pretty good model. These two steps of first training on a large dataset and then tuning the parameters further on a smaller dataset go by the name of supervised pre-training for this step on top. 
+![](2024-02-06-18-04-34.png)
 
-That's when we train the neural network on a very large dataset of say a million images of not quite the related task. Then the second step is called fine tuning where we take the parameters that we had initialized or gotten from supervised pre-training and then run gradient descent further to fine tune the weights to suit the specific application of handwritten digit recognition that we may have. If we have a small dataset, even tens or hundreds or thousands or just tens of thousands of images of the handwritten digits, being able to learn from these million images of a not quite related task can actually help our learning algorithm's performance a lot. 
+Notice that the parameters $w^5$, $b^5$ they can't be copied over because the dimension of this layer has changed, so we need to come up with new parameters $w^5$, $b^5$ that we need to train from scratch rather than just copy from the previous neural network. 
 
-One nice thing about transfer learning as well is maybe we don't need to be the one to carry out supervised pre-training. For a lot of neural networks, there will already be researchers they have already trained a neural network on a large image and will have posted a trained neural networks on the Internet, freely licensed for anyone to download and use. What that means is rather than carrying out the first step yourself, we can just download the neural network that someone else may have spent weeks training and then replace the output layer with our own output layer and carry out either Option 1 or Option 2 to fine tune a neural network that someone else has already carried out supervised pre-training on, and just do a little bit of fine tuning to quickly be able to get a neural network that performs well on our task. 
+In transfer learning, we can use the parameters from the first four layers - really all the layers except the final output layer - as a starting point for the parameters and then run an optimization algorithm such as gradient descent or the Adam optimization algorithm with the parameters initialized using the values from the first neural network. 
 
-Downloading a pre-trained model that someone else has trained and provided for free is one of those techniques where by building on each other's work on machine learning community we can all get much better results. By the generosity of other researchers that have pre-trained and posted their neural networks online. But why does transfer learning even work? 
+In detail, there are two options for how we can train these neural networks parameters:
 
-How can we possibly take parameters obtained by recognizing cats, dogs, cars, and people and use that to help we recognize something as different as handwritten digits? Here's some intuition behind it. If we are training a neural network to detect, say, different objects from images, then the first layer of a neural network may learn to detect edges in the image. 
+### Option 1: we only train the output layers parameters. 
 
-We think of these as somewhat low-level features in the image which is to detect edges. Each of these squares is a visualization of what a single neuron has learned to detect as learn to group together pixels to find edges in an image. The next layer of the neural network then learns to group together edges to detect corners. 
+- We take the parameters $w^1$, $b^1$, $w^2$, $b^2$ through $w^4$, $b^4$ as the values from our first neural network and hold them fixed. 
+- Then we use an algorithm like  gradient descent or the Adam optimization algorithm to only update $w^5$, $b^5$ to lower the usual cost function that we use for learning. In this case, to recognize digits zero to nine from a small training set of these digits zero to nine.
 
-Each of these is a visualization of what one neuron may have learned to detect, must learn to technical, simple shapes like corner like shapes. The next layer of the neural network may have learned to detect some are more complex, but still generic shapes like basic curves or smaller shapes like these. That's why by learning on detecting lots of different images, we're teaching the neural network to detect edges, corners, and basic shapes. 
+![](2024-02-06-18-11-48.png)
 
-That's why by training a neural network to detect things as diverse as cats, dogs, cars and people, we're helping it to learn to detect these pretty generic features of images and finding edges, corners, curves, basic shapes. This is useful for many other computer vision tasks, such as recognizing handwritten digits. One restriction of pre-training though, is that the image type x has to be the same for the pre-training and fine-tuning steps. 
+### Option 2: train all parameters
 
-If the final task we want to solve is a computer vision tasks, then the pre-training step also has been a neural network trained on the same type of input, namely an image of the desired dimensions. Conversely, if our goal is to build a speech recognition system to process audio, then a neural network pre-trained on images probably won't do much good on audio. Instead, we want a neural network pre-trained on audio data, there we then fine tune on our own audio dataset and the same for other types of applications. 
+- We train all the parameters in the network including $w^1$, $b^1$, $w^2$, $b^2$ all the way through $w^5$, $b^5$, but now the first four layers parameters would be initialized using the values that we had trained on our first neural network.
 
-we can pre-train a neural network on text data and If our application has a save feature input x of text data, then we can fine tune that neural network on our own data. To summarize, these are the two steps for transfer learning. Step 1 is download neural network with parameters that have been pre-trained on a large dataset with the same input type as our application. 
+If we have a very small training set then **Option 1** might work better, but if we have a training set that's larger then **Option 2** might work better.
 
-That input type could be images, audio, texts, or something else, or if we don't want to download the neural network, maybe we can train our own. But in practice, if we're using images, say, is much more common to download someone else's pre-trained neural network. Then further train or fine tune the network on our own data. 
+This algorithm is called transfer learning because the intuition is that **by learning to recognize cats, dogs, cows, people, etc, it will hopefully have learned some plausible sets of parameters for the earlier layers for processing image inputs**. Then, by transferring these parameters to the new neural network, the new neural network starts off with the parameters in a much better place. So that with just some small further learning it can end up at a pretty good model. 
 
-I found that if we can get a neural network pre-trained on large dataset, say a million images, then sometimes we can use a much smaller dataset, maybe a thousand images, maybe even smaller, to fine tune the neural network on our own data and get pretty good results. I'd sometimes train neural networks on as few as 50 images that were quite well using this technique, when it has already been pre-trained on a much larger dataset. This technique isn't panacea., we can't get every application to work just on 50 images, but it does help a lot when the dataset we have for our application isn't that large. 
+It consists of two steps:
 
-By the way, if we've heard of advanced techniques in the news like GPT-3 or BERTs or neural networks pre-trained on ImageNet, those are actually examples of neural networks that they have someone else's pre-trained on a very large image datasets or text dataset, they can then be fine tuned on other applications. If we haven't heard of GPT-3, or BERTs, or ImageNet, don't worry about it, whether we have. Those have been successful applications of pre-training in the machine learning literature. 
+**1. Supervised Pretraining:** first step where we train a network with a large -generally tangentially related- dataset.
+**2. Fine tuning:** second step, where we tune the parameters further using a smaller dataset. We take the parameters that we had initialized or gotten from supervised pre-training and then run gradient descent further to fine tune the weights to suit the specific application that we may have.
 
-One of the things I like about transfer learning is just that one of the ways that the machine learning community has shared ideas, and code, and even parameters, with each other because thanks to the researchers that have pre-trained large neural networks and posted the parameters on the internet freely for anyone else to download and use. This empowers anyone to take models, their pre-trained, to fine tune on potentially much smaller dataset. In machine learning, all of us end up often building on the work of each other and that open sharing of ideas, of codes, of trained parameters is one of the ways that the machine learning community, all of us collectively manage to do much better work than any single person by themselves can. 
+![](2024-02-06-18-18-14.png)
 
-I hope that we joining the machine learning community will someday maybe find a way to contribute back to this community as well. That's it for pre-training. I hope we find this technique useful. 
+If we have a small dataset, even tens or hundreds or thousands or just tens of thousands of images of the handwritten digits, being able to learn from these million images of a **not** quite related task can actually help our learning algorithm's performance a lot. 
 
-In the next section, I'd like to share with we some thoughts on the full cycle of a machine learning project. When building a machine learning system, whether all the steps that are worth thinking about. Let's take a look at that in the next section. 
+One nice thing about transfer learning is: **we don't always need to be the ones to carry out supervised pre-training.** For a lot of neural networks, there will already be researchers they **have already trained a neural network on a large dataset and will have posted them online, freely licensed for anyone to download and use**. 
+
+So we can just download the neural network that someone else may have spent weeks training and then replace the output layer with our own and carry out either Option 1 or Option 2 to fine tune a neural network that someone else has already carried out supervised pre-training on
+
+But **why does transfer learning even work**? 
+
+How can we possibly take parameters obtained by recognizing cats, dogs, cars, and people and use that to help we recognize something as different as handwritten digits? Here's some intuition behind it. 
+
+If we are training a neural network to detect, say, different objects from images, then the first layer of a neural network may learn to detect edges in the image, the next layer of the neural network then learns to group together edges to detect corners and the next layer may have learned to detect some are more complex, but still generic shapes like basic curves or smaller shapes like these. 
+
+Training a neural network to detect things as diverse as cats, dogs, cars and people, we're helping it to learn to detect these pretty generic features of images and finding edges, corners, curves, basic shapes, that apply to basically everything.
+
+One restriction of pre-training though, is that **the image type $x$ has to be the same for the pre-training and fine-tuning steps.**
+
+![](2024-02-06-18-22-44.png)
+
+If we can get a neural network pre-trained on large dataset, say a million images, then sometimes we can use a much smaller dataset, maybe a thousand images, maybe even smaller, to fine tune the neural network on our own data and get pretty good results. We can even sometimes train neural networks on as few as 50 images when it has already been pre-trained on a much larger dataset. However, this technique isn't apanacea: we can't get every application to work just on 50 images, but it does help a lot when the dataset we have for our application isn't that large. 
+
+![](2024-02-06-18-24-30.png)
 
 ## Full cycle of a machine learning project
 
-So far we've talked a lot about how to train a model and also talked a bit about how to get data for our machine learning application. But when we're building a machine learning system I find that training a model is just part of the puzzle. In this section I'd like to share with we what I think of as the full cycle of a machine learning project. 
+When we're building a machine learning system, training a model is just part of the puzzle. Lett's talk about **the full cycle of a machine learning project.** 
 
-That is, when we're building a valuable machine learning system, what are the steps to think about and plan for? Let's take a look, let me use speech recognition as an example to illustrate the full cycle of a machine learning project. The first step of machine learning project is to scope the project. 
+When we're building a valuable machine learning system, **what are the steps to think about and plan for?** Let's take a look, using speech recognition as an example.
 
-In other words, decide what is the project and what we want to work on. For example, I once decided to work on speech recognition for voice search. That is to do web search using speaking to our mobile phone rather than typing into our mobile phone. 
+### Step 1: Scope the project
 
-This project scoping. After deciding what to work on we have to collect data. Decide what data we need to train our machine learning system and go and do the work to get the audio and get the transcripts of the labels for our dataset. 
+![](2024-02-06-18-34-07.png)
 
-That's data collection. After we have our initial data collection we can then start to train the model. Here we would train a speech recognition system and carry out error analysis and iteratively improve our model. 
+In other words, decide what is the project and what we want to work on. For example, work on speech recognition for voice search so that we can do web search using speaking to our mobile phone rather than typing into our mobile phone. 
 
-Is not at all uncommon. After we've started training the model for error analysis or for a bias-variance analysis to tell we that we might want to go back to collect more data. Maybe collect more data of everything or just collect more data of a specific type where our error analysis tells we we want to improve the performance of our learning algorithm. 
+### Step 2: Collect the data
 
-For example, once when working on speech I realized that my model was doing particularly poorly when there was car noise in the background. That sounded like someone was speaking in a car. My speech system perform poorly decided to get more data, actually using data augmentation to get more speech data that sounds like it was a car in order to improve the performance of my learning algorithm. 
+![](2024-02-06-18-35-07.png)
 
-we go around this loop a few times, train the model, error analysis, go back to collect more data, maybe do this for a while until eventually we say the model is good enough to then deploy in a production environment. What that means is we make it available for users to use. When we deploy a system we have to also make sure that we continue to monitor the performance of the system and to maintain the system in case the performance gets worse to bring us performance back up instead of just hosting our machine learning model on a server. 
+Decide what data we need to train our machine learning system and go and do the work to get the audio and get the transcripts of the labels for our dataset. 
 
-I'll say a little bit more about why we need to maintain these machine learning systems on the next slide. But after this deployment, sometimes we realize that is not working as well as we hoped and we go back to train the model to improve it again or even go back and get more data. In fact, if users and if we have permission to use data from our production deployment, sometimes that data from our working speech system can give we access to even more data with which to keep on improving the performance of our system. 
+### Step 3: train the model
 
-Now, I think we have a sense of what scoping a project means and we've talked a bunch about collecting data and training models in this course. But let me share with we a little bit more detail about what deploying in production might look like. After we've trained a high performing machine learning model, say a speech recognition model, a common way to deploy the model would be to take our machine learning model and implement it in a server, which we're going to call an inference server, whose job it is to call our machine learning model, our trained model, in order to make predictions. 
+![](2024-02-06-18-35-44.png)
 
-Then if our team has implemented a mobile app, say a search application, then when a user talks to the mobile app, the mobile app can then make an API call to pass to our inference server the audio clip that was recorded and the inference server's job is supply the machine learning model to it and then return to it the prediction of our model, which in this case would be the text transcripts of what was said. This would be a common way of implementing an application that calls via the API and inference server that has our model repeatedly make predictions based on the input, x. This were common pattern where depend on the application does implemented. 
+Here we would train a speech recognition system and carry out bias-variance analyisis, as well as error analysis and iteratively improve our model.  It's common that, after we started training the model, error analysis or bias-variance analysis tells us that we might want to go back to collect more data. 
 
-we have an API call to give our learning algorithm the input, x, and our machine learning model within output to prediction, say y hat. To implement this some software engineering may be needed to write all the code that does all of these things. Depending on whether our application needs to serve just a few handful of users or millions of users the amounts of software engineer needed can be quite different. 
+We'd go around this loop a few times, train the model, error analysis, go back to collect more data, maybe do this for a while until eventually we say the model is good enough to then deploy in a production environment. 
 
-I've build software that serve just a handful of users on my laptop and I've also built software that serves hundreds of millions of users requiring significant data center resources. Depending on scale application needed, software engineering may be needed to make sure that our inference server is able to make reliable and efficient predictions hopefully not too high of computational cost. Software engineering may be needed to manage scaling to a large number of users. 
+![](2024-02-06-18-37-27.png)
 
-we often want to log the data we're getting both the inputs, x, as well as the predictions, y hat, assuming that user privacy and consent allows we to store this data. This data, if we can access to it, is also very useful for system monitoring. For example, I once built a speech recognition system on a certain dataset that I had but when there were new celebrities that suddenly became well-known or elections cause new politicians to become elected and people will search for these new names that were not in the training set and then my system did poorly on. 
+### Step 4: Deploy to production
 
-It was because we were monitoring the system allowed us to figure out when the data was shifting and the algorithm was becoming less accurate. This allowed us to retrain the model and then to carry out a model update to replace the old model with a new one. The deployment process can require some amounts of software engineering. 
+![](2024-02-06-18-37-57.png)
 
-For some applications, if we're just running it on a laptop or on a one or two servers, maybe not that much software engineering is needed. Depending on the team we're working on, it is possible that we built the machine learning model but there could be a different team responsible for deploying it. But there is a growing field in machine learning called MLOps. 
+We make our model available for users to use. When we deploy a system we have to also make sure that we continue to monitor the performance of the system and to maintain the system in case the performance gets worse, so that we can bring performance back up.
 
-This stands for Machine Learning Operations. This refers to the practice of how to systematically build and deploy and maintain machine learning systems. To do all of these things to make sure that our machine learning model is reliable, scales well, has good laws, is monitored, and then we have the opportunity to make updates to the model as appropriate to keep it running well. 
+After this deployment, sometimes we realize that the model is not working as well as we hoped, so we go back to train the model to improve it again or even go back and get more data. In fact, if we have permission to use data from our production deployment, sometimes that data from our working speech system can give us access to even more data with which we can keep on improving the performance of our system. 
 
-For example, if we are deploying our system to millions of people we may want to make sure we have a highly optimized implementations so that the compute cost of serving millions of people is not too expensive. In this and the last class I spent a lot of time talking about how to train a machine learning model and got this absolutely the critical piece to making sure we have a high performance system. If we ever have to deploy system to millions of people, these are some additional steps that we probably have to address. 
+![](2024-02-06-18-39-52.png)
 
-Think about the [inaudible] at that point as well. Before moving on from the topic of the machine learning development process, there's one more set of ideas that I want to share with we that relates to the ethics of building machine learning systems. This is a crucial topic for many applications so let's take a look at this in the next section. 
+Let's see more detail about **what deploying in production looks like**:
+
+After we've trained a high performing machine learning model, say a speech recognition model, a common way to deploy the model would be to take our machine learning model and implement it in a server, which we  call an inference server, whose job it is to host our machine learning model, our trained model, and call it in order to make predictions.
+
+![](2024-02-06-18-41-26.png)
+
+Then if our team has implemented a mobile app, like a search application, then when a user talks to the mobile app, the mobile app can then make an API call to pass to our inference server the audio clip that was recorded and the inference server's job is supply the machine learning model to it and then return to it the prediction of our model, which in this case would be the text transcripts
+
+![](2024-02-06-18-41-53.png)
+
+To implement this, some **software engineering may be needed to write all the code that does all of these things.** Depending on whether our application needs to serve just a few handful of users or millions of users the amounts of software engineer needed can be quite different. 
+
+Depending on scale application needed, software engineering may be needed to make sure that our inference server is able:
+
+1. **to make reliable and efficient predictions** at a hopefully not too high of computational cost. 
+2. **to scale to a large number of users**
+3. **to log the data we're getting as inputs and predictions** (when allowed)
+4. **to perform system monitoring**
+5. **to perform model updates**, i.e. replace an old model with a new one
+
+Depending on the team we're working on, it is possible that we built the machine learning model but there could be a different team responsible for deploying it. 
+
+**There is a growing field in machine learning called MLOps**, that stands for Machine Learning Operations and refers to the practice of **how to systematically build and deploy and maintain machine learning systems.**
+
+![](2024-02-06-18-47-46.png)
 
 ## Fairness, bias and ethics
 
