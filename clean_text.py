@@ -25,13 +25,13 @@ def process_md_file(file_path):
     content = re.sub(r'\b([wbWB])\^(\d+)\b', lambda match: f"${match.group(1).lower()}^{match.group(2)}$", content)
 
     # Use regex to replace standalone "w"
-    content = re.sub(r'\s+(w)\s+', r'$\1$', content)
+    content = re.sub(r'\s+(w)\s+', r' $\1$ ', content)
     # Use regex to replace standalone "b"
-    content = re.sub(r'\s+(b)\s+', r'$\1$', content)
+    content = re.sub(r'\s+(b)\s+', r' $\1$ ', content)
     # Use regex to replace standalone "x"
-    content = re.sub(r'\s+(x)\s+', r'$\1$', content)
+    content = re.sub(r'\s+(x)\s+', r' $\1$ ', content)
     # Use regex to replace standalone "y"
-    content = re.sub(r'\s+(y)\s+', r'$\1$', content)
+    content = re.sub(r'\s+(y)\s+', r' $\1$ ', content)
 
 
     # Replace tensor flow' with 'Tensorflow'
