@@ -77,43 +77,88 @@ In practice, if an algorithm doesn't predict even a single positive, we just say
 
 ## Trading off precision and recall
 
-In the ideal case, we like for learning algorithms that have high precision and high recall. High precision would mean that if a diagnosis of patients have that rare disease, probably the patient does have it and it's an accurate diagnosis. 
+In the ideal case, we would for learning algorithms that have high precision and high recall. 
 
-High recall means that if there's a patient with that rare disease, probably the algorithm will correctly identify that they do have that disease. But that in practice there's often a trade-off between precision and recall. In this section, we'll take a look at that trade-off and how we can pick a good point along that trade-off. 
+- High precision would mean that if a diagnosis of patients have that rare disease, probably the patient does have it and it's an accurate diagnosis. 
+- High recall means that if there's a patient with that rare disease, probably the algorithm will correctly identify that they do have that disease. 
 
-Here are the definitions from the last section on precision and recall, I'll just write them here. Well, we recall precision is the number of true positives divided by the total number that was predicted positive, and recall is the number of true positives divided by the total actual number of positives. If we're using logistic regression to make predictions, then the logistic regression model will output numbers between 0 and 1. 
+But in practice, there's **a trade-off between precision and recall.** 
 
-We would typically threshold the output of logistic regression at 0.5 and predict 1 if f of $x$ is greater than equal to 0.5 and predict 0 if it's less than 0.5. But suppose we want to predict that $y$ is equal to 1. That is, the rare disease is present only if we're very confident. 
+Remember that precision and recall are: 
 
-If our philosophy is, whenever we predict that the patient has a disease, we may have to send them for possibly invasive and expensive treatment. If the consequences of the disease aren't that bad, even if left not treated aggressively, then we may want to predict $y$ equals 1 only if we're very confident. In that case, we may choose to set a higher threshold where we will predict $y$ is 1 only if f of $x$ is greater than or equal to 0.7, so this is saying we'll predict $y$ equals 1 only we're at least 70% sure, rather than just 50% sure and so this number also becomes 0.7. 
+$$ \text{Precision} = \frac{\text{True positives}}{\text{True positives}+\text{False positives}}$$
 
-Notice that these two numbers have to be the same because it's just depending on whether it's greater than or equal to or less than this number that we predict 1 or 0. By raising this threshold, we predict $y$ equals 1 only if we're pretty confident and what that means is that precision will increase because whenever we predict one, we're more likely to be right so raising the thresholds will result in higher precision, but it also results in lower recall because we're now predicting one less often and so of the total number of patients with the disease, we're going to correctly diagnose fewer of them. By raising this threshold to 0.7, we end up with higher precision, but lower recall. 
+$$ \text{Recall} = \frac{\text{True positives}}{\text{True positives}+\text{False negatives}}$$
 
-In fact, if we want to predict $y$ equals 1 only if we are very confident, we can even raise this higher to 0.9 and that results in an even higher precision and so whenever we predict the patient has the disease, we're probably right and this will give we a very high precision. The recall will go even further down. On the flip side, suppose we want to avoid missing too many cases of the rare disease, so if what we want is when in doubt, predict $y$ equals 1, this might be the case where if treatment is not too invasive or painful or expensive but leaving a disease untreated has much worse consequences for the patient. 
+If we're using logistic regression to make predictions, then the logistic regression model will output numbers between 0 and 1. We have, till now, typically threshold the output of logistic regression at $0.5$ and predicted 1 if $f(x)$ is greater than or equal to 0.5 and predict 0 if it's less than 0.5. 
 
-In that case, we might say, when in doubt in the interests of safety let's just predict that they have it and consider them for treatment because untreated cases could be quite bad. If for our application, that is the better way to make decisions, then we would take this threshold instead lower it, say, set it to 0.3. In that case, we predict one so long as we think there's maybe a 30% chance or better of the disease being present and we predict zero only if we're pretty sure that the disease is absent. 
 
-As we can imagine, the impact on precision and recall will be opposite to what we saw up here, and lowering this threshold will result in lower precision because we're now looser, we're more willing to predict one even if we aren't sure but to result in higher recall, because of all the patients that do have that disease, we're probably going to correctly identify more of them. More generally, we have the flexibility to predict one only if f is above some threshold and by choosing this threshold, we can make different trade-offs between precision and recall. that for most learning algorithms, there is a trade-off between precision and recall. 
+But suppose **we want to predict that $y$ is equal to 1, that is, that the rare disease is present only if we're very confident**. 
 
-Precision and recall both go between zero and one and if we were to set a very high threshold, say a threshold of 0.99, then we enter with very high precision, but lower recall and as we reduce the value of this threshold, we then end up with a curve that trades off precision and recall until eventually, if we have a very low threshold, so the threshold equals 0.01, then we end up with very low precision but relatively high recall. Sometimes by plotting this curve, we can then try to pick a threshold which corresponds to picking a point on this curve. The balances, the cost of false positives and false negatives or the balances, the benefits of high precision and high recall. 
+This might be the case in which we know that we predict a patient to have the disease, we may have to send them for possibly invasive and expensive treatment. If the consequences of the disease aren't that bad, even if left not treated, then we may want to predict $y$ equals 1 only if we're very confident.
 
-Plotting precision and recall for different values of the threshold allows we to pick a point that we want. Notice that picking the threshold is not something we can really do with cross-validation because it's up to we to specify the best points. For many applications, manually picking the threshold to trade-off precision and recall will be what we end up doing. 
- that if we want to automatically trade-off precision and recall rather than have to do so yourself, there is another metric called the F1 score that is sometimes used to automatically combine precision recall to help we pick the best value or the best trade-off between the two. One challenge with precision recall is we're now evaluating our algorithms using two different metrics, so if we've trained three different algorithms and the precision-recall numbers look like this, is not that obvious how to pick which algorithm to use. If there was an algorithm that's better on precision and better on recall, then we probably want to go with that one. 
+![](2024-02-09-15-53-23.png)
 
-But in this example, Algorithm 2 has the highest precision, but Algorithm 3 has the highest recall, and Algorithm 1 trades off the two in-between, and so no one algorithm is obviously the best choice. In order to help we decide which algorithm to pick, it may be useful to find a way to combine precision and recall into a single score, so we can just look at which algorithm has the highest score and maybe go with that one. One way we could combine precision and recall is to take the average, this turns out not to be a good way, so I don't really recommend this. 
+In that case, we may choose to set a higher threshold, where we will predict that $y$ is 1 only if $f(x)$ is greater than or equal to, for example, $0.7$. This is saying we'll predict $y$ equals 1 only we're at least 70% sure, rather than just 50% sure.
 
-But if we were to take the average, we get 0.45, 0.4, and 0.5. But that computing the average and picking the algorithm with the highest average between precision and recall doesn't work that well because this algorithm has very low precision, and in fact, this corresponds maybe to an algorithm that actually does print $y$ equals 1 and diagnosis all patients as having the disease, that's why recall is perfect but the precision is really low. Algorithm 3 is actually not a particularly useful algorithm, even though the average between precision and recall is quite high. 
+**By raising this threshold**, we predict $y$ equals 1 only if we're pretty confident. What that means is that **precision will increase** because whenever we predict one, we're more likely to be right .
 
-Let's not use the average between precision and recall. Instead, the most common way of combining precision recall is a compute something called the F1 score, and the F1 score is a way of combining P and R precision and recall but that gives more emphasis to whichever of these values is lower. Because if an algorithm has very low precision or very low recall is pretty not that useful. 
+But: it also **results in lower recall because we're now predicting the disease less often: this means that, from the total number of patients with the disease, we're going to correctly diagnose fewer of them.** 
 
-The F1 score is a way of computing an average of sorts that pays more attention to whichever is lower. The formula for computing F1 score is this, we're going to compute one over P and one over R, and average them, and then take the inverse of that. Rather than averaging P and R precision recall we're going to average one over P and one over R, and then take one over that. 
+By raising this threshold to 0.7, **we end up with higher precision, but lower recall.**
 
-If we simplify this equation it can also be computed as follows. But by averaging one over P and one over R this gives a much greater emphasis to if either P or R turns out to be very small. If we were to compute the F1 score for these three algorithms, we'll find that the F1 score for Algorithm 1 is 0.444, and for the second algorithm is 0.175. 
+In fact, if we want to predict $y$ equals 1 only if we are very confident, we can even raise this higher to 0.9 and that results in an even higher precision and so whenever we predict the patient has the disease, we're probably right and this will give we a very high precision. The recall will go even further down. 
 
-we notice that 0.175 is much closer to the lower value than the higher value and for the third algorithm is 0.0392. F1 score gives away to trade-off precision and recall, and in this case, it will tell us that maybe the first algorithm is better than the second or the third algorithms. By the way, in math, this equation is also called the harmonic mean of P and R, and the harmonic mean is a way of taking an average that emphasizes the smaller values more. 
+---
+**On the contrary, suppose we want to avoid missing too many cases of the rare disease**. So, when in doubt, predict $y$ equals 1. This might be the case where if treatment is not too invasive or painful or expensive but leaving a disease untreated has much worse consequences for the patient. 
 
-But for the purposes of this class, we don't need to worry about that terminology of the harmonic mean. Congratulations on getting to the last section of this week and thank we also for sticking with me through these two optional sections. In this week, we've learned a lot of practical tips, practical advice for how to build a machine learning system, and by applying these ideas, I think we'd be very effective at building machine learning algorithms. 
+If for our application, that is the better way to make decisions, then we would instead **lower threshold**. For example, set it to 0.3. **In that case, we predict one so long as we think there's maybe a 30% chance or better of the disease being present and we predict zero only if we're pretty sure that the disease is absent.**
 
-Next week, we'll come back to talk about another very powerful machine learning algorithm. In fact, of the advanced techniques that why we use in many commercial production settings, I think at the top of the list would be neural networks and decision trees. Next week we'll talk about decision trees, which I think will be another very powerful technique that we're going to use to build many successful applications as well. 
+As we can imagine, the impact on precision and recall will be opposite to what we saw before: lowering this threshold will result in **lower precision** (we're more willing to predict a disease even if we aren't sure) but to result in **higher recall** (because of all the patients that do have that disease, we're probably going to correctly identify more of them). 
 
-I look forward to seeing we next week.
+![](2024-02-09-16-01-52.png)
+
+More generally, we have the flexibility to predict one only if $f(x)$ is above some threshold. And by choosing this threshold, we can make different trade-offs between precision and recall. 
+
+For most algorithms, there is a trade-off between precision and recall: Precision and recall both go between zero and one. 
+
+![](2024-02-09-16-03-38.png)
+
+Ff we were to set a very high threshold, (a threshold of 0.99), then we enter with very high precision, but lower recall. As we reduce the value of this threshold, we then end up with a curve that trades off precision and recall until eventually, if we have a very low threshold, (threshold of 0.01) and  we end up with very low precision but relatively high recall. 
+
+![](2024-02-09-16-05-21.png)
+
+By plotting this curve, we can  try to pick a threshold which corresponds to picking a point on this curve that balances the cost of false positives and false negatives; or that balances the benefits of high precision and high recall. 
+
+Notice that **picking the threshold** is not something we can really do with cross-validation because **it's up to the creator of the model to manually define the threshold that fits their use case.**
+
+---
+However, **if we want to automatically trade-off precision and recall** rather than have to do so yourself, there is another metric called the **F1 score** that is **used to automatically combine precision and recall, to help uswe pick the best value or the best trade-off between the two.** 
+
+One challenge with precision/recall is that we evaluating our algorithms using two different metrics: 
+
+![](2024-02-09-16-15-26.png)
+
+Ff we've trained three different algorithms and the precision-recall numbers look like the ones in the table above, it is not that obvious how to pick which algorithm to use. 
+
+In this example, **Algorithm 2 has the highest precision**, but **Algorithm 3 has the highest recall**, and **Algorithm 1 trades off the two in-between, and so no one algorithm is obviously the best choice**. 
+
+In order to help we decide which algorithm to pick, it may be useful to find a way to combine precision and recall into a single score.
+
+If we were to take the average, we get $0.45$, $0.4$, and $0.5$. But picking the algorithm with the highest average between precision and recall doesn't work that well: in this case, **Algorithm 3** has the highst average, but also has very low precision. In fact, this corresponds maybe to an algorithm that actually does print $y$ equals 1 for all cases, diagnosing all patients as having the disease. And that would explain why recall is perfect but the precision is really low. So, **Algorithm 3** is actually not a particularly useful algorithm, even though the average between precision and recall is quite high.
+
+![](2024-02-09-16-19-58.png)
+
+Instead, **the most common way of combining precision recall is using the F1 score**. It is a way of combining P and R, precision and recall, but that **gives more emphasis to whichever of these values is lower**, because, if an algorithm has very low precision or very low recall it is simply not that useful. 
+
+The formula for computing F1 score is:
+
+$$ F_1 \text{score} = \frac{1}{\frac{1}{2}(\frac{1}{P}+\frac{1}{R})} $$
+
+If we simplify this equation it can also be computed as follows:
+
+$$ F_1 \text{score} = 2\frac{PR}{P+R} $$
+
+If we were to compute the $F_1$ score for these three algorithms, we'll find that, for Algorithm 1 it is 0.444, and for the second algorithm is 0.175, (notice that 0.175 is much closer to the lower value than the higher value) and for the third algorithm is 0.0392.
+
+F1 score gives away to trade-off precision and recall, and in this case, **it tells us that maybe the first algorithm is better than the second or the third algorithms.** In math, this equation is also called the **harmonic mean of P and R**, and the harmonic mean is a way of taking an average that emphasizes the smaller values more. 
