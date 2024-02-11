@@ -57,7 +57,7 @@ $$ a = max(0,z) \quad\quad\text { ReLU function} $$
 plt_act_trio()
 ```
 
-![](2024-01-28-19-06-12.png)
+![](./img/2024-01-28-19-06-12.png)
 
 The example from the lecture below shows an application of the ReLU. In this example, the derived "awareness" feature is not binary but has a continuous range of values. The sigmoid is best for on/off or binary situations. The ReLU provides a continuous linear relationship. Additionally it has an 'off' range where the output is zero.  
 <img src="./images/C2_W2_ReLu.png"     style=" width:900px; padding: 10px 20px; " >
@@ -131,9 +131,9 @@ test_my_softmax(my_softmax)
 
 Below, vary the values of the `z` inputs. Note in particular how the exponential in the numerator magnifies small differences in the values. Note as well that the output values sum to one:
 
-![](2024-01-28-19-37-55.png)
+![](./img/2024-01-28-19-37-55.png)
 
-![](2024-01-28-19-38-03.png)
+![](./img/2024-01-28-19-38-03.png)
 
 
 <a name="4"></a>
@@ -302,7 +302,7 @@ for i,ax in enumerate(axes.flat):
     fig.suptitle("Label, image", fontsize=14)
 ```
 
-![](2024-01-28-19-42-19.png)
+![](./img/2024-01-28-19-42-19.png)
 
 <a name="4.3"></a>
 ### 4.3 Model representation
@@ -527,7 +527,7 @@ In course 1, we learned to track the progress of gradient descent by monitoring 
 plot_loss_tf(history)
 ```
 
-![](2024-01-28-19-53-03.png)
+![](./img/2024-01-28-19-53-03.png)
 
 #### Prediction 
 To make a prediction, use Keras `predict`. Below, X[1015] contains an image of a two.
@@ -601,7 +601,7 @@ for i,ax in enumerate(axes.flat):
 fig.suptitle("Label, yhat", fontsize=14)
 plt.show()
 ```
-![](2024-01-28-19-55-27.png)
+![](./img/2024-01-28-19-55-27.png)
 
 
 Let's look at some of the errors. 
@@ -610,7 +610,7 @@ Let's look at some of the errors.
 ```py
 print( f"{display_errors(model,X,y)} errors out of {len(X)} images")
 ```
-![](2024-01-28-19-55-56.png)
+![](./img/2024-01-28-19-55-56.png)
 
 ### Congratulations!
 You have successfully built and utilized a neural network to do multiclass classification.

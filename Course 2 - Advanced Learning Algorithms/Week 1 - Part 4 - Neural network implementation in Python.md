@@ -10,7 +10,7 @@ And let's look at how we would take an input feature vector $\mathbf{\vec{x}}$, 
 
  In this python implementation, we're going to use 1D arrays to represent all of these vectors and parameters, which is why we're going to use single square brackets here:
 
- ![](2024-01-19-14-09-29.png)
+ ![](./img/2024-01-19-14-09-29.png)
 
 `np.array([200, 17])` is a 1D array in python rather than a 2D matrix, which is what we had when we had double square brackets. 
 
@@ -42,7 +42,7 @@ z1_1 = np.dot(w1_1, x) + b1_1
 a1_1 = sigmoid(z_1)
  ```
 
-![](2024-01-19-14-25-04.png)
+![](./img/2024-01-19-14-25-04.png)
 
 And we can calculate similarly $\mathbf{{a_2}^{[1]}}$ and $\mathbf{{a_3}^{[1]}}$, the two remaining scalar numbers of the activation vector $\mathbf{\vec{a}^{[1]}}$:
 
@@ -67,7 +67,7 @@ And we create our final activation vector `a1`:
 a1 = np.array([a1_1, a1_2, a1_3])
 ```
 
-![](2024-01-19-14-29-45.png)
+![](./img/2024-01-19-14-29-45.png)
 
 So now we've computed $\mathbf{\vec{a}^{[1]}}$, let's implement the second layer as well, to compute the output $\mathbf{\vec{a}^{[2]}}$:
 
@@ -217,7 +217,7 @@ Let's plot the coffee roasting data below. The two features are Temperature in C
 plt_roast(X,Y)
 ```
 
-![](2024-01-19-23-56-44.png)
+![](./img/2024-01-19-23-56-44.png)
 
 ### Normalize Data
 To match the previous lab, we'll normalize the data. Refer to that lab for more details:
@@ -242,7 +242,7 @@ Let's build the "Coffee Roasting Network" described in lecture. There are two la
 
 As described in the previous lecture, it is possible to build your own dense layer using NumPy. This can then be utilized to build a multi-layer neural network.
 
-![](2024-01-20-00-00-22.png)
+![](./img/2024-01-20-00-00-22.png)
 
 In the first optional lab, you constructed a neuron in NumPy and in Tensorflow and noted their similarity. A layer simply contains multiple neurons/units. As described in the lecture, one can utilize a `for`-loop to visit each unit (`j`) in the layer and perform the dot product of the weights for that unit (`W[:,j]`) and sum the bias for the unit (`b[j]`) to form `z`. An activation function `g(z)` can then be applied to that result. Let's try that below to build a "dense layer" subroutine.
 
@@ -358,4 +358,4 @@ netf= lambda x : my_predict(norm_l(x),W1_tmp, b1_tmp, W2_tmp, b2_tmp)
 plt_network(X,Y,netf)
 ```
 
-![](2024-01-20-00-13-43.png)
+![](./img/2024-01-20-00-13-43.png)

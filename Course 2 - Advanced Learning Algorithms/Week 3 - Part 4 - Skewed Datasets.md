@@ -13,7 +13,7 @@ Suppose we find that we've achieved 1% error on the test set, so we have a 99% c
 
 Specifically, if it is a rare disease and if only 0.5% of the patients in our population have the disease, then even an "algorithm" that just classified all patients as not having the disease would perform better.
 
-![](2024-02-09-00-25-35.png)
+![](./img/2024-02-09-00-25-35.png)
 
 So this really means is that **we can't tell if getting 1% error is actually a good result or a bad result**. 
 
@@ -23,7 +23,7 @@ Why? Because if we have an algorithm that achieves 0.5% error and a different on
 
 Quite possibly an algorithm that has 1% error, but that at least diagnosis some patients as having the disease could be more useful than just printing $y$ equals 0 all the time. 
 
-![](2024-02-09-00-28-24.png)
+![](./img/2024-02-09-00-28-24.png)
 
 When working on problems with **skewed data sets, we usually use a different error metric** rather than just classification error to figure out how well our learning algorithm is doing. A common pair of error metrics are **precision** and **recall**.
 
@@ -41,7 +41,7 @@ And we will thus have four grid cells:
 - **False positive**: where the predicted class was 1 and the actual class was 0.
 - **True negative**: where the predicted class was 0 and the actual class was 0.
 
-![](2024-02-09-00-35-13.png)
+![](./img/2024-02-09-00-35-13.png)
 
 Assigning our datapoints from our cross-validation or test sets into each of this quadrants, we can then calculate **precision** and **recall**:
 
@@ -97,7 +97,7 @@ But suppose **we want to predict that $y$ is equal to 1, that is, that the rare 
 
 This might be the case in which we know that we predict a patient to have the disease, we may have to send them for possibly invasive and expensive treatment. If the consequences of the disease aren't that bad, even if left not treated, then we may want to predict $y$ equals 1 only if we're very confident.
 
-![](2024-02-09-15-53-23.png)
+![](./img/2024-02-09-15-53-23.png)
 
 In that case, we may choose to set a higher threshold, where we will predict that $y$ is 1 only if $f(x)$ is greater than or equal to, for example, $0.7$. This is saying we'll predict $y$ equals 1 only we're at least 70% sure, rather than just 50% sure.
 
@@ -116,17 +116,17 @@ If for our application, that is the better way to make decisions, then we would 
 
 As we can imagine, the impact on precision and recall will be opposite to what we saw before: lowering this threshold will result in **lower precision** (we're more willing to predict a disease even if we aren't sure) but to result in **higher recall** (because of all the patients that do have that disease, we're probably going to correctly identify more of them). 
 
-![](2024-02-09-16-01-52.png)
+![](./img/2024-02-09-16-01-52.png)
 
 More generally, we have the flexibility to predict one only if $f(x)$ is above some threshold. And by choosing this threshold, we can make different trade-offs between precision and recall. 
 
 For most algorithms, there is a trade-off between precision and recall: Precision and recall both go between zero and one. 
 
-![](2024-02-09-16-03-38.png)
+![](./img/2024-02-09-16-03-38.png)
 
 Ff we were to set a very high threshold, (a threshold of 0.99), then we enter with very high precision, but lower recall. As we reduce the value of this threshold, we then end up with a curve that trades off precision and recall until eventually, if we have a very low threshold, (threshold of 0.01) and  we end up with very low precision but relatively high recall. 
 
-![](2024-02-09-16-05-21.png)
+![](./img/2024-02-09-16-05-21.png)
 
 By plotting this curve, we can  try to pick a threshold which corresponds to picking a point on this curve that balances the cost of false positives and false negatives; or that balances the benefits of high precision and high recall. 
 
@@ -137,7 +137,7 @@ However, **if we want to automatically trade-off precision and recall** rather t
 
 One challenge with precision/recall is that we evaluating our algorithms using two different metrics: 
 
-![](2024-02-09-16-15-26.png)
+![](./img/2024-02-09-16-15-26.png)
 
 Ff we've trained three different algorithms and the precision-recall numbers look like the ones in the table above, it is not that obvious how to pick which algorithm to use. 
 
@@ -147,7 +147,7 @@ In order to help we decide which algorithm to pick, it may be useful to find a w
 
 If we were to take the average, we get $0.45$, $0.4$, and $0.5$. But picking the algorithm with the highest average between precision and recall doesn't work that well: in this case, **Algorithm 3** has the highst average, but also has very low precision. In fact, this corresponds maybe to an algorithm that actually does print $y$ equals 1 for all cases, diagnosing all patients as having the disease. And that would explain why recall is perfect but the precision is really low. So, **Algorithm 3** is actually not a particularly useful algorithm, even though the average between precision and recall is quite high.
 
-![](2024-02-09-16-19-58.png)
+![](./img/2024-02-09-16-19-58.png)
 
 Instead, **the most common way of combining precision recall is using the F1 score**. It is a way of combining P and R, precision and recall, but that **gives more emphasis to whichever of these values is lower**, because, if an algorithm has very low precision or very low recall it is simply not that useful. 
 

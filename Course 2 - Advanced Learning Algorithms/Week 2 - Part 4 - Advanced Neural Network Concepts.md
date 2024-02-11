@@ -10,14 +10,14 @@ Recall that this is the expression for one step of gradient descent. A parameter
 
 How can we make this work even better? In this example, we've plotted the cost function $J$ using a contour plot comprising these ellipsis, and the minimum of this cost function is at the center of the ellipsis. 
 
-![](2024-01-28-18-29-33.png)
+![](./img/2024-01-28-18-29-33.png)
 
 Now, if we were to start gradient descent in this example, one step of gradient descent, if $\alpha$ is small, may take we a little step in one direction, then another step, then another step, then another step, and we notice that every single step of gradient descent is pretty much going in the same direction.
 
 
 So we might ask ourselves: why don't we make $\alpha$ bigger? Can we have an algorithm to automatically increase $\alpha$?, to make it take bigger steps and get to the minimum faster. **The algorithm called the Adam algorithm that can do that.**
 
-![](2024-01-28-18-32-01.png)
+![](./img/2024-01-28-18-32-01.png)
 
 If this Adam algorithm sees that the learning rate is too small, and we are just taking tiny little steps in a similar direction over and over, we should just make the learning rate $\alpha$ bigger. 
 
@@ -25,7 +25,7 @@ And on the contrary, if if we see gradient descent oscillating back and forth, "
 
 Depending on how gradient descent is proceeding, sometimes we wish we had a bigger learning rate $\alpha$, and sometimes we wish we had a smaller learning rate $\alpha$. The Adam algorithm can adjust the learning rate automatically.
 
-![](2024-01-28-18-34-25.png)
+![](./img/2024-01-28-18-34-25.png)
 
 
 **Adam stands for Adaptive Moment Estimation**.
@@ -34,9 +34,9 @@ But interestingly, the **Adam algorithm doesn't use a single global learning rat
 
 If we have parameters $w_1$ through $w_10$, as well as $b$, then it actually has 11 learning rate parameters: $\alpha_1$, $\alpha_2$, all the way through $\alpha_10$ for $w_1$ to $w_10$, as well as $\alpha_11$ for the parameter b. 
 
-![](2024-01-28-18-36-15.png)
+![](./img/2024-01-28-18-36-15.png)
 
-![](2024-01-28-18-36-39.png)
+![](./img/2024-01-28-18-36-39.png)
 
 In our **code** we implement it so. The model is exactly the same as before, and the way we compile the model is very similar to what we had before, except that we now add one extra argument to the `compile` function:
 ```py
@@ -71,17 +71,17 @@ And it turns out that just using the `Dense` layer type, we can actually build s
 
 Let's recap: in the `Dense` layer that we've been using, **the activation of a neuron** is a function of every single activation value from the previous layer of a one:
 
-![](2024-01-28-18-42-12.png)
+![](./img/2024-01-28-18-42-12.png)
 
 One other layer type that we may see in some work is called a **convolutional layer**. 
 
 Let's see this with an example with the input `X`, which is a handwritten digit nine. And what we're going to do is construct a hidden layer which will compute different activations as functions of this input image `X`. 
 
-![](2024-01-28-18-44-33.png)
+![](./img/2024-01-28-18-44-33.png)
 
 But here's something I can do: for the first hidden unit, which is shown in blue, rather looking at all the pixels in this image, this neuron can only look at the pixels one rectangular region. The econd neuron, which we're going to illustrate in magenta, is also not going to look at the entire input image `X`; instead, it's only going to look at the pixels in a limited region of the image. And so on for the rest of the neurons of this convolutional layer:
 
-![](2024-01-28-18-45-45.png)
+![](./img/2024-01-28-18-45-45.png)
 
 So why might we want to do this? Why won't we let every neuron look at all the pixels but instead look at only some of the pixels? There reasons:
 
@@ -96,23 +96,23 @@ We're going to use a one dimensional input and the motivating example we're goin
 
 An EKG can be interprested just a list of numbers corresponding to the height of the surface at different points in time. So we may have say 100 numbers corresponding to the height of this curve at 100 different points of time. But we're going to rotate 90 degrees to lay it on the side in order to have  100 inputs, from $x_1$ to $x_{100}$.
 
-![](2024-01-28-18-55-30.png)
+![](./img/2024-01-28-18-55-30.png)
 
 When constructing the first hidden layer, instead of having the first hidden unit take as input all 100 numbers from the previous layer, we'll have it look only at $x_1$ to $x_{20}$, so that corresponds to looking at just a small window of this EKG signal:
 
-![](2024-01-28-18-56-49.png)
+![](./img/2024-01-28-18-56-49.png)
 
 The second neuron, seen in another colour takes $x_11$ to $x_{30}$, so looks at a different window. And the sane applies to all other neurons in this convolutional layer:
 
-![](2024-01-28-18-58-33.png)
+![](./img/2024-01-28-18-58-33.png)
 
 The next layer can also be a convolutional layer: each neuron will not look at all nine activations from the previous layer, but a subset previous layer:
 
-![](2024-01-28-18-59-53.png)
+![](./img/2024-01-28-18-59-53.png)
 
 Finally these activations $a_2$ gets input to **a sigmoid unit** that does look at all three of these values of **in order to make a binary classification regarding the presence or absence of heart disease**. 
 
-![](2024-01-28-19-00-49.png)
+![](./img/2024-01-28-19-00-49.png)
 
 With convolutional layers **we have many architecture choices such as how big is the window of inputs that a single neuron should look at and how many neurons should each layer have**. And by choosing those architectural parameters effectively, **we can build new versions of neural networks that can be even more effective than the dense layer for some application**s. 
 

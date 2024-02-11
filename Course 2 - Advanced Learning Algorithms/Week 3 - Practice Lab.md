@@ -88,7 +88,7 @@ ax.legend(loc='upper left')
 plt.show()
 ```
 
-![](2024-02-09-17-17-51.png)
+![](./img/2024-02-09-17-17-51.png)
 
 <a name="2.2"></a>
 ### 2.2 Error calculation for model evaluation, linear regression
@@ -183,7 +183,7 @@ y_pred = lmodel.predict(x).reshape(-1,1)
 plt_train_test(X_train, y_train, X_test, y_test, x, y_pred, x_ideal, y_ideal, degree)
 ```
 
-![](2024-02-09-17-19-32.png)
+![](./img/2024-02-09-17-19-32.png)
 
 The test set error shows this model will not work well on new data. If you use the test error to guide improvements in the model, then the model will perform well on the test data... but the test data was meant to represent *new* data.
 You need yet another set of data to test new data performance.
@@ -241,7 +241,7 @@ ax.legend(loc='upper left')
 plt.show()
 ```
 
-![](2024-02-09-17-21-12.png)
+![](./img/2024-02-09-17-21-12.png)
 
 <a name="3.2"></a>
 ### 3.2 Finding the optimal degree
@@ -274,7 +274,7 @@ plt.close("all")
 plt_optimal_degree(X_train, y_train, X_cv, y_cv, x, y_pred, x_ideal, y_ideal, 
                    err_train, err_cv, optimal_degree, max_degree)
 ```
-![](2024-02-09-17-22-06.png)
+![](./img/2024-02-09-17-22-06.png)
 
 The plot above demonstrates that separating data into two groups, data the model is trained on and data the model has not been trained on, can be used to determine if the model is underfitting or overfitting. In our example, we created a variety of models varying from underfitting to overfitting by increasing the degree of the polynomial used. 
 - On the left plot, the solid lines represent the predictions from these models. A polynomial model with degree 1 produces a straight line that intersects very few data points, while the maximum degree hews very closely to every data point. 
@@ -317,7 +317,7 @@ plt.close("all")
 plt_tune_regularization(X_train, y_train, X_cv, y_cv, x, y_pred, err_train, err_cv, optimal_reg_idx, lambda_range)
 ```
 
-![](2024-02-09-17-22-38.png)
+![](./img/2024-02-09-17-22-38.png)
 
 Above, the plots show that as regularization increases, the model moves from a high variance (overfitting) model to a high bias (underfitting) model. The vertical line in the right plot shows the optimal value of lambda. In this example, the polynomial degree was set to 10. 
 
@@ -330,7 +330,7 @@ X_train, y_train, X_cv, y_cv, x, y_pred, err_train, err_cv, m_range,degree = tun
 plt_tune_m(X_train, y_train, X_cv, y_cv, x, y_pred, err_train, err_cv, m_range, degree)
 ```
 
-![](2024-02-09-17-27-48.png)
+![](./img/2024-02-09-17-27-48.png)
 
 The above plots show that when a model has high variance and is overfitting, adding more examples improves performance. Note the curves on the left plot. The final curve with the highest value of $m$ is a smooth curve that is in the center of the data. On the right, as the number of examples increases, the performance of the training set and cross-validation set converge to similar values. Note that the curves are not as smooth as one might see in a lecture. That is to be expected. The trend remains clear: more data improves generalization. 
 
@@ -359,7 +359,7 @@ print("X_train.shape:", X_train.shape, "X_cv.shape:", X_cv.shape, "X_test.shape:
 plt_train_eq_dist(X_train, y_train,classes, X_cv, y_cv, centers, std)
 ```
 
-![](2024-02-09-17-29-02.png)
+![](./img/2024-02-09-17-29-02.png)
 
 Above, you can see the data on the left. There are six clusters identified by color. Both training points (dots) and cross-validataion points (triangles) are shown. The interesting points are those that fall in ambiguous locations where either cluster might consider them members. What would you expect a neural network model to do? What would be an example of overfitting? underfitting? 
 
@@ -507,7 +507,7 @@ model_predict = lambda Xl: np.argmax(tf.nn.softmax(model.predict(Xl)).numpy(),ax
 plt_nn(model_predict,X_train,y_train, classes, X_cv, y_cv, suptitle="Complex Model")
 ```
 
-![](2024-02-09-17-31-15.png)
+![](./img/2024-02-09-17-31-15.png)
 
 This model has worked very hard to capture outliers of each category. As a result, it has miscategorized some of the cross-validation data. Let's calculate the classification error.
 
@@ -599,7 +599,7 @@ model_predict_s = lambda Xl: np.argmax(tf.nn.softmax(model_s.predict(Xl)).numpy(
 plt_nn(model_predict_s,X_train,y_train, classes, X_cv, y_cv, suptitle="Simple Model")
 ```
 
-![](2024-02-09-17-33-09.png)
+![](./img/2024-02-09-17-33-09.png)
 
 This simple models does pretty well. Let's calculate the classification error.
 
@@ -700,7 +700,7 @@ model_predict_r = lambda Xl: np.argmax(tf.nn.softmax(model_r.predict(Xl)).numpy(
 plt_nn(model_predict_r, X_train,y_train, classes, X_cv, y_cv, suptitle="Regularized")
 ```
 
-![](2024-02-09-17-34-54.png)
+![](./img/2024-02-09-17-34-54.png)
 
 The results look very similar to the 'ideal' model. Let's check classification error.
 
@@ -752,7 +752,7 @@ for i in range(len(lambdas)):
 plot_iterate(lambdas, models, X_train, y_train, X_cv, y_cv)
 ```
 
-![](2024-02-09-17-36-08.png)
+![](./img/2024-02-09-17-36-08.png)
 
 As regularization is increased, the performance of the model on the training and cross-validation data sets converge. For this data set and model, lambda > 0.01 seems to be a reasonable choice.
 
@@ -764,7 +764,7 @@ Let's try our optimized models on the test set and compare them to 'ideal' perfo
 plt_compare(X_test,y_test, classes, model_predict_s, model_predict_r, centers)
 ```
 
-![](2024-02-09-17-36-38.png)
+![](./img/2024-02-09-17-36-38.png)
 
 Our test set is small and seems to have a number of outliers so classification error is high. However, the performance of our optimized models is comparable to ideal performance.
 

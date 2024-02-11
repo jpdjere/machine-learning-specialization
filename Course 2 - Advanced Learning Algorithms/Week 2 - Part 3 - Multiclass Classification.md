@@ -8,7 +8,7 @@
 
 1. For the handwritten digit classification problems we've looked at so far, we were just trying to distinguish between the handwritten digits 0 and 1. But if we're trying to read protocols or zip codes in an envelope, well, there are actually 10 possible digits we might want to recognize. 
 
-![](2024-01-28-14-14-15.png)
+![](./img/2024-01-28-14-14-15.png)
 
 2. Alternatively in the first course we saw the example if we're trying to classify whether patients may have any of three or five different possible diseases. That too would be a multiclass classification problem.
 
@@ -20,19 +20,19 @@ So a **multiclass classification problem is still a classification problem**:
 
 So whereas previously for binary classification, we may have had a data set  with features $x_1$ and $x_2$. In that case,logistic regression would fit model to estimate what the probability of $y$ being $1$, given the features $x$ and $y$ would be $0$ or $1$.
 
-![](2024-01-28-14-18-00.png)
+![](./img/2024-01-28-14-18-00.png)
 
 With multiclass classification problems, we would instead have a data set were we have four classes where the zeroes represents one class, the crosses represent another class, the triangles represent the third class and the squares represent the fourth class:
 
-![](2024-01-28-14-19-06.png)
+![](./img/2024-01-28-14-19-06.png)
 
 And instead of just estimating the chance of $y$ being equal to $1$, now want to estimate what's the chance that $y$ is equal to `1`, `2`, `3` or `4`.
 
-![](2024-01-28-14-20-07.png)
+![](./img/2024-01-28-14-20-07.png)
 
 The algorithm we will see next can learn a decision boundary that divides the space $x1$ vs $x2$ next to into four categories rather than just two categories. 
 
-![](2024-01-28-14-21-39.png)
+![](./img/2024-01-28-14-21-39.png)
 
 ## Softmax
 
@@ -40,7 +40,7 @@ The **softmax regression algorithm is a generalization of logistic regression**,
 
 Recall that logistic regression applies when $y$ can take on two possible output values, either zero or one, and the way it computes this output is, we would first calculate $z = \mathbf{\vec{w}} \cdot \mathbf{\vec{x}} + b$, and then we would compute $a$, which equals $g(z)$, which is a sigmoid function applied to $z$. And we would interpret this as the logistic regression estimates of the probability of $y$ being equal to `1`` given those input features $x$.
 
-![](2024-01-28-14-32-32.png)
+![](./img/2024-01-28-14-32-32.png)
 
 $$ a = g(z) = \frac{1}{1+e^{-z}} = P(y = 1 | \mathbf{\vec{x}}) $$
 
@@ -58,7 +58,7 @@ To embellish logistic regression a little bit in order to set us up for the gene
 
 So $a_1$ and $a_2$, of course, have to add up to 1.
 
-![](2024-01-28-14-40-41.png)
+![](./img/2024-01-28-14-40-41.png)
 
 
 
@@ -91,7 +91,7 @@ $$
 
 Whereas before we wrote down the specification for the logistic regression model, these equations on the right are our specification for the softmax regression model. It has parameters $w_1$ through $w_4$, and $b_1$ through $b_4$, and if we can learn appropriate choices to all these parameters, then this gives we a way of predicting what's the chance of $y$ being 1, 2, 3 or 4, given a set of input features x. 
 
-![](2024-01-28-14-53-28.png)
+![](./img/2024-01-28-14-53-28.png)
 
 **Notice that all $a$ need to sum up to 1.**
 
@@ -122,11 +122,11 @@ Notice that by construction that this formula, if we add up $a_1$, $a_1$ all the
 
 Also, if we apply softmax regression with $n$ equals 2, so there are only two possible output classes then softmax regression ends up computing basically the same thing as logistic regression. The parameters end up being a little bit different, but it ends up reducing to logistic regression model.
 
-![](2024-01-28-15-08-17.png)
+![](./img/2024-01-28-15-08-17.png)
 
 **Let's now take a look at how to specify the cost function for softmax regression**. But first, let's recall how to calculate the loss and the cost function for logistic regression:
 
-![](2024-01-28-15-12-22.png)
+![](./img/2024-01-28-15-12-22.png)
 
 Now, **let's see the cost function that is conventionally use the softmax regression**. First, recall that these are the equations we use for softmax regression:
 
@@ -154,13 +154,13 @@ So basically, if $y = 1$, the loss is $-\log{a_1}$. And the same for all other v
 
 To illustrate what this is doing, if $y$ is equal to $$, then the loss is $-\log{a_j}$. This what this function looks like:
 
-![](2024-01-28-15-24-20.png)
+![](./img/2024-01-28-15-24-20.png)
 
 $-\log{a_j}$ is a curve where, if ${a_j}$ was very close to 1, the loss will be very small. But if it thought, say, ${a_j}$ had only a 50% chance then the loss gets a little bit bigger. And **the smaller ${a_j}$ is, the bigger the loss.** 
 
 This incentivizes the algorithm to make ${a_j}$ as large as possible, as close to 1 as possible. Because whatever the actual value $y$ was, we want the algorithm to say hopefully that the chance of $y$ being that value was pretty large.
 
-![](2024-01-28-15-26-21.png)
+![](./img/2024-01-28-15-26-21.png)
 
 Notice that in this loss function, **$y$ in each training example can take on only one value**. We end up computing this $-\log{a_j}$ only for one value of ${a_j}$, which is whatever was the actual value of $y$ equals $j$ in that particular training example. For example, if $y$ was equal to 2, we end up computing $-\log{a_2}$, but not any of the other terms.
 
@@ -170,11 +170,11 @@ In order **to build a neural network that can carry out multi class classificati
 
 Previously, when we were doing handwritten digit recognition with just two classes, we used a new neural network with an architecture of three hidden layers, with the output layer being just 1 neuron or unit:
 
-![](2024-01-28-15-37-38.png)
+![](./img/2024-01-28-15-37-38.png)
 
 If we now want to do handwritten digit classification with 10 classes, all the digits from zero to nine, then we're going to **change this neural network to have 10 output units nd this new output layer will be a Softmax output layer**. 
 
-![](2024-01-28-15-38-22.png)
+![](./img/2024-01-28-15-38-22.png)
 
 And the way forward propagation works in this neural network is:
 
@@ -203,11 +203,11 @@ z_{10}^{[3]} = \mathbf{\vec{w}}_{10}^{[3]} \cdot \mathbf{\vec{a}}^{[2]} + b_{10}
 \end{align*}
 $$
 
-![](2024-01-28-15-51-59.png)
+![](./img/2024-01-28-15-51-59.png)
 
 The Softmax layer, sometimes also called **the Softmax activation function** is a little bit unusual in one respect compared to the other activation functions we've seen so far, like sigma, radial and linear, because it is a function of function all other parameters in the layer: $a_1$ is not only a function of $z_1$, but of $z_1$, $z_2$, up to 10:
 
-![](2024-01-28-15-54-18.png)
+![](./img/2024-01-28-15-54-18.png)
 
 Let's look at how we would implement this in Tensorflow:
 
@@ -241,9 +241,9 @@ The implementation that we saw in the last video of a neural network with a soft
 
 Let's take a look at what can go wrong with that implementation and also how to make it better. Let's see two different ways of computing the same quantity in a computer:
 
-![](2024-01-28-16-32-21.png)
+![](./img/2024-01-28-16-32-21.png)
 
-![](2024-01-28-16-32-52.png)
+![](./img/2024-01-28-16-32-52.png)
 
 The second result looks a little off: **because the computer has only a finite amount of memory to store each number, called a floating-point number in this case, depending on how we decide to compute the value 2/10,000, the result can have more or less numerical round-off error**. 
 
@@ -251,11 +251,11 @@ While the way we have been computing the cost function for softmax is correct, t
 
 Let's first explain this in a little bit more detail using logistic regression:
 
-![](2024-01-28-16-35-17.png)
+![](./img/2024-01-28-16-35-17.png)
 
 For logistic regression, this works okay, and usually the numerical round-off errors aren't that bad. But, instead, we can enable TensorFlow to not have to compute $a$ as an intermediate term, simply by replacing the value of $a$ in the loss function:
 
-![](2024-01-28-16-36-57.png)
+![](./img/2024-01-28-16-36-57.png)
 
 We can tell TensorFlow to do this, and it will be able to rearrange terms in this expression and come up with a more numerically accurate way to compute the loss function. 
 
@@ -278,7 +278,7 @@ model.compile(loss=BinaryCrossEntropy(from_logits=True)) #added from_logits argu
 
 One downside of this code is it becomes a little bit less legible, but this causes TensorFlow to have a little bit less numerical roundoff error. 
 
-![](2024-01-28-16-43-04.png)
+![](./img/2024-01-28-16-43-04.png)
 
 Now in the case of logistic regression, either of these implementations actually works okay, but the numerical roundoff errors can get worse when it comes to softmax. 
 
@@ -288,7 +288,7 @@ Now let's take this idea and see how it applies to softmax regression.
 
 Recall what we saw in the last video for the calculation of the output $a_1$ to $a_10$ and the loss function, as well as the code implementation:
 
-![](2024-01-28-16-44-40.png)
+![](./img/2024-01-28-16-44-40.png)
 
 But once again, if we the loss function in terms of $z$, the `logits`, instead of $a$, this this gives TensorFlow the ability to rearrange terms and compute this integral numerically accurate way. Just to give we some intuition for why TensorFlow might want to do this, it turns out if one of the z's really small than $e$ to the power of a negative small number becomes very, very small, or if one of the $z$'s is a very large number, then $e$ to the power of $z$ can become a very large number. By rearranging terms, TensorFlow can avoid some of these very small or very large numbers and therefore come up with more accuarate computation for the loss function. 
 
@@ -305,7 +305,7 @@ from tensorflow.keras.losses import SparseCategoricalentropy
 model.compile(loss=SparseCategoricalentropy(from_logits=True))
 ```
 
-![](2024-01-28-16-48-16.png)
+![](./img/2024-01-28-16-48-16.png)
 
 One more detail: since we updated our code to use `linear` as the activation function of our output layer, this final layer no longer outputs these probabilities $a_1$ through $a_10$. It is instead of putting $z_1$ through $z_{10}$. So we need to take that output and map it with the softmax function (for multiclass) or the sigmoid function (for binary linear regression):
 
@@ -345,13 +345,13 @@ However, there's a different type of classification problem called a **multi-lab
 
 If we're building a self-driving car or maybe a driver assistance system, then given a picture of what's in front of our car, we may want to ask a question like, is there a car or at least one car? Or is there a bus, or is there a pedestrian or are there any pedestrians? Let's see three examples:
 
-![](2024-01-28-16-58-24.png)
+![](./img/2024-01-28-16-58-24.png)
 
 These are examples of multi-label classification problems because, associated with a single input, image $X$, there are three different labels corresponding to whether or not there are any cars, buses, or pedestrians in the image. 
 
 So this case, the target $Y$ is actually a vector of three numbers, and **this is distinct from multi-class classification**, where for, say handwritten digit classification, **$Y$ was just a single number, even if that number could take on 10 different possible values**. 
 
-![](2024-01-28-17-00-16.png)
+![](./img/2024-01-28-17-00-16.png)
 
 **How do we build a neural network for multi-label classification?**
 
@@ -359,7 +359,7 @@ One **first approach** is to just treat this as three completely separate machin
 
 That's actually a reasonable approach. Here's the first neural network to detect cars, second one to detect buses, third one to detect pedestrians:
 
-![](2024-01-28-17-05-37.png)
+![](./img/2024-01-28-17-05-37.png)
 
 
 But there's **a second approach**, which is to train a single neural network to simultaneously detect all three of cars, buses, and pedestrians. It will have a similar architecture, than the first approach, but the final output layer, instead, will have three output neurals and will output $a^{[3]}$, which is going to be a vector of three numbers (is there a car? Is there a bus? is there a pedestrian?) 
@@ -425,8 +425,8 @@ plt.close("all")
 plt_softmax(my_softmax)
 ```
 
-![](2024-01-28-17-23-03.png)
-![](2024-01-28-17-23-23.png)
+![](./img/2024-01-28-17-23-03.png)
+![](./img/2024-01-28-17-23-23.png)
 
 As you are varying the values of the z's above, there are a few things to note:
 * the exponential in the numerator of the softmax magnifies small differences in the values 
@@ -676,7 +676,7 @@ X_train, y_train = make_blobs(n_samples=m, centers=centers, cluster_std=std,rand
 plt_mc(X_train,y_train,classes, centers, std=std)
 ```
 
-![](2024-01-28-17-44-03.png)
+![](./img/2024-01-28-17-44-03.png)
 
 Each dot represents a training example. The axis (x0,x1) are the inputs and the color represents the class the example is associated with. Once trained, the model will be presented with a new example, (x0,x1), and will predict the class.  
 
@@ -733,7 +733,7 @@ With the model trained, we can see how the model has classified the training dat
 ```py
 plt_cat_mc(X_train, y_train, model, classes)
 ```
-![](2024-01-28-17-48-49.png)
+![](./img/2024-01-28-17-48-49.png)
 
 Above, the decision boundaries show how the model has partitioned the input space.  This very simple model has had no trouble classifying the training data. How did it accomplish this? Let's look at the network in more detail. 
 
@@ -750,7 +750,7 @@ W1,b1 = l1.get_weights()
 plt_layer_relu(X_train, y_train.reshape(-1,), W1, b1, classes)
 ```
 
-![](2024-01-28-17-49-56.png)
+![](./img/2024-01-28-17-49-56.png)
 
 ```py
 # gather the trained parameters from the output layer
@@ -763,7 +763,7 @@ plt_output_layer_linear(Xl2, y_train.reshape(-1,), W2, b2, classes,
                         x0_rng = (-0.25,np.amax(Xl2[:,0])), x1_rng = (-0.25,np.amax(Xl2[:,1])))
 ```
 
-![](2024-01-28-17-50-42.png)
+![](./img/2024-01-28-17-50-42.png)
 
 ### Explanation
 

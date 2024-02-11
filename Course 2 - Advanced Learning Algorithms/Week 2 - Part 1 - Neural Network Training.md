@@ -4,7 +4,7 @@
 
 Let's continue with our running example of handwritten digit recognition recognizing this image as zero or a one. Here we're using the neural network architecture that we saw last section, where we have an input X, that is an image, and then the first hidden layer had 25 units, second hidden layer had 15 units, and then one output unit. 
 
-![](2024-01-23-00-13-40.png)
+ ![](./img/2024-01-23-00-13-40.png)
 
 If we're given a training set of examples comprising images X, as was the ground truth label Y, how would we train the parameters of this neural network? Let me go ahead and show we the code that we can use in TensorFlow to train this network. Then in the next few videos after this, we'll dive into details to explain what the code is actually doing. 
 
@@ -30,7 +30,7 @@ model.compile(loss=BinaryCrossentropy())
 model.fit(X, Y, epochs=100)
 ```
 
-![](2024-01-23-00-16-56.png)
+ ![](./img/2024-01-23-00-16-56.png)
 
 As you can see above:
 - Step 1 is to specify the model, which tells TensorFlow how to compute forward inference. - Step 2 compiles the model using a specific loss function
@@ -54,7 +54,7 @@ z = np.dot(w, x) + b
 f_x = 1 / (1+np.exp(-z))
 ```
 
-![](2024-01-23-00-25-05.png)
+ ![](./img/2024-01-23-00-25-05.png)
 
 The **second step** we had to do to train the logistic regression model was to **specify the loss function and also the cost function**.
 
@@ -64,7 +64,7 @@ We may recall that the loss function said, if logistic regression outs $f(x)$ an
 loss = -y * np.log(f_x) - (1 - y) * np.log(1 - f_x)
 ```
 
-![](2024-01-23-00-38-54.png)
+ ![](./img/2024-01-23-00-38-54.png)
 
 And this loss was a measure of how well is logistic regression doing **on a single training example** `(x, y)`. 
 
@@ -72,7 +72,7 @@ Given this definition of a loss function, we then defined the **cost function**.
 
 This was a function of the parameters $w$ and $b$ and it takes average of the loss function computed on the M training examples. This means the cost function J is an average of the loss function computed over our entire training set. 
 
-![](2024-01-23-00-42-43.png)
+ ![](./img/2024-01-23-00-42-43.png)
 
 The **third and final step** to train a logistic regression model was to use an algorithm -specifically gradient descent- to minimize that cost function $J(w, b)$.
 
@@ -89,17 +89,17 @@ w = w - alpha * dj_dw
 b = b - alpha * dj_db
 ```
 
-![](2024-01-23-00-46-15.png)
+ ![](./img/2024-01-23-00-46-15.png)
 
 Now let's look at how these three steps map to training a neural network, for each step:
 
-![](2024-01-23-00-47-01.png)
+ ![](./img/2024-01-23-00-47-01.png)
 
 Let's look in greater detail in these three steps in the context of training a neural network. 
 
 In the **first step**, we specify how to compute the output given the input `x` and parameters `w` and `b`. This code snippet specifies the entire architecture of the neural network:
 
-![](2024-01-23-00-48-56.png)
+ ![](./img/2024-01-23-00-48-56.png)
 
 The code above specifies that there are 25 hidden units in the first hidden layer, then the 15 in the next one, and then one output unit and that we're using the sigmoid activation value. 
 
@@ -122,13 +122,13 @@ model.compile(loss=BinaryCrossentropy())
 
 Having specified the loss with respect to a single training example, TensorFlow knows that it costs we want to minimize is then the average: taking the average over all $M$ training examples of the loss on all of the training examples. Optimizing this cost function will result in fitting the neural network to our binary classification data.
 
-![](2024-01-23-00-58-55.png)
+ ![](./img/2024-01-23-00-58-55.png)
 
 **In case we wanted to solve a regression problem rather than a classification problem, we can also tell TensorFlow to compile our model using a different loss function.**
 
 For example, if we have a regression problem and if we want to minimize the squared error loss then we can use the more intuitively named **mean squared error loss function**. Then TensorFlow will try to m**inimize the mean squared error.** 
 
-![](2024-01-23-01-01-50.png)
+ ![](./img/2024-01-23-01-01-50.png)
 
 ```py
 from tensorflow.keras.losses import MeanSquaredError
@@ -137,7 +137,7 @@ model.compile(loss=MeanSquaredError())
 --- 
 The cost function $J(\mathbf{\vec{W}}, \mathbf{B})$ is a function of all the parameters in the entire neural network, in all layers. So $\mathbf{\vec{W}}$ includes $\mathbf{\vec{w}^{[1]}}$, $\mathbf{\vec{w}^{[2]}}$ and $\mathbf{\vec{w}^{[3]}}$. And the same for $\mathbf{\vec{B}}$
 
-![](2024-01-23-01-04-52.png)
+ ![](./img/2024-01-23-01-04-52.png)
 
 Finally, **the third step, we will ask TensorFlow to minimize the cost function**.
 
@@ -148,7 +148,7 @@ $w_j^{[l]} = w_j^{[l]} - α \frac{∂}{∂} J(\vec{w}, b)$
 
 $b_j^{[l]} = b_j^{[l]} - α \frac{∂}{∂b} J(\vec{w}, b)$
 
-![](2024-01-23-01-08-56.png)
+ ![](./img/2024-01-23-01-08-56.png)
 
 After doing, say, 100 iterations of gradient descent, hopefully, we get to a good value of the parameters. 
 
@@ -159,6 +159,6 @@ But TensorFlow does all of these things for us. It implements backpropagation al
 ```py
 model.fit(X, y, epochs=100)
 ```
-![](2024-01-23-01-10-53.png)
+ ![](./img/2024-01-23-01-10-53.png)
 
 In fact, we'll later is that **TensorFlow can use an algorithm that is even a little bit faster than gradient descent**.

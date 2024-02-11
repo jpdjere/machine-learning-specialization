@@ -8,7 +8,7 @@ So let's see a number of tips on h**ow to make decisions** about what to do next
 
 Let's start with an example: we've implemented regularized linear regression to predict housing prices, so we have the usual cost function for our learning algorithm: squared error plus this regularization term.
 
-![](2024-01-29-13-16-45.png)
+![](./img/2024-01-29-13-16-45.png)
 
 But if we train the model, and **find that it makes unacceptably large errors in it's predictions, what do we try next?:** 
 
@@ -19,7 +19,7 @@ But if we train the model, and **find that it makes unacceptably large errors in
 - Try decreasing $\lambda$
 - Try increasing $\lambda$
 
-![](2024-01-29-13-33-22.png)
+![](./img/2024-01-29-13-33-22.png)
 
 
 On any given machine learning application, it will often turn out that some of these things could be fruitful, and some of these things not fruitful. **The key to being effective at how we build a machine learning algorithm will be if we can find a way to make good choices about where to invest our time.** 
@@ -38,7 +38,7 @@ Some of these diagnostics will tell us things like, if is it worth weeks, or eve
 
 Let's take the example of learning to predict housing prices as a function of the size. Let's say we've trained the model to predict housing prices as a function of the size $x$ and the model is a fourth order polynomial.
 
-![](2024-01-29-13-37-19.png)
+![](./img/2024-01-29-13-37-19.png)
 
 Because we fit a fourth order polynomial to a training set with five data points,the training data really well. But it will fail to generalize to new examples that aren't in the training set (overfitted data).
 
@@ -50,11 +50,11 @@ We can use the techinque of splitting into a **training set and a test set**.
 
 If we have a training set (in the following example, a small training set with just 10 examples), **rather than taking all our data to train the parameters $w$ and $b$** of the model, we can **instead split the training set into two subsets**. We can put 70% of the data into the first part and call that the **training set**. And the second part of the data, the 30% of the data, will be called **test set**.
 
-![](2024-01-29-13-43-16.png)
+![](./img/2024-01-29-13-43-16.png)
 
 And notice that we will have new notation for out training data according to this split:
 
-![](2024-01-29-13-45-13.png)
+![](./img/2024-01-29-13-45-13.png)
 
 $$m_{train} = \text{no. training examples}$$
 $$m_{test} = \text{no. test examples}$$
@@ -63,27 +63,27 @@ So, in order to train a model and evaluated it, the following is the formula if 
 
 $$J(\vec{\mathbf{w}},b) = \frac{1}{2m_{train}} \sum\limits_{i = 1}^{m_{train}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}^{(i)}) - y^{(i)})^2  + \frac{\lambda}{2m_{train}} \sum\limits_{j = i}^{n} w_j^2$$
 
-![](2024-01-29-13-51-06.png)
+![](./img/2024-01-29-13-51-06.png)
 
 And then to tell how well this model is doing we would compute $J_{test}(\vec{\mathbf{w}},b)$ **which is equal to the average error on the test set**, a prediction on the $i^{th}$ test example input minus the actual price of the house on the test example, squared. And notice that the test error formula $J_{test}$, it does not include that regularization term:
 
 $$J_{test}(\vec{\mathbf{w}},b) = \frac{1}{2m_{test}} \sum\limits_{i = 1}^{m_{test}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}_{test}^{(i)}) - y^{(i)}_{test})^2  $$
 
-![](2024-01-29-13-55-16.png)
+![](./img/2024-01-29-13-55-16.png)
 
 One other quantity that's often useful to computer as well as is **the training error, a measure of how well the learning algorithm is doing on the training set**. 
 
 $$J_{train}(\vec{\mathbf{w}},b) = \frac{1}{2m_{train}} \sum\limits_{i = 1}^{m_{train}} (f_{\vec{\mathbf{w}},b}(\mathbf{\vec{x}}_{train}^{(i)}) - y^{(i)}_{train})^2  $$
 
-![](2024-01-29-13-56-57.png)
+![](./img/2024-01-29-13-56-57.png)
 
 So, in the model like what we saw earlier in this section, $J_{train}$ will be low because the average error on our training examples will be zero or very close to zero, $thus J_{train}$ will be very close to zero.
 
-![](2024-01-29-13-59-21.png)
+![](./img/2024-01-29-13-59-21.png)
 
 But if we have a few additional examples in our test set that the algorithm had not trained on, then those test examples will have a large gap between what the algorithm is predicting as the estimated housing price, and the actual value of those housing prices. And so, $J_{test}$.
 
-![](2024-01-29-14-00-07.png)
+![](./img/2024-01-29-14-00-07.png)
 
 Knowing that $J_{test}$ is high on this model gives us a way to realize that the model is actually not so good at generalizing to new examples or new data points that were not in the training set. 
 
@@ -102,7 +102,7 @@ And to **compute the train error**:
 
 $$J_{train}(\mathbf{w},b) = -\frac{1}{m_{train}}  \sum_{i=0}^{m_{train}-1} \left[ y^{(i)} \log\left(f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) + \left( 1 - y^{(i)}\right) \log \left( 1 - f_{\mathbf{w},b}\left( \mathbf{x}^{(i)} \right) \right) \right]$$
 
-![](2024-01-29-14-08-49.png)
+![](./img/2024-01-29-14-08-49.png)
 
 
 This will work OK for figuring out if our learning algorithm is doing well, by seeing how our algorithm is doing in terms of test error. 
@@ -111,7 +111,7 @@ But when applying machine learning to classification problems, there's actually 
 
 And that is: **measure what the fraction of the test set and the fraction of the training set that the algorithm has misclassified**.
 
-![](2024-01-29-14-11-57.png)
+![](./img/2024-01-29-14-11-57.png)
 
 Since we can have the algorithm make a prediction 1 or 0 on every test example, w**e can then count up in the test set the fraction of examples where $y_hat$ is not equal to the actual ground truth label $y$.**.
 
@@ -121,27 +121,27 @@ In the last section, we saw how to use the **test set** to evaluate the performa
 
 We saw first that once the model's parameters $w$ and $b$ have been fit to the training set, the **training error may not be a good indicator** of how well the algorithm will do or how well it will generalize to new examples that were not in the training set. For the example in the image below, the training error will be pretty much zero.
 
-![](2024-01-31-12-04-56.png)
+![](./img/2024-01-31-12-04-56.png)
 
 That's likely **much lower than the actual generalization error**, that is, the average error on new examples that were not in the training set. 
 
 We saw on the last section is that **$J_{test}$, the performance of the algorithm on examples the algorithm is not trained on,  will be a better indicator of how well the model will likely do on new data**. 
 
-![](2024-01-31-12-06-44.png)
+![](./img/2024-01-31-12-06-44.png)
 
 Let's take a look at **how we might use a test set to choose a model for a given machine learning application**:
 
 When developing a model to fit to some data, we might develop a whole range of model function, which go from something linear, to a function of, for example, a 10th order polynomial:
 
-![](2024-01-31-12-08-58.png)
+![](./img/2024-01-31-12-08-58.png)
 
 So, just a hand-up, the following is not the best procedure, but it looks that we could try is to look at all of $J_{test}$ values for each of the models and see which one gives we the lowest value:
 
-![](2024-01-31-12-11-13.png)
+![](./img/2024-01-31-12-11-13.png)
 
 If for example, we found that the model with the 5th order polynomial reports the lowest $J_{test}$, the we would choose that model and report that test set error $J_{test}$ as a measure of how well the model performs.
 
-![](2024-01-31-12-12-56.png)
+![](./img/2024-01-31-12-12-56.png)
 
 But this is a flawed procedure: and the reason for thatis that $J_{test}(w^{<5>},b^{<5>})$ is likely to be an optimistic estimate of the generalization error. In other words, it is likely to be lower than the actual generalization error.
 
@@ -149,7 +149,7 @@ But this is a flawed procedure: and the reason for thatis that $J_{test}(w^{<5>}
 
 We know that if we were to fit $w$, $b$ to the training data, then the training data would be an overly optimistic estimate of generalization error. **So analogously, if we want to choose the parameter $d$ using the test set, then the test set error $J_{test} is now overly optimistic - is lower than actual estimate of the generalization error.**
 
-![](2024-01-31-12-18-38.png)
+![](./img/2024-01-31-12-18-38.png)
 
 So, instead, if we want to automatically choose a model, and decide what degree polynomial to use, we need to modify the training and testing procedure in order to carry out model selection. Here's how to do it.
 
@@ -158,7 +158,7 @@ Instead of splitting our data into just two subsets, the **training set** and th
 - **the cross-validation set**
 - **the test set**
 
-![](2024-01-31-12-20-33.png)
+![](./img/2024-01-31-12-20-33.png)
 
 **The name cross-validation refers to that this is an extra dataset that we're going to use to check or cross check the validity or really the accuracy of different models.**
 
@@ -177,13 +177,13 @@ $$J_{test}(\vec{\mathbf{w}},b) = \frac{1}{2m_{test}} \sum\limits_{i = 1}^{m_{tes
 
 As usual, none of these terms include the regularization term that is included in the training objective.
 
-![](2024-01-31-12-24-55.png)
+![](./img/2024-01-31-12-24-55.png)
 
 Armed with these three measures of learning algorithm performance, this is how we can then go about carrying out model selection. We can, with the 10 models we saw earlier, each with a different parameter $d$ and for each we calculate $w_1$, $b_1$ using the training set $J_{train}$.
 
 **But instead of evaluating the models and their parameters using our test set, we will instead evaluate these parameters on our cross-validation sets.** 
 
-![](2024-01-31-12-40-10.png)
+![](./img/2024-01-31-12-40-10.png)
 
 Then, in order to choose a model, we will look at which model has the lowest cross-validation error, $J_{cv}$, and choose that. For example, if $J_cv$ of $w_4$, $b_4$ is the lowest, then we pick this fourth-order polynomial as the model we will use for this application. 
 
@@ -203,7 +203,7 @@ To help we decide how many layers do the neural network have and how many hidden
 2. valuate the neural networks performance using $J_{cv}$, using our cross-validation set (since this is a classification problem, $J_{cv}$ the most common choice would be to compute this as the fraction of cross-validation examples that the algorithm has misclassified). Then pick the model with the lowest $J_{cv}$.
 3. report out an estimate of the generalization error using the test set $J_{test}$.
 
-![](2024-01-31-12-49-21.png)
+![](./img/2024-01-31-12-49-21.png)
 
 It's considered best practice in machine learning that, if we have to make decisions about our model, such as fitting parameters or choosing the model architecture, such as neural network architecture or degree of polynomial if we're fitting a linear regression, to make all those decisions only using our training set and our cross-validation set, and to not look at the test set at all.
 
@@ -282,7 +282,7 @@ You can plot the dataset to get an idea of how the target behaves with respect t
 utils.plot_dataset(x=x, y=y, title="input vs. target")
 ```
 
-![](2024-01-31-12-53-56.png)
+![](./img/2024-01-31-12-53-56.png)
 
 ### Split the dataset into training, cross validation, and test sets
 
@@ -329,7 +329,7 @@ You can plot the dataset again below to see which points were used as training, 
 utils.plot_train_cv_test(x_train, y_train, x_cv, y_cv, x_test, y_test, title="input vs. target")
 ```
 
-![](2024-01-31-12-55-49.png)
+![](./img/2024-01-31-12-55-49.png)
 
 ### Fit a linear model
 
@@ -361,7 +361,7 @@ print(f"Computed standard deviation of the training set: {scaler_linear.scale_.s
 # Plot the results
 utils.plot_dataset(x=X_train_scaled, y=y_train, title="scaled input vs. target")
 ```
-![](2024-01-31-12-58-00.png)
+![](./img/2024-01-31-12-58-00.png)
 
 #### Train the model
 
@@ -506,7 +506,7 @@ print(f"Cross validation MSE: {mean_squared_error(y_cv, yhat) / 2}")
 
 You'll notice that the MSEs are significantly better for both the training and cross validation set when you added the 2nd order polynomial. You may want to introduce more polynomial terms and see which one gives the best performance. As shown in class, you can have 10 different models like this:
 
-![](2024-01-31-13-10-26.png)
+![](./img/2024-01-31-13-10-26.png)
 
 You can create a loop that contains all the steps in the previous code cells. Here is one implementation that adds polynomial features up to degree=10. We'll plot it at the end to make it easier to compare the results for each model.
 
@@ -555,7 +555,7 @@ degrees=range(1,11)
 utils.plot_train_cv_mses(degrees, train_mses, cv_mses, title="degree of polynomial vs. train and CV MSEs")
 ```
 
-![](2024-01-31-13-11-23.png)
+![](./img/2024-01-31-13-11-23.png)
 
 ### Choosing the best model
 
@@ -596,7 +596,7 @@ print(f"Test MSE: {test_mse:.2f}")
 
 The same model selection process can also be used when choosing between different neural network architectures. In this section, you will create the models shown below and apply it to the same regression task above.
 
-![](2024-02-02-16-24-59.png)
+![](./img/2024-02-02-16-24-59.png)
 
 #### Prepare the Data
 
@@ -741,7 +741,7 @@ You can plot the dataset to examine how the examples are separated.
 ```py
 utils.plot_bc_dataset(x=x_bc, y=y_bc, title="x1 vs. x2")
 ```
-![](2024-02-02-16-34-39.png)
+![](./img/2024-02-02-16-34-39.png)
 
 #### Split and prepare the dataset
 

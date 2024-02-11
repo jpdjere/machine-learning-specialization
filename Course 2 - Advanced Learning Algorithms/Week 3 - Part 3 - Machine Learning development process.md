@@ -8,24 +8,24 @@ Let's first take a look first at the iterative loop of machine learning developm
 
 First, we decide on what is **the overall architecture of our system**. That means **choosing our machine learning model as well as deciding what data to use**, maybe picking the **hyperparameters**, etc:
 
-![](2024-02-06-13-12-15.png)
+![](./img/2024-02-06-13-12-15.png)
 
 Then, given those decisions, we would **implement and train a model**.
 
 When we train a model for the first time, it will almost never work as well as we want it to. 
 
-![](2024-02-06-13-13-55.png)
+![](./img/2024-02-06-13-13-55.png)
 
 The next step that I recommend then is to **implement or to look at a few diagnostics**, such as looking at the **bias and variance of our algorithm as well as error analysis**.
 
-![](2024-02-06-13-14-33.png)
+![](./img/2024-02-06-13-14-33.png)
 
 Based on the insights from the diagnostics, we can then make decisions like:
 - do want to make our neural network bigger?
 - do we want to change the $\lambda$ regularization parameter?
 - do we want to aadd more data or add more features or subtract features?
 
-![](2024-02-06-13-15-28.png)
+![](./img/2024-02-06-13-15-28.png)
 
 So we go around this loop again with our new choice of architecture, and it will often take multiple iterations through this loop until we get to the performance that we want. 
 
@@ -35,13 +35,13 @@ The example on the left is what a highly spammy email might look like. Notice th
 
 In contrast, the email on the right is an actual email.
 
-![](2024-02-06-13-16-50.png)
+![](./img/2024-02-06-13-16-50.png)
 
 **How do we build a classifier to recognize spam versus non-spam emails?**
 
 **One way to do so would be to train a supervised learning algorithm where the input features $x$ will be the features of an email and the output label $y$ will be one or zero depending on whether it's spam or non-spam.** 
 
-![](2024-02-06-13-18-08.png)
+![](./img/2024-02-06-13-18-08.png)
 
 This application is an example of text classification because we're taking a text document that is an email and trying to classify it as either spam or non-spam. 
 
@@ -49,7 +49,7 @@ One way to construct the features of the email would be to say, take the top 10,
 
 Given the words in the email, we set the features to be `0` or `1` depending on if they appear in the training example email.
 
-![](2024-02-06-13-20-45.png)
+![](./img/2024-02-06-13-20-45.png)
 
 Another way would be to let these numbers not just be 1 or 0, but actually, count the number of times a given word appears in the email. If `buy` appears twice, maybe we want to set this to 2.
 
@@ -57,7 +57,7 @@ Given these features, we can then train a classification algorithm such as a log
 
 After we've trained our initial model, if it doesn't work as well as we wish, we will quite likely have multiple ideas for improving the learning algorithm's performance:
 
-![](2024-02-06-13-22-40.png)
+![](./img/2024-02-06-13-22-40.png)
 
 For example, is always tempting to 
 
@@ -94,7 +94,7 @@ In terms of **the most important ways to help we run diagnostics** to choose wha
 
 So, what is **error analysis**?
 
-![](2024-02-06-13-32-41.png)
+![](./img/2024-02-06-13-32-41.png)
 
 Concretely, let's imagine we have $m_{cv}$, that is, 500 cross validation examples; and our algorithm misclassifies 100 of these 500 cross validation examples. 
 
@@ -105,7 +105,7 @@ The process involves **finding a set of examples from the cross validation set t
 For example, if we notice that quite a lot of the misclassified spam emails are pharmaceutical sales, trying to sell medicines or drugs, then we would go through these examples and count up by hand how many emails that are misclassified are pharmaceutical spam (21 emails). Or if we suspect that deliberate misspellings are tripping over our spam classifier then we would count up how many of these examples that it misclassified had a deliberate misspelling (3 out of 100)
 
 And we end up with the numbers seen in the figure:
-![](2024-02-06-13-37-32.png)
+![](./img/2024-02-06-13-37-32.png)
 
 
 If we end up with these counts then that tells we that pharmaceutical spam and emails trying to steal passwords or phishing emails seem to be the biggest problems whereas deliberate misspellings is comparatively smaller.
@@ -130,7 +130,7 @@ In that case, **we can sample randomly a subset of usually around a 100 datapoin
 
 Based on our error analysis in the example we just went through, it looks like more sophisticated email features could not be able to help much, whereas more sophisticated features to detect pharma spam or phishing emails could help a lot. Also, detecting misspellings would not help nearly as much. 
 
-![](2024-02-06-13-44-53.png)
+![](./img/2024-02-06-13-44-53.png)
 
 ---
 
@@ -156,7 +156,7 @@ When training machine learning algorithms, it feels like always we wish we had e
 
 Instead, **an alternative way of adding data might be to focus on adding more data of the types where error analysis has indicated it might help the most**.
 
-![](2024-02-06-13-51-45.png)
+![](./img/2024-02-06-13-51-45.png)
 
 In the previous section we saw that, if error analysis reviewed that pharma spam was a large problem, then could decide to have a more targeted effort not to get more data of any type but to stay focused on getting more examples of pharma spam.
 
@@ -166,7 +166,7 @@ One example: if we have a lot of unlabeled email data, we might quickly skim thr
 
 This could boost our learning algorithm performance much more than just trying to add more data of all sorts of emails. 
 
-![](2024-02-06-13-54-33.png)
+![](./img/2024-02-06-13-54-33.png)
 
 ### Data augmentation
 
@@ -183,7 +183,7 @@ For example if we're trying to recognize the letters from $A$ to $Z$ for an OCR 
 - changing the contrast
 - mirroring (only for some letters)
 
-![](2024-02-06-13-58-01.png)
+![](./img/2024-02-06-13-58-01.png)
 
 These are examples of distortions to the image that don't change the fact that this is still the letter $A$. We would be ways of taking a training example $(x, y)$, and applying a distortion or transformation to the input $x$, in order to come up with another example that has the same label. 
 
@@ -193,7 +193,7 @@ For a more advanced example of data augmentation: we can also take the letter $A
 
 And this process of distorting these examples can turn one image many more training examples that we can feed to the learning algorithm to hope it learn more robustly.
 
-![](2024-02-06-14-01-40.png)
+![](./img/2024-02-06-14-01-40.png)
 
 
 This idea of **data augmentation also works for speech recognition.**
@@ -204,7 +204,7 @@ For example, we can add the background noise of a crowd of people, of a moving c
 
 This is actually a really critical technique for increasing artificially the size of the training datato build a more accurate speech recognizer. 
 
-![](2024-02-06-14-04-16.png)
+![](./img/2024-02-06-14-04-16.png)
 
 ---
 
@@ -214,7 +214,7 @@ So for example, if we take the letter $A$ and warp it, it should still look like
 
 In contrast, it's is usually not that helpful to add purely random meaningless noise to data, like adding per pixel noise to the images of the letters, as the resulting images don't represent data that we'd see in the test set.
 
-![](2024-02-06-14-07-30.png)
+![](./img/2024-02-06-14-07-30.png)
 
 So one way to think about data augmentation is: "how can we modify or warp or distort or make more noise in our data, but in a way so that what we get is still quite similar to what we have in our test set"? Since that's what the learning algorithm will ultimately end up doing well on.
 
@@ -224,17 +224,17 @@ So one way to think about data augmentation is: "how can we modify or warp or di
 
 For example: Photo OCR or photo optical character recognition refers to the problem of looking at an image and automatically having a computer read the text that appears in this image, like this one:
 
-![](2024-02-06-14-17-44.png)
+![](./img/2024-02-06-14-17-44.png)
 
 How can we train an OCR algorithm to read text from an image like that? 
 
 When we look closely at what the letters in this image look like they actually look as follows:
 
-![](2024-02-06-14-18-44.png)
+![](./img/2024-02-06-14-18-44.png)
 
 So one way to create artificial data for this task is to use our computer's text editor and the differen t fonts, and screenshotting examples in different colors, shapes and orientations to generate synthetic data:
 
-![](2024-02-06-14-20-37.png)
+![](./img/2024-02-06-14-20-37.png)
 
 The images on the left are real data from real pictures taken out in the world, while the images on the right are synthetically generated using fonts on the computer. They look actually pretty realistic.
 
@@ -242,7 +242,7 @@ The images on the left are real data from real pictures taken out in the world, 
 
 ### Summary
 
-![](2024-02-06-14-25-26.png)
+![](./img/2024-02-06-14-25-26.png)
 
 All the techniques we've seen in this section relate to **finding ways to engineer the data used by our system**. 
 
@@ -262,15 +262,15 @@ Here's how transfer learning works: let's say we want to recognize the handwritt
 
 If we find a very large dataset of one million images of pictures of cats, dogs, cars, people, and so on, with a thousand classes, we can then start by training a neural network on this large dataset of a million images with a thousand different classes. 
 
-![](2024-02-06-18-02-36.png)
+![](./img/2024-02-06-18-02-36.png)
 
 We can train the algorithm to take as input an image $X$, and learn to recognize any of these 1,000 different classes. In this process, we end up learning parameters for the first layer of the neural network $w^1$, $b^1$, for the second layer $w^2$, $b^2$,and so on, and finally $w^5$, $b^5$ for the output layer.
 
-![](2024-02-06-18-03-37.png)
+![](./img/2024-02-06-18-03-37.png)
 
 To apply transfer learning, **we make a copy of this neural network where we would keep the parameters $w^1$, $b^1$, $w^2$, $b^2$, $w^3$, $b^3$, and $w^4$, $b^4$. But for the last layer, we would eliminate the output layer and replace it with a much smaller output layer with just 10 rather than 1,000 output units. These 10 output units will correspond to the classes zero, one, through nine that we want our neural network to recognize.**
 
-![](2024-02-06-18-04-34.png)
+![](./img/2024-02-06-18-04-34.png)
 
 Notice that the parameters $w^5$, $b^5$ they can't be copied over because the dimension of this layer has changed, so we need to come up with new parameters $w^5$, $b^5$ that we need to train from scratch rather than just copy from the previous neural network. 
 
@@ -283,7 +283,7 @@ In detail, there are two options for how we can train these neural networks para
 - We take the parameters $w^1$, $b^1$, $w^2$, $b^2$ through $w^4$, $b^4$ as the values from our first neural network and hold them fixed. 
 - Then we use an algorithm like  gradient descent or the Adam optimization algorithm to only update $w^5$, $b^5$ to lower the usual cost function that we use for learning. In this case, to recognize digits zero to nine from a small training set of these digits zero to nine.
 
-![](2024-02-06-18-11-48.png)
+![](./img/2024-02-06-18-11-48.png)
 
 ### Option 2: train all parameters
 
@@ -298,7 +298,7 @@ It consists of two steps:
 **1. Supervised Pretraining:** first step where we train a network with a large -generally tangentially related- dataset.
 **2. Fine tuning:** second step, where we tune the parameters further using a smaller dataset. We take the parameters that we had initialized or gotten from supervised pre-training and then run gradient descent further to fine tune the weights to suit the specific application that we may have.
 
-![](2024-02-06-18-18-14.png)
+![](./img/2024-02-06-18-18-14.png)
 
 If we have a small dataset, even tens or hundreds or thousands or just tens of thousands of images of the handwritten digits, being able to learn from these million images of a **not** quite related task can actually help our learning algorithm's performance a lot. 
 
@@ -316,11 +316,11 @@ Training a neural network to detect things as diverse as cats, dogs, cars and pe
 
 One restriction of pre-training though, is that **the image type $x$ has to be the same for the pre-training and fine-tuning steps.**
 
-![](2024-02-06-18-22-44.png)
+![](./img/2024-02-06-18-22-44.png)
 
 If we can get a neural network pre-trained on large dataset, say a million images, then sometimes we can use a much smaller dataset, maybe a thousand images, maybe even smaller, to fine tune the neural network on our own data and get pretty good results. We can even sometimes train neural networks on as few as 50 images when it has already been pre-trained on a much larger dataset. However, this technique isn't apanacea: we can't get every application to work just on 50 images, but it does help a lot when the dataset we have for our application isn't that large. 
 
-![](2024-02-06-18-24-30.png)
+![](./img/2024-02-06-18-24-30.png)
 
 ## Full cycle of a machine learning project
 
@@ -330,45 +330,45 @@ When we're building a valuable machine learning system, **what are the steps to 
 
 ### Step 1: Scope the project
 
-![](2024-02-06-18-34-07.png)
+![](./img/2024-02-06-18-34-07.png)
 
 In other words, decide what is the project and what we want to work on. For example, work on speech recognition for voice search so that we can do web search using speaking to our mobile phone rather than typing into our mobile phone. 
 
 ### Step 2: Collect the data
 
-![](2024-02-06-18-35-07.png)
+![](./img/2024-02-06-18-35-07.png)
 
 Decide what data we need to train our machine learning system and go and do the work to get the audio and get the transcripts of the labels for our dataset. 
 
 ### Step 3: train the model
 
-![](2024-02-06-18-35-44.png)
+![](./img/2024-02-06-18-35-44.png)
 
 Here we would train a speech recognition system and carry out bias-variance analyisis, as well as error analysis and iteratively improve our model.  It's common that, after we started training the model, error analysis or bias-variance analysis tells us that we might want to go back to collect more data. 
 
 We'd go around this loop a few times, train the model, error analysis, go back to collect more data, maybe do this for a while until eventually we say the model is good enough to then deploy in a production environment. 
 
-![](2024-02-06-18-37-27.png)
+![](./img/2024-02-06-18-37-27.png)
 
 ### Step 4: Deploy to production
 
-![](2024-02-06-18-37-57.png)
+![](./img/2024-02-06-18-37-57.png)
 
 We make our model available for users to use. When we deploy a system we have to also make sure that we continue to monitor the performance of the system and to maintain the system in case the performance gets worse, so that we can bring performance back up.
 
 After this deployment, sometimes we realize that the model is not working as well as we hoped, so we go back to train the model to improve it again or even go back and get more data. In fact, if we have permission to use data from our production deployment, sometimes that data from our working speech system can give us access to even more data with which we can keep on improving the performance of our system. 
 
-![](2024-02-06-18-39-52.png)
+![](./img/2024-02-06-18-39-52.png)
 
 Let's see more detail about **what deploying in production looks like**:
 
 After we've trained a high performing machine learning model, say a speech recognition model, a common way to deploy the model would be to take our machine learning model and implement it in a server, which we  call an inference server, whose job it is to host our machine learning model, our trained model, and call it in order to make predictions.
 
-![](2024-02-06-18-41-26.png)
+![](./img/2024-02-06-18-41-26.png)
 
 Then if our team has implemented a mobile app, like a search application, then when a user talks to the mobile app, the mobile app can then make an API call to pass to our inference server the audio clip that was recorded and the inference server's job is supply the machine learning model to it and then return to it the prediction of our model, which in this case would be the text transcripts
 
-![](2024-02-06-18-41-53.png)
+![](./img/2024-02-06-18-41-53.png)
 
 To implement this, some **software engineering may be needed to write all the code that does all of these things.** Depending on whether our application needs to serve just a few handful of users or millions of users the amounts of software engineer needed can be quite different. 
 
@@ -384,7 +384,7 @@ Depending on the team we're working on, it is possible that we built the machine
 
 **There is a growing field in machine learning called MLOps**, that stands for Machine Learning Operations and refers to the practice of **how to systematically build and deploy and maintain machine learning systems.**
 
-![](2024-02-06-18-47-46.png)
+![](./img/2024-02-06-18-47-46.png)
 
 ## Fairness, bias and ethics
 

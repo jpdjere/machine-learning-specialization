@@ -254,7 +254,7 @@ for i,ax in enumerate(axes.flat):
     ax.set_axis_off()
 ```
 
-![](2024-01-21-15-21-50.png)
+![](./img/2024-01-21-15-21-50.png)
 
 <a name="2.3"></a>
 ### 2.3 Model representation
@@ -264,7 +264,7 @@ The neural network you will use in this assignment is shown in the figure below.
     - Recall that our inputs are pixel values of digit images.
     - Since the images are of size $20\times20$, this gives us $400$ inputs  
     
-![](2024-01-21-15-22-09.png)
+![](./img/2024-01-21-15-22-09.png)
 
 - The parameters have dimensions that are sized for a neural network with $25$ units in layer 1, $15$ units in layer 2 and $1$ output unit in layer 3. 
 
@@ -478,13 +478,13 @@ print(f"prediction after threshold: {yhat}")
 
 Let's compare the predictions vs the labels for a random sample of 64 digits. This takes a moment to run.
 
-![](2024-01-21-15-38-06.png)
+![](./img/2024-01-21-15-38-06.png)
 
 <a name="2.5"></a>
 ### 2.5 NumPy Model Implementation (Forward Prop in NumPy)
 As described in lecture, it is possible to build your own dense layer using NumPy. This can then be utilized to build a multi-layer neural network.
 
-![](2024-01-21-15-38-27.png)
+![](./img/2024-01-21-15-38-27.png)
 
 <a name="ex02"></a>
 ### Exercise 2
@@ -610,7 +610,7 @@ fig.suptitle("Label, yhat Tensorflow, yhat Numpy", fontsize=16)
 plt.show()
 ```
 
-![](2024-01-21-15-43-06.png)
+![](./img/2024-01-21-15-43-06.png)
 
 <a name="2.6"></a>
 ### 2.6 Vectorized NumPy Model Implementation (Optional)
@@ -618,7 +618,7 @@ The optional lectures described vector and matrix operations that can be used to
 
 Below describes a layer operation that computes the output for all units in a layer on a given input example:
 
-![](2024-01-21-15-44-11.png)
+![](./img/2024-01-21-15-44-11.png)
 
 We can demonstrate this using the examples `X` and the `W1`,`b1` parameters above. We use `np.matmul` to perform the matrix multiply. Note, the dimensions of x and W must be compatible as shown in the diagram above.
 
@@ -633,7 +633,7 @@ print(a1.shape)
 
 You can take this a step further and compute all the units for all examples in one Matrix-Matrix operation.
 
-![](2024-01-21-16-29-33.png)
+![](./img/2024-01-21-16-29-33.png)
 
 The full operation is $\mathbf{Z}=\mathbf{XW}+\mathbf{b}$. This will utilize NumPy broadcasting to expand $\mathbf{b}$ to $m$ rows. If this is unfamiliar, a short tutorial is provided at the end of the notebook.
 
@@ -783,22 +783,22 @@ If these conditions are not met, a `ValueError: operands could not be broadcast 
 
 Here are some examples:
 
-![](2024-01-21-16-37-40.png)
+![](./img/2024-01-21-16-37-40.png)
 ---
 **Vector-Sacalar Match**
-![](2024-01-21-16-39-17.png)
+![](./img/2024-01-21-16-39-17.png)
 **Vector-Scalar NO Match**
-![](2024-01-21-16-41-31.png)
-![](2024-01-21-16-43-24.png)
+![](./img/2024-01-21-16-41-31.png)
+![](./img/2024-01-21-16-43-24.png)
 
 **Vector-Vector**
-![](2024-01-21-16-39-39.png)
+![](./img/2024-01-21-16-39-39.png)
 
-![](2024-01-21-16-39-44.png)
+![](./img/2024-01-21-16-39-44.png)
 
-![](2024-01-21-16-39-53.png)
+![](./img/2024-01-21-16-39-53.png)
 
-![](2024-01-21-16-39-57.png)
+![](./img/2024-01-21-16-39-57.png)
 
 The graphic above shows NumPy expanding the arguments to match before the final operation. Note that this is a notional description. The actual mechanics of NumPy operation choose the most efficient implementation.
 
@@ -827,7 +827,7 @@ print(f"(a * b).shape: {(a * b).shape}, \na * b = \n{a * b}")
 #  [15]]
 ```
 ---
-![](2024-01-21-16-47-15.png)
+![](./img/2024-01-21-16-47-15.png)
 
 ```py
 a = np.array([1,2,3,4]).reshape(-1,1)
@@ -850,4 +850,4 @@ print(f"(a + b).shape: {(a + b).shape}, \na + b = \n{a + b}")
 
 This is the scenario in the dense layer you built above. Adding a 1-D vector $b$ to a (m,j) matrix:
 
-![](2024-01-21-16-48-27.png)
+![](./img/2024-01-21-16-48-27.png)

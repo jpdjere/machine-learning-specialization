@@ -11,7 +11,7 @@ Let's remember remember the following example from the first course on linear re
 - a fourth order model with **high variance (overfits)**
 - a quadratic model that is "just right"
 
-![](2024-02-02-16-54-49.png)
+![](./img/2024-02-02-16-54-49.png)
 
 Because this is a problem with just a single feature $x$, we can plot them an analyze the shape of the graph. But if we had more features, we can't plot $f(x)$ and visualize them.
 
@@ -23,13 +23,13 @@ In particular, let's look at the example on the left. If we were to compute $J_{
 
 In the case of $J_{cv}$, the algorithm also doesn't do that well on examples that it had not previously seen, so $J_{cv}$ will also be high:
 
-![](2024-02-03-18-50-24.png)
+![](./img/2024-02-03-18-50-24.png)
 
 One characteristic of an algorithm with high bias, i.e. that is under fitting, is that it's not even doing well on the training set. **When $J_{train}$ is high, that is our strong indicator that this algorithm has high bias.**
 
 Let's now look at the example on the right. 
 
-![](2024-02-04-14-51-52.png)
+![](./img/2024-02-04-14-51-52.png)
 
 If we were to compute $J_{train}$, how well is this doing on the training set? It's actually doing great on the training set: its the training data really well. $J_{train}$ here will be low. 
 
@@ -40,7 +40,7 @@ A characteristic signature or indication that **our algorithm has high variance 
 
 Finally, the case in the middle:
 
-![](2024-02-04-14-54-13.png)
+![](./img/2024-02-04-14-54-13.png)
 
 If we look at $J_{train}$, we see it's low, so this is doing quite well on the training set. If we look at a few new examples, like those from our cross-validation set, we find that $J_{cv}$ is also a pretty low. **$J_{train}$ not being too high indicates this doesn't have a high bias problem and $J_{cv}$ not being much worse than $J_{train}$ this indicates that it doesn't have a high variance problem either.**
 
@@ -54,7 +54,7 @@ To summarize:
 
 Let's now take a different view on bias and variance.Let's see how $J_{train}$ and $J_{cv}$ variance as a function of the degree of the polynomial we're fitting:
 
-![](2024-02-04-15-11-26.png)
+![](./img/2024-02-04-15-11-26.png)
 
 If we were to plot $J_{train}$ as a function of the degree of polynomial, what we find is that as we fit a higher and higher degree polynomial, -if not using regularization-, but as we fit a higher and higher order polynomial, the training error will tend to go down.
 
@@ -62,7 +62,7 @@ This happens because when we have a very simple linear function (very low $d$), 
 
 Next, let's look at $J_{cv}$, which shows how well does it do on data that it did not get to fit train with. 
 
-![](2024-02-04-15-12-40.png)
+![](./img/2024-02-04-15-12-40.png)
 
 What we saw was when $d$ equals one, when the degree of polynomial was very low, $J_{cv}$ was pretty high because it underfits, so it didn't do well on the cross validation set. But when the degree of the polynomial is very large, for example four, it doesn't do well on the cross-validation set either, and so it's also high. 
 
@@ -80,7 +80,7 @@ This corresponds to the leftmost portion of the curves above, which is where $J_
 
 This corresponds to the rightmost portion of the plot, where $J_{cv}$ is much greater than $J_{train}$. Usually $J_{train}$ will be pretty low, but the key indicator is whether $J_{cv}$ is much greater than $J_{train}$. That's what happens when we fit a very high order polynomial to a small dataset. 
 
-![](2024-02-04-15-21-54.png)
+![](./img/2024-02-04-15-21-54.png)
 
 In some cases, **it is possible to simultaneously have high bias and have high-variance**. This won't happen that much for linear regression, but if we're training a neural network, there are some applications where unfortunately we have high bias and high variance. 
 
@@ -88,7 +88,7 @@ One way to recognize that situation will be if $J_{train}$ is high, so we're not
 
 The notion of high bias and high variance doesn't really happen for linear models applied which we can visualize in a 1D graph; but to give intuition about what it looks like, it would be as if for part of the input, we had a very complicated model that overfits the data, but then for some reason, for other parts of the input, it doesn't even fit the training data well, and so it underfits for part of the input.
 
-![](2024-02-04-15-25-07.png)
+![](./img/2024-02-04-15-25-07.png)
 
 The indicator for that will be if the algorithm does poorly on the training set, and it even does much worse than on the training set. However, for most learning applications, we probably have primarily a high bias or high variance problem rather than both at the same time. But it is possible sometimes they're both at the same time. 
 
@@ -99,26 +99,26 @@ Now let's take a look at **how regularization, specifically the choice of the re
 Let's use an example where we're going to use a fourth-order polynomial, but we're going to fit this model using regularization. Remember that the value of $\lambda$ is the regularization parameter that controls how much we trade-off keeping the parameters $w$ small versus fitting the training data well. 
 
 Let's start with the example of setting $\lambda$ to be **a very large value**, i.e. equal to 10,000. If we do that, we would end up fitting a model that is a straight line, because the regulaization parameter makes all $w$ parameters nearly 0, and the model ends up being just $f(x) = b$:
-![](2024-02-04-15-35-39.png)
+![](./img/2024-02-04-15-35-39.png)
 
 
 This model clearly has high bias and it underfits the training data because it doesn't even do well on the training set and $J_{train}$ is large. 
 
 Now, let's take a look at the other extreme, where we set $\lambda$ to be **a very small value** even going to extreme of setting it to zero. With that choice of Lambda, there is no regularization, so we're just fitting a fourth-order polynomial with no regularization and we end up with a curve that overfits the data:
 
-![](2024-02-04-15-37-24.png)
+![](./img/2024-02-04-15-37-24.png)
 
 What we saw previously was when we have a model like this, $J_{train}$ is small, but $J_{cv}$ is much larger than $J_{train}$ or $J_{cv}$ is large. This indicates we have high variance and it overfits this data.
 
 **If we have some intermediate value of $\lambda$**, then we would hopefully get a model that is just right and fits the data well with small $J_{train}$ and small $J_{cv}$.
 
-![](2024-02-04-15-38-31.png)
+![](./img/2024-02-04-15-38-31.png)
 
 **If we are trying to decide what is a good value of $\lambda$ to use for the regularization parameter, cross-validation gives we a way to do so** . So, **how can we choose a good value of $\lambda$?**
 
 This is a procedure similar to what we had seen for choosing the degree of polynomial $d$ using cross-validation: specifically, we fit model trying a large range of possibe values for lambda, all the way from 0 from maybe up to 10.
 
-![](2024-02-04-15-42-23.png)
+![](./img/2024-02-04-15-42-23.png)
 
 For each one, we minimize the cost function and get the parameters $w$ and $b$, and for each we compute the cross validation error, $J_{cv}$. 
 
@@ -133,15 +133,15 @@ Using a graph where we set the x-axis with the value of the regularization param
 
 - if we look at the extreme where $\lambda$ equals zero on the left, that corresponds to not using any regularization, so we end up with a very wiggly curve characteristic of a high variance model. **So $J_{train}$ is going to be small and $J_{cv}$ is going to be large because it does great on the training data but does much worse on the cross validation data**. 
 
-![](2024-02-04-15-48-56.png)
+![](./img/2024-02-04-15-48-56.png)
 
 - In the extreme on the right for very large values of $\lambda$, we end up fitting a model that is basically a constant value. **This has high bias, it underfits the data, and $J_{train}$ will be high and $J_{cv}$ will be high as well**. 
 
-![](2024-02-04-15-50-37.png)
+![](./img/2024-02-04-15-50-37.png)
 
 In fact, if we were to look at how $J_{train}$ varies as a function of $\lambda$, **we find that $J_{train}$ will go up as $\lambda$ get larger**, because in the optimization cost function, the larger $\lambda$ is, the more the algorithm is trying to keep $w^2$ (from the regularization parameter) small. That is, the more weight is given to this regularization term, and thus the less attention is paid to actually do well on the training set. 
 
-![](2024-02-04-15-53-08.png)
+![](./img/2024-02-04-15-53-08.png)
 
 This term on the lef, before the regularization term, is actually $J_{train}$, so the more effort we do trying to keep the parameters $w$ small, the less good a job it does on minimizing the training error. That's why as $\lambda$ increases, the training error $J_{train}$ will tend to increase.
 
@@ -149,14 +149,14 @@ Now, **how about the cross-validation error?** We can see that the cross-validat
 
 It either overfits on the left or underfits on the right. But there'll be some intermediate value of $\lambda$ that causes the algorithm to perform best:
 
-![](2024-02-04-15-57-13.png)
+![](./img/2024-02-04-15-57-13.png)
 
 
 If we compare this diagram to the one that we had in the previous section, where the horizontal axis was the degree of polynomial, **these two diagrams look a little bit not mathematically and not in any formal way, but they look a little bit like mirror images of each other, and that's because**: 
 - when we're **plotting against the degree of polynomial,** the left part of the curve corresponded to underfitting and high bias, the right part corresponded to overfitting and high variance. 
 - when we're **plotting against labmda**, high-variance was on the left and high bias was on the right. 
 
-![](2024-02-04-15-59-50.png)
+![](./img/2024-02-04-15-59-50.png)
 
 But in both cases, cross-validation, evaluating different values can help we choose a good value of $d$ or a good value of $\lambda$. 
 
@@ -170,7 +170,7 @@ Let's use as a running example the application of speech recognition: It's the j
 
 Let's say the training error for this data-set is 10.8% meaning that it transcribes it perfectly for 89.2% of our training set, but makes some mistake in 10.8% of our training set. And if we were to also measure our speech recognition algorithm's performance on a separate cross-validation set, let's say it gets 14.8% error:
 
-![](2024-02-04-16-05-31.png)
+![](./img/2024-02-04-16-05-31.png)
 
 If we look at these numbers like this, it looks like the training error is really high, since it got 10% wrong - and then the cross-validation error is even higher. But getting 10% of even our training set wrong that seems already pretty high. **This 10% error could lead us to conclude it has high bias** because it's not doing well on our training set. 
 
@@ -180,11 +180,11 @@ Concretely, let's say that we measure how well fluent speakers can transcribe au
 
 So if even a human makes 10.6% error, then it seems difficult to expect a learning algorithm to do much better. **So, in order to judge if the training error is high, it is more useful to see if the training error is much higher than a human level of performance**. In this example it does just 0.2% worse than humans.
 
-![](2024-02-04-16-11-25.png)
+![](./img/2024-02-04-16-11-25.png)
 
 But in contrast, **the gap or the difference between  $J_{cv}$ and  $J_{train}$ is much larger.** There's actually a 4% gap there.
 
-![](2024-02-04-16-12-33.png)
+![](./img/2024-02-04-16-12-33.png)
 
 So we benchmark it to human level performance, we see that the algorithm is actually doing quite well on the training set, but the bigger problem is the cross-validation error is much higher than the training error. So we would conclude that **this algorithm actually has more of a variance problem than a bias problem**.  
 
@@ -198,7 +198,7 @@ We can determine one in three different ways:
 - **Competing algorithms performance:** if there's some competing algorithm, such a previous implementation that someone else has implemented or even a competitor's algorithm. 
 - **Guess based on prior experience**
 
-![](2024-02-04-16-18-23.png)
+![](./img/2024-02-04-16-18-23.png)
 
 So, **if we have access to this baseline level of performance**, then when judging if an algorithm has high bias or variance, we would look at the baseline level of performance, and the training error, and the cross-validation error:
 
@@ -206,11 +206,11 @@ The two key quantities to measure are then:
 1. what is **the difference between training error and the baseline level that we hope to get to**. In our example, this is 0.2, so very low, but if this is large then we would say we have a high bias problem.
 2. what is **the gap between our training error and our cross-validation error**: if this is **high** then we will conclude we **have a high variance problem**. 
 
-![](2024-02-04-16-21-30.png)
+![](./img/2024-02-04-16-21-30.png)
 
 But let's look at a second example:
 
-![](2024-02-04-16-23-18.png)
+![](./img/2024-02-04-16-23-18.png)
 
 In this second example, the training error is much higher than what humans can do and what we hope to get to; whereas the cross-validation error is just a little bit bigger than the training error. If our training error and cross validation error look like this, **we can conclude that this algorithm has high bias**. 
 
@@ -222,7 +222,7 @@ To summarize:
 
 It is possible for our algorithms to have high bias and high variance:
 
-![](2024-02-04-16-26-47.png)
+![](./img/2024-02-04-16-26-47.png)
 
 
 ## Learning curves
@@ -235,20 +235,20 @@ And for the learning curve, we're going to plot both $J_{cv}$, the cross-validat
 
 Let's start by plotting the cross-validation error:
 
-![](2024-02-04-16-32-55.png)
+![](./img/2024-02-04-16-32-55.png)
 
 
 This shape is no surprise: **as $m_{train}$, the training set size, gets bigger, then we learn a better model and so the cross-validation error goes down.** 
 
 Now, let's plot $J_{train}$:
 
-![](2024-02-04-16-34-40.png)
+![](./img/2024-02-04-16-34-40.png)
 
 **As the training set size gets bigger, the training set error actually increases.** 
 
 Why is this? If we take a look at the small graphs to the right of the next image, we can see that as we increase the number of data points to make our model fit to it just gets harder and harder to fit every single one of our training examples perfectly:
 
-![](2024-02-04-16-37-00.png)
+![](./img/2024-02-04-16-37-00.png)
 
 Notice one other thing about these curves: **the cross-validation error will be typically higher than the training error since we fit the parameters to the training set**, but not to the cross-validations set. 
 
@@ -258,18 +258,18 @@ Let's now take a look at what the learning curves will look like for an algorith
 
 If we were to plot the training error, for a high bias model, such as a linear curve, then **the training error will go up like so as we'd expect, and then start to flatten out, or plateau**
 
-![](2024-02-04-16-44-02.png)
+![](./img/2024-02-04-16-44-02.png)
 
 And that's because as we get more and more training examples when we're fitting the simple linear function, our model doesn't learn any more from the additional training data, since its just a linear curve.
 
 Similarly, **our cross-validation error will come down and also fattened out after a while**, (but again, with $J_{cv}$ higher than $J_{train}$), for the same reason: the model is too simple to learn from additional data:
 
-![](2024-02-04-16-45-59.png)
+![](./img/2024-02-04-16-45-59.png)
 
 
 If we had a measure of that baseline level of performance, such as human-level performance, then it will tend to be a value that is far lower than our $J_{train}$ and our $J_{cv}$. **The big gap between the baseline level of performance and $J_{train}$ is our indicator that this algorithm has high bias**
 
-![](2024-02-04-16-47-55.png)
+![](./img/2024-02-04-16-47-55.png)
 
 
 Also notice: if we could increase even further the x-axis to the right, adding more training examples, **both error curves would still flatten out and would never  find a way to dip down to the human level performance**.
@@ -282,29 +282,29 @@ That's why b**efore investing a lot of effort into collecting more training data
 
 If we were to fit the fourth-order polynomial with a small lambda (or lambda equal to 0) then we get a curve that, though it fits the training data very well, it doesn't generalize.
 
-![](2024-02-04-16-51-25.png)
+![](./img/2024-02-04-16-51-25.png)
 
 In this scenario, $J_{train}$ will be going up as the training set size increases, while $J_{cv}$ will be much higher: our cross-validation error is much higher than our training error. Remember: the signal for high variance is whether $J_{cv}$ is much higher than $J_{train}$. 
 
-![](2024-02-04-16-53-08.png)
+![](./img/2024-02-04-16-53-08.png)
 
 That huge gap indicates us that we have a high-variance problem in our model.
 
 If we were to plot a **baseline level of performance**, we may find that  to be here, that $J_{train}$ can sometimes be even lower than the human level performance. But happens because, when we're overfitting our training set, we are actually fitting the training set so well tjat we end up with an unrealistically low error, even as low as 0.
 
-![](2024-02-04-16-56-13.png)
+![](./img/2024-02-04-16-56-13.png)
 
 In contrast to the situation of dealing with a high-bias model, **when we have high variance, then increasing the training set size can help a lot**. 
 
 If we could extrapolate the curves in the graph above to the right, by increasing $m_{train}$, then the training error will continue to go up, but the cross-validation error will come down as well, and end up approach $J_{train}$. **So in this scenario, it might be possible just by increasing the training set size to lower the cross-validation error and to get our algorithm to perform better and better**.
 
-![](2024-02-04-16-59-04.png)
+![](./img/2024-02-04-16-59-04.png)
 
 To summarize, **if a learning algorithm suffers from high variance, then getting more training data is indeed likely to help.**
 
 So, if model that results in acomplex wiggly curve that is overfitting our data is given more training examples can become smoother and have less cross-validation error (but more train error) as we feed it more and more data.
 
-![](2024-02-04-17-01-31.png)
+![](./img/2024-02-04-17-01-31.png)
 
 If we're building a machine learning application, we could plot the learning curves: we can take different subsets of our training sets, and even if we have, say, 1,000 training examples, we could train a model on just 100 training examples and look at the training error and cross-validation error, then train a model on 200 examples, holding out 800 examples and just not using them for now, and plot $J_{train}$ and $J_{cv}$ and so on the repeats and plot out what the learning curve looks like. If we were to visualize it that way, then that could be another way for we to see if our learning curve looks more like a high bias or high variance one. 
 
@@ -316,7 +316,7 @@ W've seen how by looking at $J_{train}$ and  $J_{cv}$, that is the training erro
 
 This will help we make better decisions about what to try next in order to improve the performance of our learning algorithm. Let's look at an example:
 
-![](2024-02-04-17-09-04.png)
+![](./img/2024-02-04-17-09-04.png)
 
 If we've implemented regularized linear regression on predicting housing prices, but our algorithm makes unacceptably large errors in its predictions, what do we try next? 
 
@@ -379,7 +379,7 @@ Was seen that high bias or high variance are both bad in the sense that they hur
 
 We saw there's a tradeoff between bias and variance: in our example, we overcame it by choosing a second order polynomial that helps by making a tradeoff and picking a model with lowest possible cross validation error - not too much bias, not too much variance:
 
-![](2024-02-04-17-24-41.png)
+![](./img/2024-02-04-17-24-41.png)
 
 And so before the days of neural networks, **machine learning engineers talked a lot about the bias-variance tradeoff** in which we had **to balance the complexity or the degree of polynomial of our model**, or the size of our regularization parameter to make bias and variance both not be too high. 
 
@@ -393,11 +393,11 @@ So, let's see a simple recipe, that isn't always applicable, but if it applies c
 
 **1. Train our algorithm on dataset and ask if it dow well on it (high or low $J_{train}$)**
 
-![](2024-02-04-17-30-55.png)
+![](./img/2024-02-04-17-30-55.png)
 
 **2. If $J_{train}$ is high (high bias), use a bigger neural network with more hidden layers or more hidden units per layer**
 
-![](2024-02-04-17-32-11.png)
+![](./img/2024-02-04-17-32-11.png)
 
 And we can then keep on going through this loop and make our neural network bigger and bigger until it does well on the training set (achieves the level of error in our training set that is roughly comparable to the target level of error we hope to get to).
 
@@ -405,7 +405,7 @@ After it does well on the training set, the answer to our question is yes. So th
 
 **3. Ask: does it do well on the cross validation set (high-variance)?**
 
-![](2024-02-04-17-34-20.png)
+![](./img/2024-02-04-17-34-20.png)
 
 If the answer is no, then we can conclude that the algorithm has high variance. The big gap in $J_{cv}$ and $J_{train}$ indicates we probably have a high variance problem and **we can try to fix it is to get more data**. 
 
@@ -428,7 +428,7 @@ This recipe explains a lot of** the rise of deep learning in the last several ye
 
 The answer is that **a large neural network with well-chosen regularization will usually do as well or better than a smaller one**. 
 
-![](2024-02-04-17-42-27.png)
+![](./img/2024-02-04-17-42-27.png)
 
 If we have a small neural network like the one on the left, and we were to switch to a much larger neural network like the one on the right, we could think that the risk of overfitting goes up significantly. 
 
@@ -438,7 +438,7 @@ In other words: **it almost never hurts to go to a larger neural network as long
 
 To regularize a neural network in Tensorflow, we need to add the `kernel_regularization` parameter to the `Dense` function:
 
-![](2024-02-04-17-47-47.png)
+![](./img/2024-02-04-17-47-47.png)
 
 ```py
 layer_1 = Dense(units=25, activation="relu", kernel_regularizer=L2(0.01))
@@ -463,7 +463,7 @@ So the rise of deep learning has really changed the way that machine learning pr
 
 In the previous optional lab, you saw how to evaluate a learning algorithm's performance by measuring its training and cross validation error. Given these values, you are able to quantify how well a model is doing and this helps you make a decision on which one to use for a given application. In this lab, you will build upon this process and explore some tips to improve the performance of your models. As it turns out, the training and cross validation errors can tell you what to try next to improve your models. Specifically, it will show if you have a high bias (underfitting) or high variance (overfitting) problem. This lecture slide shown below gives an example:
 
-![](2024-02-04-17-53-14.png)
+![](./img/2024-02-04-17-53-14.png)
 
 The leftmost figure shows a high bias problem where the model is not capturing the patterns in the training data. As a result, you will have a high training and cross validation error. The rightmost figure, on the other hand, shows a high variance problem where the model has overfit the training set. Thus, even though it has a low training error, it will perform poorly on new examples. That is indicated by a high cross validation error. The ideal model would be the figure in the middle, where it successfully learns from the training set and also generalizes well to unseen data. The lectures gave some tips on what to do next to achieve this "just right" model. 
 
@@ -542,7 +542,7 @@ model = LinearRegression()
 utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=10, baseline=400)
 ```
 
-![](2024-02-04-17-56-59.png)
+![](./img/2024-02-04-17-56-59.png)
 
 As you can see, the more polynomial features you add, the better the model fits to the training data. In this example, it even performed better than the baseline. At this point, you can say that the models with degree greater than 4 are low-bias because they perform close to or better than the baseline.
 
@@ -553,7 +553,7 @@ However, if the baseline is defined lower (e.g. you consulted an expert regardin
 utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=10, baseline=250)
 ```
 
-![](2024-02-04-17-57-52.png)
+![](./img/2024-02-04-17-57-52.png)
 
 #### Try getting additional features
 
@@ -594,7 +594,7 @@ model = LinearRegression()
 utils.train_plot_poly(model, x_train, y_train, x_cv, y_cv, max_degree=6, baseline=250)
 ```
 
-![](2024-02-04-17-59-43.png)
+![](./img/2024-02-04-17-59-43.png)
 
 #### Try decreasing the regularization parameter
 
@@ -608,7 +608,7 @@ reg_params = [10, 5, 2, 1, 0.5, 0.2, 0.1]
 utils.train_plot_reg_params(reg_params, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
 ```
 
-![](2024-02-04-18-00-59.png)
+![](./img/2024-02-04-18-00-59.png)
 
 The resulting plot shows an initial $\lambda$ of `10` and as you can see, the training error is worse than the baseline at that point. This implies that it is placing a huge penalty on the `w` parameters and this prevents the model from learning more complex patterns in your data. As you decrease $\lambda$, the model loosens this restriction and the training error is able to approach the baseline performance.
 
@@ -627,7 +627,7 @@ reg_params = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1]
 # Define degree of polynomial and train for each value of lambda
 utils.train_plot_reg_params(reg_params, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
 ```
-![](2024-02-04-18-02-19.png)
+![](./img/2024-02-04-18-02-19.png)
 
 #### Try smaller sets of features
 
@@ -679,7 +679,7 @@ files = [file1, file2]
 utils.train_plot_diff_datasets(model, files, max_degree=4, baseline=250)
 ```
 
-![](2024-02-04-18-04-26.png)
+![](./img/2024-02-04-18-04-26.png)
 
 #### Get more training examples
 
@@ -706,7 +706,7 @@ model = LinearRegression()
 utils.train_plot_learning_curve(model, x_train, y_train, x_cv, y_cv, degree= 4, baseline=250)
 ```
 
-![](2024-02-04-18-05-06.png)
+![](./img/2024-02-04-18-05-06.png)
 
 From the results, it shows that the cross validation error starts to approach the training error as you increase the dataset size. Another insight you can get from this is that adding more examples will not likely solve a high bias problem. That's because the training error remains relatively flat even as the dataset increases.
 
