@@ -285,3 +285,426 @@ I did just illustrate how we could bump up $w_1$ by a little bit and see how muc
 
 Whereas we got all four of these derivatives N + P, rather than N times P steps. And this makes a huge difference in practical neural networks, where the number of nodes and the number of parameters can be really large.
 
+## Optional Lab: Derivatives
+
+This lab will give you a more intuitive understanding of derivatives. It will show you a simple way of calculating derivatives arithmetically. It will also introduce you to a handy Python library that allows you to calculate derivatives symbolically.
+
+```py
+from sympy import symbols, diff
+```
+
+### Informal definition of derivatives
+
+The formal definition of derivatives can be a bit daunting with limits and values 'going to zero'. The idea is really much simpler. 
+
+The derivative of a function describes how the output of a function changes when there is a small change in an input variable.
+
+Let's use the cost function $J(w)$ as an example. The cost $J$ is the output and $w$ is the input variable.  
+Let's give a 'small change' a name *epsilon* or $\epsilon$. We use these Greek letters because it is traditional in mathematics to use *epsilon*($\epsilon$) or *delta* ($\Delta$) to represent a small value. You can think of it as representing 0.001 or some other small value.  
+
+$$
+\begin{equation}
+\text{if } w \uparrow \epsilon \text{ causes }J(w) \uparrow \text{by }k \times \epsilon \text{ then}  \\
+\frac{\partial J(w)}{\partial w} = k \tag{1}
+\end{equation}
+$$
+
+This just says if you change the input to the function $J(w)$ by a little bit and the output changes by $k$ times that little bit, then the derivative of $J(w)$ is equal to $k$.
+
+Let's try this out.  Let's look at the derivative of the function $J(w) = w^2$ at the point $w=3$ and $\epsilon = 0.001$
+
+```py
+J = (3)**2
+J_epsilon = (3 + 0.001)**2
+k = (J_epsilon - J)/0.001    # difference divided by epsilon
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_dw ~= k = {k:0.6f} ")
+# J = 9, J_epsilon = 9.006001, dJ_dw ~= k = 6.001000 
+```
+
+We have increased the input value a little bit (0.001), causing the output to change from 9 to 9.006001, an increase of 6 times the input increase. Referencing (1) above, this says that $k=6$, so $\frac{\partial J(w)}{\partial w} \approx 6$. If you are familiar with calculus, you know, written symbolically,  $\frac{\partial J(w)}{\partial w} = 2 w$. With $w=3$ this is 6. Our calculation above is not exactly 6 because to be exactly correct $\epsilon$ would need to be [infinitesimally small](https://www.dictionary.com/browse/infinitesimally) or really, really small. That is why we use the symbols $\approx$ or ~= rather than =. Let's see what happens if we make $\epsilon$ smaller.
+
+```py
+J = (3)**2
+J_epsilon = (3 + 0.000000001)**2
+k = (J_epsilon - J)/0.000000001
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_dw ~= k = {k} ")
+# J = 9, J_epsilon = 9.000000006, dJ_dw ~= k = 6.000000496442226 
+```
+
+The value gets close to exactly 6 as we reduce the size of $\epsilon$. Feel free to try reducing the value further.
+
+### Finding symbolic derivatives
+In backprop it is useful to know the derivative of simple functions at any input value. Put another way, we would like to know the 'symbolic' derivative rather than the 'arithmetic' derivative. An example of a symbolic derivative is,  $\frac{\partial J(w)}{\partial w} = 2 w$, the derivative of $J(w) = w^2$ above.  With the symbolic derivative you can find the value of the derivative at any input value $w$.  
+
+If you have taken a calculus course, you are familiar with the many [differentiation rules](https://en.wikipedia.org/wiki/Differentiation_rules#Power_laws,_polynomials,_quotients,_and_reciprocals) that mathematicians have developed to solve for a derivative given an expression. Well, it turns out this process has been automated with symbolic differentiation programs. An example of this in python is the [SymPy](https://www.sympy.org/en/index.html) library. Let's take a look at how to use this.
+
+#### $J = w^2$
+Define the python variables and their symbolic names.
+
+```py
+J, w = symbols('J, w')
+```
+
+Define and print the expression. Note SymPy produces a [latex](https://en.wikibooks.org/wiki/LaTeX/Mathematics) string which generates a nicely readable equation.
+
+```py
+J=w**2
+J
+```
+
+Use SymPy's `diff` to differentiate the expression for $J$ with respect to $w$. Note the result matches our earlier example.
+
+```py
+dJ_dw = diff(J,w)
+dJ_dw
+# 2𝑤
+```
+
+Evaluate the derivative at a few points by 'substituting' numeric values for the symbolic values. In the first example, $w$ is replaced by $2$.
+
+```py
+dJ_dw.subs([(w,2)])    # derivative at the point w = 2
+# 4
+
+dJ_dw.subs([(w,3)])    # derivative at the point w = 3
+# 6
+
+dJ_dw.subs([(w,-3)])    # derivative at the point w = -3
+# -6
+```
+
+![](2024-02-13-01-46-59.png)
+
+![](2024-02-13-01-47-07.png)
+
+![](2024-02-13-01-47-18.png)
+
+![](2024-02-13-01-47-29.png)
+
+## Optional Lab: Back propagation using a computation graph
+
+Working through this lab will give you insight into a key algorithm used by most machine learning frameworks. Gradient descent requires the derivative of the cost with respect to each parameter in the network.  Neural networks can have millions or even billions of parameters. The *back propagation* algorithm is used to compute those derivatives. *Computation graphs* are used to simplify the operation. Let's dig into this below.
+
+```py
+from sympy import *
+import numpy as np
+import re
+%matplotlib widget
+import matplotlib.pyplot as plt
+from matplotlib.widgets import TextBox
+from matplotlib.widgets import Button
+import ipywidgets as widgets
+from lab_utils_backprop import *
+```
+
+### Computation Graph
+A computation graph simplifies the computation of complex derivatives by breaking them into smaller steps. Let's see how this works.
+
+Let's calculate the derivative of this slightly complex expression, $J = (2+3w)^2$. We would like to find the derivative of $J$ with respect to $w$ or $\frac{\partial J}{\partial w}$.
+
+```py
+plt.close("all")
+plt_network(config_nw0, "./images/C2_W2_BP_network0.PNG")
+```
+
+![](2024-02-13-01-54-08.png)
+
+Above, you can see we broke the expression into two nodes which we can work on independently. If you already have a good understanding of the process from the lecture, you can go ahead and fill in the boxes in the diagram above. You will want to first fill in the blue boxes going left to right and then fill in the green boxes starting on the right and moving to the left.
+If you have the correct values, the values will show as green or blue. If the value is incorrect, it will be red. Note, the interactive graphic is not particularly robust. If you run into trouble with the interface, run the cell above again to restart.
+
+If you are unsure of the process, we will work this example step by step below.
+
+### Forward Propagation   
+Let's calculate the values in the forward direction.
+
+>Just a note about this section. It uses global variables and reuses them as the calculation progresses. If you run cells out of order, you may get funny results. If you do, go back to this point and run them in order.
+
+```py
+w = 3
+a = 2+3*w
+J = a**2
+print(f"a = {a}, J = {J}")
+# a = 11, J = 121
+```
+
+### Backprop
+ Backprop is the algorithm we use to calculate derivatives. As described in the lectures, backprop starts at the right and moves to the left. The first node to consider is $J = a^2 $ and the first step is to find $\frac{\partial J}{\partial a}$ 
+
+ ### $\frac{\partial J}{\partial a}$ 
+#### Arithmetically
+Find $\frac{\partial J}{\partial a}$ by finding how $J$ changes as a result of a little change in $a$. This is described in detail in the derivatives optional lab.
+
+```py
+a_epsilon = a + 0.001       # a epsilon
+J_epsilon = a_epsilon**2    # J_epsilon
+k = (J_epsilon - J)/0.001   # difference divided by epsilon
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_da ~= k = {k} ")
+# J = 121, J_epsilon = 121.02200099999999, dJ_da ~= k = 22.000999999988835 
+```
+
+$\frac{\partial J}{\partial a}$ is 22 which is $2\times a$. Our result is not exactly $2 \times a$ because our epsilon value is not infinitesimally small. 
+
+#### Symbolically
+Now, let's use SymPy to calculate derivatives symbolically as we did in the derivatives optional lab. We will prefix the name of the variable with an 's' to indicate this is a *symbolic* variable.
+
+```py
+sw,sJ,sa = symbols('w,J,a')
+sJ = sa**2
+sJ
+
+sJ.subs([(sa,a)])
+
+dJ_da = diff(sJ, sa)
+```
+![](2024-02-13-01-55-34.png)
+![](2024-02-13-01-55-44.png)
+
+So, $\frac{\partial J}{\partial a} = 2a$. When $a=11$, $\frac{\partial J}{\partial a} = 22$. This matches our arithmetic calculation above.
+If you have not already done so, you can go back to the diagram above and fill in the value for $\frac{\partial J}{\partial a}$.
+
+### $\frac{\partial J}{\partial w}$ 
+Moving from right to left, the next value we would like to compute is $\frac{\partial J}{\partial w}$. To do this, we first need to calculate $\frac{\partial a}{\partial w}$ which describes how the output of this node, $a$, changes when the input $w$ changes a little bit.
+
+#### Arithmetically
+Find $\frac{\partial a}{\partial w}$ by finding how $a$ changes as a result of a little change in $w$.
+
+```py
+w_epsilon = w + 0.001       # a  plus a small value, epsilon
+a_epsilon = 2 + 3*w_epsilon
+k = (a_epsilon - a)/0.001   # difference divided by epsilon
+print(f"a = {a}, a_epsilon = {a_epsilon}, da_dw ~= k = {k} ")
+
+# a = 11, a_epsilon = 11.003, da_dw ~= k = 3.0000000000001137 
+```
+
+Calculated arithmetically,  $\frac{\partial a}{\partial w} \approx 3$. Let's try it with SymPy.
+
+```py
+sa = 2 + 3*sw
+sa
+
+da_dw = diff(sa,sw)
+da_dw
+```
+
+![](2024-02-13-01-57-09.png)
+
+```py
+dJ_dw = da_dw * dJ_da
+dJ_dw
+```
+![](2024-02-13-01-57-25.png)
+
+And $a$ is 11 in this example so $\frac{\partial J}{\partial w} = 66$. We can check this arithmetically:
+
+```py
+w_epsilon = w + 0.001
+a_epsilon = 2 + 3*w_epsilon
+J_epsilon = a_epsilon**2
+k = (J_epsilon - J)/0.001   # difference divided by epsilon
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_dw ~= k = {k} ")
+# J = 121, J_epsilon = 121.06600900000001, dJ_dw ~= k = 66.0090000000082 
+```
+
+**Another view**  
+One could visualize these cascading changes this way:  
+
+![](2024-02-13-01-58-46.png)
+
+A small change in $w$ is multiplied by $\frac{\partial a}{\partial w}$ resulting in a change that is 3 times as large. This larger change is then multiplied by $\frac{\partial J}{\partial a}$ resulting in a change that is now $3 \times 22 = 66$ times larger.
+
+### Computation Graph of a Simple Neural Network
+Below is a graph of the neural network used in the lecture with different values. Try and fill in the values in the boxes. Note, the interactive graphic is not particularly robust. If you run into trouble with the interface, run the cell below again to restart.
+
+![](2024-02-13-01-59-16.png)
+
+Below, we will go through the computations required to fill in the above computation graph in detail. We start with the forward path.
+
+### Forward propagation
+The calculations in the forward path are the ones you have recently learned for neural networks. You can compare the values below to those you calculated for the diagram above.
+
+```py
+# Inputs and parameters
+x = 2
+w = -2
+b = 8
+y = 1
+# calculate per step values   
+c = w * x
+a = c + b
+d = a - y
+J = d**2/2
+print(f"J={J}, d={d}, a={a}, c={c}")
+# J=4.5, d=3, a=4, c=-4
+```
+
+### Backward propagation (Backprop)
+As described in the lectures, backprop starts at the right and moves to the left. The first node to consider is $J = \frac{1}{2}d^2 $ and the first step is to find $\frac{\partial J}{\partial d}$
+
+### $\frac{\partial J}{\partial d}$ 
+
+#### Arithmetically
+Find $\frac{\partial J}{\partial d}$ by finding how $J$ changes as a result of a little change in $d$.
+
+```py
+d_epsilon = d + 0.001
+J_epsilon = d_epsilon**2/2
+k = (J_epsilon - J)/0.001   # difference divided by epsilon
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_dd ~= k = {k} ")
+# J = 4.5, J_epsilon = 4.5030005, dJ_dd ~= k = 3.0004999999997395 
+```
+
+$\frac{\partial J}{\partial d}$ is 3, which is the value of $d$. Our result is not exactly $d$ because our epsilon value is not infinitesimally small. 
+#### Symbolically
+Now, let's use SymPy to calculate derivatives symbolically, as we did in the derivatives optional lab. We will prefix the name of the variable with an 's' to indicate this is a *symbolic* variable.
+
+```py
+sx,sw,sb,sy,sJ = symbols('x,w,b,y,J')
+sa, sc, sd = symbols('a,c,d')
+sJ = sd**2/2
+sJ
+
+sJ.subs([(sd,d)])
+
+dJ_dd = diff(sJ, sd)
+dJ_dd
+```
+
+![](2024-02-13-02-00-52.png)
+
+So, $\frac{\partial J}{\partial d}$ = d. When $d=3$, $\frac{\partial J}{\partial d}$ = 3. This matches our arithmetic calculation above.
+
+If you have not already done so, you can go back to the diagram above and fill in the value for $\frac{\partial J}{\partial d}$.
+
+### $\frac{\partial J}{\partial a}$ 
+![](2024-02-13-02-01-29.png)
+
+Moving from right to left, the next value we would like to compute is $\frac{\partial J}{\partial a}$. To do this, we first need to calculate $\frac{\partial d}{\partial a}$ which describes how the output of this node changes when the input $a$ changes a little bit. (Note, we are not interested in how the output changes when $y$ changes since $y$ is not a parameter.)
+
+#### Arithmetically
+Find $\frac{\partial d}{\partial a}$ by finding how $d$ changes as a result of a little change in $a$.
+
+```py
+a_epsilon = a + 0.001         # a  plus a small value
+d_epsilon = a_epsilon - y
+k = (d_epsilon - d)/0.001   # difference divided by epsilon
+print(f"d = {d}, d_epsilon = {d_epsilon}, dd_da ~= k = {k} ")
+# d = 3, d_epsilon = 3.0010000000000003, dd_da ~= k = 1.000000000000334 
+```
+Calculated arithmetically,  $\frac{\partial d}{\partial a} \approx 1$. Let's try it with SymPy.
+#### Symbolically
+
+```py
+sd = sa - sy
+sd
+
+dd_da = diff(sd,sa)
+dd_da
+```
+
+![](2024-02-13-02-02-49.png)
+
+Calculated arithmetically,  $\frac{\partial d}{\partial a}$ also equals 1.  
+>The next step is the interesting part, repeated again in this example:
+> - We know that a small change in $a$ will cause $d$ to change by 1 times that amount.
+> - We know that a small change in $d$ will cause $J$ to change by $d$ times that amount. (d=3 in this example)    
+ so, putting these together, 
+> - We  know that a small change in $a$ will cause $J$ to change by $1\times d$ times that amount.
+> 
+>This is again *the chain rule*.  It can be written like this: 
+ $$\frac{\partial J}{\partial a} = \frac{\partial d}{\partial a} \frac{\partial J}{\partial d} $$
+ 
+Let's try calculating it:
+
+```py
+dJ_da = dd_da * dJ_dd
+dJ_da
+```
+![](2024-02-13-02-03-15.png)
+
+And $d$ is 3 in this example so $\frac{\partial J}{\partial a} = 3$. We can check this arithmetically:
+
+```py
+a_epsilon = a + 0.001
+d_epsilon = a_epsilon - y
+J_epsilon = d_epsilon**2/2
+k = (J_epsilon - J)/0.001   
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_da ~= k = {k} ")
+```
+
+> **The steps in backprop**   
+>Now that you have worked through several nodes, we can write down the basic method:\
+> working right to left, for each node:
+>- calculate the local derivative(s) of the node
+>- using the chain rule, combine with the derivative of the cost with respect to the node to the right.   
+
+The 'local derivative(s)' are the derivative(s) of the output of the current node with respect to all inputs or parameters.
+
+Let's continue the job. We'll be a bit less verbose now that you are familiar with the method.
+
+### $\frac{\partial J}{\partial c}$,  $\frac{\partial J}{\partial b}$
+
+![](2024-02-13-02-04-00.png)
+
+The next node has two derivatives of interest. We need to calculate  $\frac{\partial J}{\partial c}$ so we can propagate to the left. We also want to calculate   $\frac{\partial J}{\partial b}$. Finding the derivative of the cost with respect to the parameters $w$ and $b$ is the object of backprop. We will find the local derivatives,  $\frac{\partial a}{\partial c}$ and  $\frac{\partial a}{\partial b}$ first and then combine those with the derivative coming from the right, $\frac{\partial J}{\partial a}$.
+
+```py
+# calculate the local derivatives da_dc, da_db
+sa = sc + sb
+sa
+
+da_dc = diff(sa,sc)
+da_db = diff(sa,sb)
+print(da_dc, da_db)
+
+dJ_dc = da_dc * dJ_da
+dJ_db = da_db * dJ_da
+print(f"dJ_dc = {dJ_dc},  dJ_db = {dJ_db}")
+```
+
+![](2024-02-13-02-04-36.png)
+
+And in our example, d = 3.
+
+###  $\frac{\partial J}{\partial w}$
+
+![](2024-02-13-02-05-02.png)
+
+The last node in this example calculates `c`. Here, we are interested in how J changes with respect to the parameter w. We will not back propagate to the input $x$, so we are not interested in $\frac{\partial J}{\partial x}$. Let's start by calculating $\frac{\partial c}{\partial w}$.
+
+```py
+# calculate the local derivative
+sc = sw * sx
+sc
+
+dc_dw = diff(sc,sw)
+dc_dw
+```
+![](2024-02-13-02-05-35.png)
+
+This derivative is a bit more exciting than the last one. This will vary depending on the value of $x$. This is 2 in our example.
+
+Combine this with $\frac{\partial J}{\partial c}$ to find $\frac{\partial J}{\partial w}$.
+
+```py
+dJ_dw = dc_dw * dJ_dc
+dJ_dw
+# 𝑑𝑥
+
+print(f"dJ_dw = {dJ_dw.subs([(sd,d),(sx,x)])}")
+# dJ_dw = 2*d
+```
+
+$d=3$,  so $\frac{\partial J}{\partial w} = 6$ for our example.   
+Let's test this arithmetically:
+
+```py
+J_epsilon = ((w+0.001)*x+b - y)**2/2
+k = (J_epsilon - J)/0.001  
+print(f"J = {J}, J_epsilon = {J_epsilon}, dJ_dw ~= k = {k} ")
+```
+
+They match! Great.
+
+### Congratulations!
+You've worked through an example of back propagation using a computation graph. You can apply this to larger examples by following the same node by node approach. 
