@@ -365,28 +365,262 @@ So, the question is: **given these three possible features to split on at the ro
 
 **When building a regression tree, rather than trying to reduce entropy,** which was that measure of impurity that we had for a classification problem, **we instead try to reduce the variance of the weight of the values $Y$ at each of these subsets of the data.** 
 
-So, if we've seen the notion of variants in other contexts, that's great. This is the statistical mathematical notion of variants that we'll used in a minute. But if we've not seen how to compute the variance of a set of numbers before, don't worry about it. 
+**Variant is the statistical mathematical notion of how widely a set of numbers varies.** So for the set of numbers 7.2, 9.2 and so on, up to 10.2, it turns out the variance is 1.47: it doesn't vary that much. Whereas, for 8.8, 15, 11, 18 and 20, these numbers go all the way from 8.8 all the way up to 20, so the variance is much larger: 21.87. 
 
-All we need to know for this slide is that variants informally computes how widely a set of numbers varies. So for this set of numbers 7.2, 9.2 and so on, up to 10.2, it turns out the variance is 1.47, so it doesn't vary that much. Whereas, here 8.8, 15, 11, 18 and 20, these numbers go all the way from 8.8 all the way up to 20. 
 
-And so the variance is much larger, turns out to the variance of 21.87. And so the way we'll evaluate the quality of the split is, we'll compute same as before, W left and W right as the fraction of examples that went to the left and right branches. And the average variance after the split is going to be 5/10, which is W left times 1.47, which is the variance on the left and then plus 5/10 times the variance on the right, which is 21.87. 
+![](2024-02-16-12-49-12.png)
 
-So, this weighted average variance plays a very similar role to the weighted average entropy that we had used when deciding what split to use for a classification problem. And we can then repeat this calculation for the other possible choices of features to split on. Here in the tree in the middle, the variance of these numbers here turns out to be 27.80. 
+The way we'll evaluate the quality of the split is: first, we'll compute same as before, $w_{\text{left}}$  and $w_{\text{right}}$  as the fraction of examples that went to the left and right branches. And then, **the average variance** after the split is going to be $w_{\text{left}}$ times the left variance, plus $w_{\text{right}}$ times the right variance:
 
-The variance here is 1.37. And so with W left equals seven-tenths and W right as three-tenths, and so with these values, we can compute the weighted variance as follows. Finally, for the last example, if we were to split on the whiskers feature, this is the variance on the left and right, there's W left and W right. 
+![](2024-02-16-12-51-16.png)
 
-And so the weight of variance is this. A good way to choose a split would be to just choose the value of the weighted variance that is lowest. Similar to when we're computing information gain, we're going to make just one more modification to this equation. 
+**This weighted average variance plays a very similar role to the weighted average entropy** that we had used when deciding what split to use for a classification problem. 
 
-Just as for the classification problem, we didn't just measure the average weighted entropy, we measured the reduction in entropy and that was information gain. For a regression tree we'll also similarly measure the reduction in variance. Turns out, if we look at all of the examples in the training set, all ten examples and compute the variance of all of them, the variance of all the examples turns out to be 20.51. 
+Then we repeat this calculation for the other possible choices of features to split on:
 
-And that's the same value for the roots node in all of these, of course, because it's the same ten examples at the roots node. And so what we'll actually compute is the variance of the roots node, which is 20.51 minus this expression down here, which turns out to be equal to 8.84. And so at the roots node, the variance was 20.51 and after splitting on ear shape, the average weighted variance at these two nodes is 8.84 lower. 
+![](2024-02-16-12-52-23.png)
 
-So, the reduction in variance is 8.84. And similarly, if we compute the expression for reduction in variance for this example in the middle, it's 20.51 minus this expression that we had before, which turns out to be equal to 0.64. So, this is a very small reduction in variance. 
+A good way **to choose a split would be to just choose the value of the weighted variance that is lowest.** 
 
-And for the whiskers feature we end up with this which is 6.22. So, between all three of these examples, 8.84 gives we the largest reduction in variance. So, just as previously we would choose the feature that gives we the largest information gain for a regression tree, we will choose the feature that gives we the largest reduction in variance, which is why we choose ear shape as the feature to split on. 
+Similar to when we're computing information gain, we're going to make just one more modification to this equation. Just as for the classification problem, we didn't just measure the average weighted entropy, we measured the reduction in entropy and that was information gain. For a regression tree, we'll also **similarly measure the reduction in variance**. 
 
-Having chosen the ear shape feature to split on, we now have two subsets of five examples in the left and right side branches and we would then, again, we say recursively, where we take these five examples and do a new decision tree focusing on just these five examples, again, evaluating different options of features to split on and picking the one that gives we the biggest variance reduction. And similarly on the right. And we keep on splitting until we meet the criteria for not splitting any further. 
+Turns out, if we look at all of the examples in the training set, all ten examples and compute the variance of all of them, the variance of all the examples turns out to be 20.51. That's the same value for the roots node in all of these, of course, because it's the same ten examples at the roots node.
 
-And so that's it. With this technique, we can get our decision treat to not just carry out classification problems, but also regression problems. So far, we've talked about how to train a single decision tree. 
+![](2024-02-16-12-58-06.png)
 
-It turns out if we train a lot of decision trees, we call this an ensemble of decision trees, we can get a much better result. Let's take a look at why and how to do so in the next section.
+So what we'll actually compute is the variance of the roots node, which is 20.51, minus this average weighted variance in each of the possible splits:
+
+![](2024-02-16-12-59-17.png)
+
+So, between all three of these exampless, 8.84 gives we the largest reduction in variance. So, just as previously we would choose the feature that gives we the largest information gain for a regression tree, **we will choose the feature that gives we the largest reduction in variance, which is why we choose ear shape as the feature to split on.** 
+
+Having chosen the ear shape feature to split on, we now have two subsets of five examples in the left and right side branches and we would then recursively split the tree according to a feature, taking the five examples and doing a new decision tree focusing on those five, evaluating different options of features to split on and picking the one that gives we the biggest variance reduction. And similarly on the right. And we keep on splitting until we meet the criteria for not splitting any further. 
+
+## Optional Lab: Decision Trees
+
+[LINK](https://www.coursera.org/learn/advanced-learning-algorithms/ungradedLab/hPtix/optional-lab-decision-trees/lab?path=%2Fnotebooks%2FC2_W4_Lab_01_Decision_Trees.ipynb)
+
+[Internal Link](./labs/Work%204/C2_W4_Lab_01_Decision_Trees.ipynb)
+
+In this notebook you will visualize how a decision tree is splitted using information gain.
+
+We will revisit the dataset used in the video lectures.
+
+As you saw in the lectures, in a decision tree, we decide if a node will be split or not by looking at the **information gain** that split would give us. (Image of video IG)
+
+Where 
+
+$$\text{Information Gain} = H(p_1^\text{node})- \left(w^{\text{left}}H\left(p_1^\text{left}\right) + w^{\text{right}}H\left(p_1^\text{right}\right)\right),$$
+
+and $H$ is the entropy, defined as
+
+$$H(p_1) = -p_1 \text{log}_2(p_1) - (1- p_1) \text{log}_2(1- p_1)$$
+
+Remember that log here is defined to be in base 2. Run the code block below to see by yourself how the entropy. $H(p)$ behaves while $p$ varies.
+
+Note that the H attains its higher value when $p = 0.5$. This means that the probability of event is $0.5$. And its minimum value is attained in $p = 0$ and $p = 1$, i.e., the probability of the event happening is totally predictable. Thus, the entropy shows the degree of predictability of an event.
+
+```py
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from utils import *
+```
+
+```py
+%matplotlib widget
+_ = plot_entropy()
+
+```
+
+![](2024-02-16-13-08-55.png)
+
+![](2024-02-16-13-09-02.png)
+
+We will use **one-hot encoding** to encode the categorical features. They will be as follows:
+
+- Ear Shape: Pointy = 1, Floppy = 0
+- Face Shape: Round = 1, Not Round = 0
+- Whiskers: Present = 1, Absent = 0
+
+Therefore, we have two sets:
+
+- `X_train`: for each example, contains 3 features:
+            - Ear Shape (1 if pointy, 0 otherwise)
+            - Face Shape (1 if round, 0 otherwise)
+            - Whiskers (1 if present, 0 otherwise)
+            
+- `y_train`: whether the animal is a cat
+            - 1 if the animal is a cat
+            - 0 otherwise
+
+```py
+X_train = np.array([[1, 1, 1],
+[0, 0, 1],
+ [0, 1, 0],
+ [1, 0, 1],
+ [1, 1, 1],
+ [1, 1, 0],
+ [0, 0, 0],
+ [1, 1, 0],
+ [0, 1, 0],
+ [0, 1, 0]])
+
+y_train = np.array([1, 1, 0, 0, 1, 1, 0, 1, 0, 0])
+```
+
+```py
+#For instance, the first example
+X_train[0]
+# array([1, 1, 1])
+```
+
+This means that the first example has a pointy ear shape, round face shape and it has whiskers.
+
+On each node, we compute the information gain for each feature, then split the node on the feature with the higher information gain, by comparing the entropy of the node with the weighted entropy in the two splitted nodes.
+
+So, the root node has every animal in our dataset. Remember that $p_1^{node}$ is the proportion of positive class (cats) in the root node. So
+
+$$p_1^{node} = \frac{5}{10} = 0.5$$
+
+Now let's write a function to compute the entropy.
+
+```py
+def entropy(p):
+    if p == 0 or p == 1:
+        return 0
+    else:
+        return -p * np.log2(p) - (1- p)*np.log2(1 - p)
+    
+print(entropy(0.5))
+# 1.0
+```
+
+To illustrate, let's compute the information gain if we split the node for each of the features. To do this, let's write some functions.
+
+```py
+def split_indices(X, index_feature):
+    """Given a dataset and a index feature, return two lists for the two split nodes, the left node has the animals that have 
+    that feature = 1 and the right node those that have the feature = 0 
+    index feature = 0 => ear shape
+    index feature = 1 => face shape
+    index feature = 2 => whiskers
+    """
+    left_indices = []
+    right_indices = []
+    for i,x in enumerate(X):
+        if x[index_feature] == 1:
+            left_indices.append(i)
+        else:
+            right_indices.append(i)
+    return left_indices, right_indices
+```
+
+So, if we choose Ear Shape to split, then we must have in the left node (check the table above) the indices:
+
+$$0 \quad 3 \quad 4 \quad 5 \quad 7$$
+
+and the right indices, the remaining ones.
+
+```py
+split_indices(X_train, 0)
+# ([0, 3, 4, 5, 7], [1, 2, 6, 8, 9])
+```
+
+Now we need another function to compute the weighted entropy in the splitted nodes. As you've seen in the video lecture, we must find:
+
+- $w^{\text{left}}$ and $w^{\text{right}}$, the proportion of animals in **each node**.
+- $p^{\text{left}}$ and $p^{\text{right}}$, the proportion of cats in **each split**.
+
+Note the difference between these two definitions!! To illustrate, if we split the root node on the feature of index 0 (Ear Shape), then in the left node, the one that has the animals 0, 3, 4, 5 and 7, we have:
+
+$$w^{\text{left}}= \frac{5}{10} = 0.5 \text{ and } p^{\text{left}} = \frac{4}{5}$$
+$$w^{\text{right}}= \frac{5}{10} = 0.5 \text{ and } p^{\text{right}} = \frac{1}{5}$$
+
+```py
+def weighted_entropy(X,y,left_indices,right_indices):
+    """
+    This function takes the splitted dataset, the indices we chose to split and returns the weighted entropy.
+    """
+    w_left = len(left_indices)/len(X)
+    w_right = len(right_indices)/len(X)
+    p_left = sum(y[left_indices])/len(left_indices)
+    p_right = sum(y[right_indices])/len(right_indices)
+    
+    weighted_entropy = w_left * entropy(p_left) + w_right * entropy(p_right)
+    return weighted_entropy
+```
+
+```py
+left_indices, right_indices = split_indices(X_train, 0)
+weighted_entropy(X_train, y_train, left_indices, right_indices)
+# 0.7219280948873623
+```
+
+So, the weighted entropy in the 2 split nodes is 0.72. To compute the **Information Gain** we must subtract it from the entropy in the node we chose to split (in this case, the root node). 
+
+```py
+def information_gain(X, y, left_indices, right_indices):
+    """
+    Here, X has the elements in the node and y is theirs respectives classes
+    """
+    p_node = sum(y)/len(y)
+    h_node = entropy(p_node)
+    w_entropy = weighted_entropy(X,y,left_indices,right_indices)
+    return h_node - w_entropy
+```
+
+```py
+information_gain(X_train, y_train, left_indices, right_indices)
+# 0.2780719051126377
+```
+
+Now, let's compute the information gain if we split the root node for each feature:
+```py
+for i, feature_name in enumerate(['Ear Shape', 'Face Shape', 'Whiskers']):
+    left_indices, right_indices = split_indices(X_train, i)
+    i_gain = information_gain(X_train, y_train, left_indices, right_indices)
+    print(f"Feature: {feature_name}, information gain if we split the root node using this feature: {i_gain:.2f}")
+
+# Feature: Ear Shape, information gain if we split the root node using this feature: 0.28
+# Feature: Face Shape, information gain if we split the root node using this feature: 0.03
+# Feature: Whiskers, information gain if we split the root node using this feature: 0.12
+```
+
+So, the best feature to split is indeed the Ear Shape. Run the code below to see the split in action. You do not need to understand the following code block. 
+
+```py
+tree = []
+build_tree_recursive(X_train, y_train, [0,1,2,3,4,5,6,7,8,9], "Root", max_depth=1, current_depth=0, tree = tree)
+generate_tree_viz([0,1,2,3,4,5,6,7,8,9], y_train, tree)
+
+# Depth 0, Root: Split on feature: 0
+#  - Left leaf node with indices [0, 3, 4, 5, 7]
+#  - Right leaf node with indices [1, 2, 6, 8, 9]
+```
+
+![](2024-02-16-13-13-21.png)
+
+The process is **recursive**, which means we must perform these calculations for each node until we meet a stopping criteria:
+
+- If the tree depth after splitting exceeds a threshold
+- If the resulting node has only 1 class
+- If the information gain of splitting is below a threshold
+
+The final tree looks like this:
+
+```py
+tree = []
+build_tree_recursive(X_train, y_train, [0,1,2,3,4,5,6,7,8,9], "Root", max_depth=2, current_depth=0, tree = tree)
+generate_tree_viz([0,1,2,3,4,5,6,7,8,9], y_train, tree)
+
+#  Depth 0, Root: Split on feature: 0
+# - Depth 1, Left: Split on feature: 1
+#   -- Left leaf node with indices [0, 4, 5, 7]
+#   -- Right leaf node with indices [3]
+# - Depth 1, Right: Split on feature: 2
+#   -- Left leaf node with indices [1]
+#   -- Right leaf node with indices [2, 6, 8, 9]
+```
+
+![](2024-02-16-13-14-09.png)
