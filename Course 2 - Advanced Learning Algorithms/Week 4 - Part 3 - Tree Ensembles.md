@@ -6,11 +6,11 @@
 
 Let's take a look. With the example that we've been using, the best feature to split on at the root node turned out to be the ear shape, resulting in the following two subsets of the dat,a and then building further sub trees on from them:
 
-![](2024-02-16-13-22-14.png)
+![](./img/2024-02-16-13-22-14.png)
 
 But if we were to take just one of the ten examples and change it to a different cat, so that instead of having pointy ears, round face, whiskers absent, this new cat has floppy ears, round face, whiskers present.**With just changing a single training example, the highest information gain feature to split on becomes the whiskers feature**, instead of the ear shape feature:
 
-![](2024-02-16-13-23-58.png)
+![](./img/2024-02-16-13-23-58.png)
 
 As a result of that, **the subsets of data we get in the left and right sub-trees become totally different**, and as we continue to run the decision tree learning algorithm recursively, **we build out totally different sub trees on the left and right**. 
 
@@ -18,7 +18,7 @@ As a result of that, **the subsets of data we get in the left and right sub-tree
 
 **This is what we call a tree ensemble, which is just a collection of multiple trees.** 
 
-![](2024-02-16-13-26-28.png)
+![](./img/2024-02-16-13-26-28.png)
 
 If we had this ensemble of three trees, each one of these is a plausible way to classify cat versus not-cat. 
 
@@ -26,11 +26,11 @@ If we had a new test example that we wanted to classify, **we run all three of t
 
 This test example has pointy ears, a not round face shape and whiskers are present, so the trees would give the following result:
 
-![](2024-02-16-13-28-28.png)
+![](./img/2024-02-16-13-28-28.png)
 
 The majority votes of the predictions among these three trees is cat. **So, the final prediction of this ensemble of trees is that this is a cat**, which happens to be the correct prediction.
 
-![](2024-02-16-13-29-32.png)
+![](./img/2024-02-16-13-29-32.png)
 
 The reason we use an ensemble of trees is by having lots of decision trees and having them vote, it makes our overall algorithm less sensitive to what any single tree may be doing because it gets only one vote out of three or one vote out of all trees that have been trained.
 
@@ -42,7 +42,7 @@ Let's see next how to build the tree ensemble.
 
 In order to illustrate how sampling with replacement works, we're going to show we a demonstration of it using four tokens that are colored red, yellow, green, and blue.
 
-![](2024-02-16-13-32-15.png)
+![](./img/2024-02-16-13-32-15.png)
 
 If we put the four tokens in a bag and sample by replacement, we take the first token from the bag - turns out to be green-, and then, before the next time we take a token out of the bag, we put that green token that we took out in the first step back in.
 
@@ -52,7 +52,7 @@ If I do this for times, I'l gett a sequence that might be: **green, yellow, blue
 
 The replacement part of this is critical because if we were not replacing a token every time I sample, then we would always just get the same four tokens. That's why replacing a token is important to make sure I don't just get the same four tokens every single time. 
 
-![](2024-02-16-13-35-54.png)
+![](./img/2024-02-16-13-35-54.png)
 
 The way that sampling with replacement applies to building an ensemble of trees is as follows: **we are going to construct multiple random training sets that are all slightly different from our original training set.** 
 
@@ -60,13 +60,13 @@ Let's take our 10 examples of cats and dogs, and we're going to put the 10 train
 
 Using this theoretical bag, **we're going to create a new random training set of 10 examples of the exact same size as the original data set.** 
 
-![](2024-02-16-13-38-13.png)
+![](./img/2024-02-16-13-38-13.png)
 
 Notice now this fifth training example is identical to the second one that we had out there. But that's fine.
 
 We keep going and we get another repeats the example, and so on and so forth. Until eventually we end up with 10 training examples, some of which are repeats.
 
-![](2024-02-16-13-38-46.png)
+![](./img/2024-02-16-13-38-46.png)
 
 Notice also that this training set does not contain all 10 of the original training examples, but that's okay. That is part of the sampling with replacement procedure. 
 
@@ -82,15 +82,15 @@ Here's how we can generate an ensemble of trees:
 
 - **if we are given a training set of size $m$, then for $b$ equals 1 to $B$, we can use sampling with replacement to create a new training set of size $m$.** So if we have 10 training examples, we will put the 10 training examples in that virtual bag and sample of replacement 10 times to generate a new training set with also 10 examples.
 
-![](2024-02-16-13-42-47.png)
+![](./img/2024-02-16-13-42-47.png)
 
 - **then, we would train a decision tree on that data set**. If we train the decision on this data said we end up with the following decision tree:
 
-![](2024-02-16-13-43-59.png)
+![](./img/2024-02-16-13-43-59.png)
 
 - **having done this once, we would then go and repeat this a $B$ amount of times**, and get a $B$ number of trees.
 
-![](2024-02-16-13-45-43.png)
+![](./img/2024-02-16-13-45-43.png)
 
 **A typical choice of $B$, the number of trees we built, might be around a 100.** It is recommended any value from around 64 even up to 128. 
 
@@ -108,13 +108,13 @@ So there's one modification to further try to randomize the feature choice at ea
 
 The way this is done is: **at every node, when choosing a feature to use to split on, if $n$ features are available, we will instead pick a random subset of $k$ features, which is less than $n$ and allow the algorithm to choose only from that subset of $k$ features**. 
 
-![](2024-02-16-13-54-11.png)
+![](./img/2024-02-16-13-54-11.png)
 
 In other words, we would pick $k$ features as the allowed features and then out of those $k$ features, **choose the one with the highest information gain as the choice of feature to use the split**. 
 
 **When $n$ is large, dozens or even hundreds, a ypical choice for the value of $k$ would be the square root of $n$.**
 
-![](2024-02-16-13-56-04.png)
+![](./img/2024-02-16-13-56-04.png)
 
 In our example we have only three features, and this technique tends to be used more for larger problems with a larger number of features. 
 
@@ -132,13 +132,13 @@ Let's take a look at how XGBoost works: it is just one modification to the ensem
 
 Here again, is the algorithm that we had written down previously:
 
-![](2024-02-16-14-08-06.png)
+![](./img/2024-02-16-14-08-06.png)
 
 Again, given the training set to size $m$, we repeat $B$ times, use sampling with replacement to create a new training set of size $m$ and then train the decision tree on the new data set. And so the first time through this loop, we create a training set with sampling with replacemente and train a decision tree.
 
 But here's where we're going to change the algorithm: every time through this loop, other than the first time, when sampling, instead of picking from all $m$ examples of equal probability with $\frac{1}{m}$ probability, we will make it more likely that we'll pick misclassified examples that the previously trained trees do poorly on. 
 
-![](2024-02-16-15-25-26.png)
+![](./img/2024-02-16-15-25-26.png)
 
 In training and education, there's an idea called deliberate practice. And so this idea of boosting is similar: we're going to look at the decision trees we've trained so far and look at what we're still not yet doing well on. And then, when building the next decision tree, **we're going to focus more attention on the examples that we're not yet doing well on.** So rather than looking at all the training examples, we focus more attention on the subset of examples is not yet doing well on and get the new decision tree, the next decision tree reporting ensemble to try to do well on them. 
 
@@ -146,19 +146,19 @@ In training and education, there's an idea called deliberate practice. And so th
 
 So in detail: we will look at this tree that we have just built and go back to the original training set. Notice that this is the original training set, not one generated through sampling with replacement:
 
-![](2024-02-16-15-28-00.png)
+![](./img/2024-02-16-15-28-00.png)
 
 And we'll go through all ten examples and **look at what this learned decision tree predicts on all ten examples**. The fourth column shows its predictions and we put a checkmark next to each example, depending on whether the trees classification was correct or incorrect.
 
 What we'll do in the second time through this loop is: **we will still use sampling with replacement to generate another training set of ten examples, but every time we pick an example from these ten, will give a higher chance of picking from one of these three examples that we are still misclassifying.** And the boosting procedure will do this for a total of $B$ times where on each iteration, we look at what the ensemble of trees for trees 1, 2... up to $(B - 1)$, are not yet doing that well on.
 
-![](2024-02-16-15-31-40.png)
+![](./img/2024-02-16-15-31-40.png)
 
 And when we're building tree number $B$ we will then have a higher probability of picking examples that the ensemble of the previously sample trees is still not yet doing well on. 
 
 **The mathematical details of exactly how much to increase the probability of picking missclasified inputs vs correctly classified inputs are quite complex, but we don't have to worry about them in order to use boosted tree implementations.**
 
-![](2024-02-16-15-34-04.png)
+![](./img/2024-02-16-15-34-04.png)
 
 **Of different ways of implementing boosting the most widely used one today is XGBoost, which stands for extreme gradient boosting, which is an open source implementation of boosted trees that is very fast and efficient.**
 
@@ -170,14 +170,14 @@ In machine learning competitions such as the widely used competition site called
 
 In fact, **XGBoost and deep learning algorithms seem to be the two types of algorithms that win a lot of these competitions**.
 
-![](2024-02-16-15-40-27.png)
+![](./img/2024-02-16-15-40-27.png)
 
 
 And one technical note: **rather than doing sampling with replacement, XGBoost actually assigns different weights to different training examples.** So it doesn't actually need to generate a lot of randomly chosen training sets, which makes it even a little bit more efficient than using a sampling with replacement procedure. 
 
 The details of XGBoost are quite complex to implement, which is why many practitioners will use the open source libraries that implement XGBoost. This is all we need to do in order to use XGBoost: 
 
-![](2024-02-16-15-41-53.png)
+![](./img/2024-02-16-15-41-53.png)
 
 ```py
 from xgboost import XGBClassifier
@@ -203,7 +203,7 @@ mode.fit(X_train, Y_train)
 y_pred = model.predict(X_test)
 ```
 
-![](2024-02-16-15-43-00.png)
+![](./img/2024-02-16-15-43-00.png)
 
 So that's it for the XGBoost algorithm. We have just one last section for this week and for this course where we'll wrap up and also talk about when should we use a decision tree versus maybe use the neural network. Let's go on to the last and final section of this week. 
 
@@ -217,19 +217,19 @@ For example, in the housing price prediction application we had a dataset with f
 
 In contrast, it is not recommended to use decision trees and tree ensembles on unstructured data: data such as images, section, audio, and texts that we're less likely to store in a spreadsheet format. Neural networks  will tend to work better for unstructured data task. 
 
-![](2024-02-16-15-53-13.png)
+![](./img/2024-02-16-15-53-13.png)
 
 One huge advantage of **decision trees and tree ensembles** is that they **can be very fast to train.**
 
 Remember the diagram about the iterative loop of machine learning development: if our model takes many hours to train then that limits how quickly we can go through this loop and improve the performance of our algorithm. But because decision trees, including tree ensembles, tend to be pretty fast to train, that allows we to go to this loop more quickly and more efficiently improve the performance of our learning algorithm.
 
-![](2024-02-16-15-54-12.png)
+![](./img/2024-02-16-15-54-12.png)
 
 Finally, **small decision trees maybe human interpretable.** If we are training just a single decision tree and that decision tree has only say a few dozen nodes **we may be able to print out a decision tree to understand exactly how it's making decisions**.
 
 However, **interpretability of decision trees is sometimes a bit overstated**: when we build an ensemble of 100 trees and if each of those trees has hundreds of nodes, then looking at that ensemble to figure out what it's doing does become difficult and may need some separate visualization techniques. 
 
-![](2024-02-16-15-55-31.png)
+![](./img/2024-02-16-15-55-31.png)
 
 **How about neural networks?** 
 
@@ -238,23 +238,23 @@ In contrast to decision trees and tree ensembles, **it works well on all types o
 Whereas on tabular structured data, neural networks and decision trees are often both competitive, on unstructured data, such as images, section, audio, and text, a neural network will really be the preferred algorithm and not the decision tree or a tree ensemble. 
 
 
-![](2024-02-16-15-59-55.png)
+![](./img/2024-02-16-15-59-55.png)
 
 On the downside though, **neural networks may be slower than a decision tree.**
 
 A large neural network can just take a long time to train. 
 
-![](2024-02-16-16-00-23.png)
+![](./img/2024-02-16-16-00-23.png)
 
 Another key benefit of **neural networks is that they work with transfer learning**. This is really important because, for many applications, we have only a small dataset and being able to use transfer learning to carry out pre-training on a much larger dataset is critical to getting competitive performance.
 
-![](2024-02-16-16-01-29.png)
+![](./img/2024-02-16-16-01-29.png)
 
 Finally, if **we're building a system of multiple machine learning models working together, it might be easier to string together and train multiple neural networks than multiple decision trees.**
 
 The reasons for this are quite technical and we don't need to worry about it for the purpose of this course. But it relates to that, even when we string together multiple neural networks, we can train them all together using gradient descent. Whereas for decision trees we can only train one decision tree at a time.
 
-![](2024-02-16-16-02-27.png)
+![](./img/2024-02-16-16-02-27.png)
 
 ## Optional Lab: Trees Ensembles, Random Forests and XGBoost
 
@@ -327,7 +327,7 @@ df = pd.read_csv("heart.csv")
 df.head()
 ```
 
-![](2024-02-16-16-24-32.png)
+![](./img/2024-02-16-16-24-32.png)
 
 We must perform some data engineering before working with the models. There are 5 categorical features, so we will use Pandas to one-hot encode them.
 
@@ -363,7 +363,7 @@ df = pd.get_dummies(data = df,
 df.head()
 ```
 
-![](2024-02-16-16-25-18.png)
+![](./img/2024-02-16-16-25-18.png)
 
 Let's choose the variables that will be the input features of the model.
 - The target is `HeartDisease`.
@@ -535,7 +535,7 @@ plt.plot(accuracy_list_val)
 plt.legend(['Train','Validation'])
 ```
 
-![](2024-02-16-21-23-10.png)
+![](./img/2024-02-16-21-23-10.png)
 
 Note how increasing the the number of `min_samples_split` reduces overfitting.
 - Increasing `min_samples_split` from 10 to 30, and from 30 to 50, even though it does not improve the validation accuracy, it brings the training accuracy closer to it, showing a reduction in overfitting.
@@ -565,7 +565,7 @@ plt.plot(accuracy_list_val)
 plt.legend(['Train','Validation'])
 ```
 
-![](2024-02-16-21-23-31.png)
+![](./img/2024-02-16-21-23-31.png)
 
 We can see that in general, reducing `max_depth` can help to reduce overfitting.
 - Reducing `max_depth` from 8 to 4 increases validation accuracy closer to training accuracy, while significantly reducing training accuracy.
@@ -642,7 +642,7 @@ plt.plot(accuracy_list_val)
 plt.legend(['Train','Validation'])
 ```
 
-![](2024-02-16-21-25-07.png)
+![](./img/2024-02-16-21-25-07.png)
 
 Notice that, even though the validation accuraty reaches is the same both at `min_samples_split = 2` and `min_samples_split = 10`, in the latter the difference in training and validation set reduces, showing less overfitting.
 
@@ -669,7 +669,7 @@ plt.plot(accuracy_list_val)
 plt.legend(['Train','Validation'])
 ```
 
-![](2024-02-16-21-25-25.png)
+![](./img/2024-02-16-21-25-25.png)
 
 ```py
 accuracy_list_train = []
@@ -694,7 +694,7 @@ plt.plot(accuracy_list_val)
 plt.legend(['Train','Validation'])
 ```
 
-![](2024-02-16-21-25-41.png)
+![](./img/2024-02-16-21-25-41.png)
 
 Let's then fit a random forest with the following parameters:
 

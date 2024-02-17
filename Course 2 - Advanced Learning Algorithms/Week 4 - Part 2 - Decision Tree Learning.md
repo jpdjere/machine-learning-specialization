@@ -10,48 +10,48 @@ Let's take a look at **the definition of entropy, which is a measure of the impu
 
 Given a set of six examples, three cats and three dogs, let's define $p_1$ to be the fraction of examples that are cats, that is, the fraction of examples with label one. $p_1$ in this example is equal to 3/6.
 
-![](2024-02-14-13-33-14.png)
+![](./img/2024-02-14-13-33-14.png)
 
 We're going to measure the impurity of a set of examples using a function called the entropy function, which looks as follows:
 
-![](2024-02-14-13-34-07.png)
+![](./img/2024-02-14-13-34-07.png)
 
 The entropy function is conventionally denoted as **H** of the number $p_1$: $H(p_1)$.
 
 The function curve has as its horizontal axis $p_1$, the fraction of cats in the sample, and the vertical axis is the value of the entropy. In this example where $p_1$ is 3/6 or 0.5, the value of the entropy of $p_1$ would be equal to one.
 
-![](2024-02-14-13-36-04.png)
+![](./img/2024-02-14-13-36-04.png)
 
 Notice that this curve is highest when our set of examples is 50-50, so it's most impure: it has an impurity or entropy of 1 when our set of examples is 50-50. In contrast, if our set of examples was either all cats or "not cats" then the entropy is 0.
 
-![](2024-02-14-13-37-35.png)
+![](./img/2024-02-14-13-37-35.png)
 
 Let's just go through a few more examples to gain further intuition about entropy and how it works. Here's a different set of examples with five cats and one dog, so $p_1$ the fraction of positive examples, a fraction of examples labeled one is 5/6 and so $p_1$ is about 0.83. If we read off that value at about 0.83 we find that the entropy of $p_1$ is about 0.65.
 
-![](2024-02-14-13-38-22.png)
+![](./img/2024-02-14-13-38-22.png)
 
 One more examples: the following sample of six images has all cats. So $p_1$ is 6/6 because all six are cats and the entropy of $p_1$ is this point over here which is zero. We see that **as we go from 3/6 to 6/6 cats, the impurity decreases from 1 to 0 or in other words, the purity increases as we go from a 50-50 mix of cats and dogs to all cats. **
 
-![](2024-02-14-13-39-38.png)
+![](./img/2024-02-14-13-39-38.png)
 
 Let's look at a few more examples. 
 
 Here's another sample with two cats and four dogs: so $p_1$ here is 2/6 which is 1/3. If we read off the entropy at 0.33 it turns out to be about 0.92. 
 
-![](2024-02-14-13-41-05.png)
+![](./img/2024-02-14-13-41-05.png)
 
 
 This is actually quite impure. In particular, this set is more impure the third set, which has an entropy of 0.65, because it's closer to a 50-50 mix.
 
-![](2024-02-14-13-42-22.png)
+![](./img/2024-02-14-13-42-22.png)
 
 Finally, one last example: if we have a set of all six dogs then $p_1$ is equal to 0 and the entropy of $p_1$ is equal to 0. So  there's zero impurity: a completely pure set of all "not cats" or all dogs.
 
-![](2024-02-14-13-43-27.png)
+![](./img/2024-02-14-13-43-27.png)
 
 Now, let's look at **the actual equation for the entropy function $H(p_1)$**. Recall that $p_1$ is the fraction of examples that are equal to cats so if we have a sample that is 2/3 cats then that sample must have 1/3 "not cats". Let's define $p_0$ to be equal to the fraction of examples that are "not cats" to be just equal to 1 minus $p_1$. 
 
-![](2024-02-14-13-44-54.png)
+![](./img/2024-02-14-13-44-54.png)
 
 The entropy function is then defined: 
 
@@ -86,21 +86,21 @@ Let's use the example of deciding what feature to use at the root node of the de
 
 If we had split **using their ear shape feature at the root node**, we would have gotten five examples on the left and five on the right:
 
-![](2024-02-14-13-55-22.png)
+![](./img/2024-02-14-13-55-22.png)
 
 On the left, we would have 4/5 cats, so $p_1$ would be equal to 4/5 or 0.8. On the right, 1/5 are cats, so $p_1$ is equal to 1/5 or 0.2. If we apply the entropy formula from the last section to this left subset of data and this right subset of data, we find that the degree of impurity on the left is $H(0.8)$, which is about 0.72, and on the right, the entropy of 0.2, $H(0.2)$ turns out also to be 0.72. 
 
-![](2024-02-14-13-56-31.png)
+![](./img/2024-02-14-13-56-31.png)
 
 One other option would be to **split on the face shape feature on the root node**. If we'd done so, then on the left, 4/7 examples would be cats, so $p_1$ is 4/7, and on the right, 1/3 are cats, so $p_1$ on the right is 1/3. 
 
 The entropy of 4/7 and the entropy of 1/3 are 0.99 and 0.92, respectively. So the degree of impurity in the left and right nodes seems much higher, 0.99 and 0.92 compared to 0.72 and 0.72, from the previous choice of feature.
 
-![](2024-02-14-14-06-29.png)
+![](./img/2024-02-14-14-06-29.png)
 
 Finally, the third possible **choice of feature to use at the root node would be the whiskers feature**. In this case, $p_1$ on the left is 3/4, $p_1$ on the right is 2/6, and the entropy values are as seen below: 
 
-![](2024-02-14-14-07-12.png)
+![](./img/2024-02-14-14-07-12.png)
 
 The key question we need to answer is: g**iven these three options of a feature to use at the root node, which one works best?** Rather than looking at these entropy numbers and comparing them, it would be useful to **take a weighted average of them**:
 
@@ -113,7 +113,7 @@ So, associated with each of these splits is two numbers, the entropy on the left
 
 In the first example we have that 5/10 examples went to the left sub-branch, so we can compute the weighted average as 5/10 times the entropy of 0.8, and then add to that 5/10 examples also went to the right sub-branch, plus 5/10 times the entropy of 0.2.  And the same formula applies for all cases:
 
-![](2024-02-14-14-11-45.png)
+![](./img/2024-02-14-14-11-45.png)
 
 **The way we will choose a split is by computing these three numbers and picking whichever one is lowest**, since that gives us the left and right sub-branches with the lowest average weighted entropy. 
 
@@ -121,15 +121,15 @@ Because of the way that decision trees are built, we're actually going to make o
 
 So, if we go to the root node, where we have started off with all 10 examples, with five cats and dogs, there we had $p_1$ equals 5/10 or 0.5. The entropy of the root node was $H(0.5)$, which is 1. This was maximum impurity:
 
-![](2024-02-14-14-14-36.png)
+![](./img/2024-02-14-14-14-36.png)
 
 So, the formula that we're actually going to use for choosing a split is not this weighted entropy at the left and right sub-branches. Instead it's going to be: **the entropy at the root node, $H(0.5)$, minus the formula for the weighted average. **
 
-![](2024-02-14-14-16-15.png)
+![](./img/2024-02-14-14-16-15.png)
 
 In this example, if we work out the math, it turns out to be 0.28 for the face shape feature, 0.03 for the face shape feature, and 0.12 for the whiskers feature. **These numbers are called the information gain**, and **they measure the reduction in entropy that we get in our tree resulting from making a split**. 
 
-![](2024-02-14-14-20-49.png)
+![](./img/2024-02-14-14-20-49.png)
 
 **Why do we bother to compute reduction in entropy rather than just entropy at the left and right sub-branches?** 
 
@@ -143,7 +143,7 @@ Let's now see **the general formula for how to compute information gain**:
 
 Using the example of splitting on the ear shape feature, **let's define $p_1^{\text{left}}$ to be equal to the fraction of examples in the left subtree that have a positive label, i.e. that are cats**. In this example,$p_1^{\text{left}}$ will be equal to 4/5. Also, let's define $w_left$ to be the fraction of examples of all of the examples of the root node that went to the left sub-branch. So in this example, $w_left$ would be 5/10. And we can similarly define the same values for the right branch:
 
-![](2024-02-14-14-29-29.png)
+![](./img/2024-02-14-14-29-29.png)
 
 Let's also define $p_1^{\text{root}}$ to be the fraction of examples that are positive in the root node, which, in this case, would be 5/10 or 0.5. 
 
@@ -175,43 +175,43 @@ First, the following is **the overall process of building a decision tree**:
 
 Let's look at an illustration of how this process will work: we started all of the examples at the root nodes and based on computing information gain for all three features, we decide that ear-shaped is the best feature to split on. Based on that, we create a left and right sub-branches and send the subsets of the data with pointy versus floppy ear to left and right sub-branches.
 
-![](2024-02-14-14-39-19.png)
+![](./img/2024-02-14-14-39-19.png)
 
 Let's for now just focus on the left sub-branch where we have five examples: if our splitting criteria is to keep splitting until everything in the node belongs to a single class, so either all cats or all dogs. We will look at this node and see if it meets the splitting criteria: it does not because there is a mix of cats and dogs here.
 
-![](2024-02-14-14-40-48.png)
+![](./img/2024-02-14-14-40-48.png)
 
 So, the next step is to then pick a feature to split on. We then go through the features one at a time and **compute the information gain of each of those features as if this node were the new root node of a decision tree that was trained using just five training examples**. We would compute the information gain for splitting on the whiskers feature, the information gain on splitting on the face shape feature and the ear shape feature.
 
 The information gain for splitting on ear shape will be zero because all of these training example the same point ear shape. Between whiskers and face shape, face shape turns out to have a highest information gain. So, we're going to split on face shape and that allows us to build left and right sub branches as follows:
 
-![](2024-02-14-14-46-30.png)
+![](./img/2024-02-14-14-46-30.png)
 
 For the left sub-branch, we check for the criteria for whether or not we should stop splitting and we have all cats. So, **the stopping criteria is met**, and **we create a leaf node that makes a prediction of cat**. 
 
 For the right sub-branch, we find that it is all dogs, so we also stop splitting since we've met the splitting criteria. We put a leaf node there, that predicts "not cat":
 
-![](2024-02-14-14-48-03.png)
+![](./img/2024-02-14-14-48-03.png)
 
 Having built out this left subtree, we can now turn our attention to building the right subtree. Let's' now again cover up the root node and the entire left subtree:
 
-![](2024-02-14-14-48-32.png)
+![](./img/2024-02-14-14-48-32.png)
 
 To build out the right subtree, we have five examples. Again, the first thing we do is check if the criteria to stop splitting has been met. Since the criteria is if all the examples are a single class, we know we have not met that criteria.
 
 So we will decide to keep splitting in this right sub-branch as well. In fact, the procedure for building the right sub-branch will be a lot as if we were training a decision tree learning algorithm from scratch, where the dataset we have comprises just these five training examples. Again: computing information gain for all of the possible features to split on, we find that the whiskers feature has the highest information gain:
 
-![](2024-02-14-14-50-40.png)
+![](./img/2024-02-14-14-50-40.png)
 
 Now agaim, we check if the criteria to stop splitting are met, and we decide that they are. We end up with leaf nodes that predict cat and "not cat".
 
-![](2024-02-14-14-51-26.png)
+![](./img/2024-02-14-14-51-26.png)
 
 This is the overall process for building the decision tree. 
 
 Notice that there's interesting aspects of what we've done: after we decided what to split on at the root node, the way we built the left subtree was by building a decision tree on a subset of five examples. The way we built the right subtree was by, again, building a decision tree on a subset of five examples.
 
-![](2024-02-14-14-52-55.png)
+![](./img/2024-02-14-14-52-55.png)
 
 In computer science, **this is an example of a recursive algorithm**: the way we build a decision tree at the root is by building other smaller decision trees in the left and the right sub-branches.
 
@@ -229,11 +229,11 @@ In the example we've seen so far, each of the features could take on only one of
 
 Here's a new training set for our pet adoption center applicatio, where all the data is the same except for the ear shaped feature. Rather than ear shape only being pointy and floppy, it can now also take on an oval shape. And so the initial feature is still a categorical value feature, but it can take on three possible values instead of just two:
 
-![](2024-02-15-14-29-31.png)
+![](./img/2024-02-15-14-29-31.png)
 
 This means that when we split on this feature, we end up creating three subsets of the data and end up building three sub branches for this tree. 
 
-![](2024-02-15-14-30-03.png)
+![](./img/2024-02-15-14-30-03.png)
 
 But there's a different way of addressing features that can take on more than two values, which is to **use one-hot encoding**.
 
@@ -245,7 +245,7 @@ But there's a different way of addressing features that can take on more than tw
 
 And for each feature, we place a 1 or a 0 depending n the actual value for that training point:
 
-![](2024-02-15-14-32-38.png)
+![](./img/2024-02-15-14-32-38.png)
 
  And so: instead of one feature taking on three possible values, we've now constructed three new features each of which can take on only one of two possible values: either 0 or 1. 
  
@@ -259,7 +259,7 @@ An additional note: even though this week's material has been focused on trainin
 
 In particular, if we were to take the face shape feature we would replace round and not round with 1 and 0, respectively. For whiskers, similarly replace presence with 1 and absence with 0:
 
-![](2024-02-15-14-37-23.png)
+![](./img/2024-02-15-14-37-23.png)
 
 Then we can notice,  that we have taken all the categorical features we had and encoded them as a list of these five features. Three from the one-hot encoding of ear shape, one from face shape and another from whiskers. Now, **this list of five features can also be fed to a neural network or to logistic regression to try to train a cat classifier**.
 
@@ -269,7 +269,7 @@ Let's look at how we can modify decision tree to work with features that aren't 
 
 Let's start with an example: 
 
-![](2024-02-15-14-39-42.png)
+![](./img/2024-02-15-14-39-42.png)
 
 We modified the cat adoption center  data set to add one more feature which is **the weight of the animal in pounds**. On average, cats are a little bit lighter than dogs, although there are some cats are heavier than some dogs. But the weight of an animal is a useful feature for deciding if it is a cat or not. 
 
@@ -279,27 +279,27 @@ But how do we decide how to split on the weight feature?
 
 Here's a plot of the data at the root node. We plotted on the horizontal axis the wieght of the animal and the vertical axis is cat on top and "not cat" below. So the vertical axis indicates the label, $y$ being 1 or 0. 
 
-![](2024-02-15-14-43-23.png)
+![](./img/2024-02-15-14-43-23.png)
 
 **The way we split on the weight feature is by splitting based on whether or not the weight is less than or equal to some value.** Let's say 8 punds, although **that will be the job of the learning algorithm to choose**. And what we should do when constraint-splitting on the weight feature is to **consider many different values of this threshold and then to pick the one that is the best, i.e., that results in the best information gain** 
 
 So in particular, if we were considering splitting the examples based on whether the weight is less than or equal to 8, then we would be splitting this data set into two subsets, where the subset on the left has two cats and the subset on the right has three cats and five dogs.
 
-![](2024-02-15-14-46-08.png)
+![](./img/2024-02-15-14-46-08.png)
 
 So if we were to calculate our usual information gain calculation, we'll be computing the entropy at the root node with our entropy formula, which turns out to be 0.24:
 
-![](2024-02-15-14-46-59.png)
+![](./img/2024-02-15-14-46-59.png)
 
 But we should try other values as well. What if we were to split on whether or not the weight is less than equal to 9? That corresponds to this new line over here:
 
-![](2024-02-15-14-47-44.png)
+![](./img/2024-02-15-14-47-44.png)
 
 And the information gain here looks much better: 0.61, much higher than 0.24.
 
 Orr we could try another value like 13:
 
-![](2024-02-15-14-48-47.png)
+![](./img/2024-02-15-14-48-47.png)
 
 And the calculation for the information gain turns out be 0.40. 
 
@@ -309,7 +309,7 @@ This way, **if we have 10 training examples, we will test nine different possibl
 
 In this example an information gain of 0.61 turns out to be higher than that of any other feature. So, assuming the algorithm chooses this feature to split on, we will end up splitting the data set according to whether or not the weight of the animal is less than equal to 9 pounds.
 
-![](2024-02-15-14-52-03.png)
+![](./img/2024-02-15-14-52-03.png)
 
 And so we end up with two subsets of the data so that we can then build recursively additional decision trees using these two subsets of the data to build out the rest of the tree. 
 
@@ -319,19 +319,19 @@ So far, we've only been talking about decision trees as **classification algorit
 
 The example we're going to use for this will be to use these three features that we had previously as $X$, in order to predict the weight of the animal, $Y$. So just to be clear, the weight, unlike the previous section is no longer an input feature, but the target output, $Y$, that we want to predict (instead of trying to predict whether or not an animal is or is not a cat.)
 
-![](2024-02-16-08-55-12.png)
+![](./img/2024-02-16-08-55-12.png)
 
 **This is a regression problem because we want to predict a number, $Y$.**
 
 Let's look at what a regression tree will look like. Here we have an already constructed-tree for this regression problem where the root node splits on ear shape feature, and then the left and right sub tree split on face shape:
 
-![](2024-02-16-08-56-56.png)
+![](./img/2024-02-16-08-56-56.png)
 
 **There's nothing wrong with a decision tree that chooses to split on the same feature in both the left and right side branches.** It's perfectly fine **if the splitting algorithm chooses to do that.** 
 
 If during training, we had decided on these splits, then the leaf nodes would have animals with the following weights:
 
-![](2024-02-16-08-58-10.png)
+![](./img/2024-02-16-08-58-10.png)
 
 So, the last thing we need to fill in for this decision tree is: if there's a test example that comes down to one of these nodes, for example, the left-most node, what is the weight that we should predict for an animal with pointy ears and a round face shape?
 
@@ -339,11 +339,11 @@ So, the last thing we need to fill in for this decision tree is: if there's a te
 
 And by averaging the four numbers, of that node, it turns out we get 8.35 pounds:
 
-![](2024-02-16-09-00-30.png)
+![](./img/2024-02-16-09-00-30.png)
 
  If on the other hand, an animal has pointy ears and a not round face shape, then it will predict 9.2 pounds because that's the weight of this one animal in the corresponding node. And similarly for the other two nodes:
 
- ![](2024-02-16-09-03-39.png)
+ ![](./img/2024-02-16-09-03-39.png)
 
 So, what this model will do is: **given a new test example, follow the decision nodes down as usual until it gets to a leaf node and then predict that value at the leaf node which I had just computed by taking an average of the weights of the animals that during training got to that same leaf node.** 
 
@@ -351,15 +351,15 @@ So, if we were constructing a decision tree from scratch using this data set in 
 
 Let's illustrate how to make that decision with an example. At the root node, one thing we could do is split on the ear shape: if we do that, we end up with left and right branches of the tree with five animals on the left and right with the following weights:
 
-![](2024-02-16-09-06-12.png)
+![](./img/2024-02-16-09-06-12.png)
 
 If we were to choose the split on the face shape, we end up with these animals on the left and right with the corresponding weights:
 
-![](2024-02-16-09-06-30.png)
+![](./img/2024-02-16-09-06-30.png)
 
 And if we were to choose to split on whiskers being present or absent, we end up with this: 
 
-![](2024-02-16-09-06-50.png)
+![](./img/2024-02-16-09-06-50.png)
 
 So, the question is: **given these three possible features to split on at the root node, which one do we want to pick that gives the best predictions for the weight of the animal?**
 
@@ -368,17 +368,17 @@ So, the question is: **given these three possible features to split on at the ro
 **Variant is the statistical mathematical notion of how widely a set of numbers varies.** So for the set of numbers 7.2, 9.2 and so on, up to 10.2, it turns out the variance is 1.47: it doesn't vary that much. Whereas, for 8.8, 15, 11, 18 and 20, these numbers go all the way from 8.8 all the way up to 20, so the variance is much larger: 21.87. 
 
 
-![](2024-02-16-12-49-12.png)
+![](./img/2024-02-16-12-49-12.png)
 
 The way we'll evaluate the quality of the split is: first, we'll compute same as before, $w_{\text{left}}$  and $w_{\text{right}}$  as the fraction of examples that went to the left and right branches. And then, **the average variance** after the split is going to be $w_{\text{left}}$ times the left variance, plus $w_{\text{right}}$ times the right variance:
 
-![](2024-02-16-12-51-16.png)
+![](./img/2024-02-16-12-51-16.png)
 
 **This weighted average variance plays a very similar role to the weighted average entropy** that we had used when deciding what split to use for a classification problem. 
 
 Then we repeat this calculation for the other possible choices of features to split on:
 
-![](2024-02-16-12-52-23.png)
+![](./img/2024-02-16-12-52-23.png)
 
 A good way **to choose a split would be to just choose the value of the weighted variance that is lowest.** 
 
@@ -386,11 +386,11 @@ Similar to when we're computing information gain, we're going to make just one m
 
 Turns out, if we look at all of the examples in the training set, all ten examples and compute the variance of all of them, the variance of all the examples turns out to be 20.51. That's the same value for the roots node in all of these, of course, because it's the same ten examples at the roots node.
 
-![](2024-02-16-12-58-06.png)
+![](./img/2024-02-16-12-58-06.png)
 
 So what we'll actually compute is the variance of the roots node, which is 20.51, minus this average weighted variance in each of the possible splits:
 
-![](2024-02-16-12-59-17.png)
+![](./img/2024-02-16-12-59-17.png)
 
 So, between all three of these exampless, 8.84 gives we the largest reduction in variance. So, just as previously we would choose the feature that gives we the largest information gain for a regression tree, **we will choose the feature that gives we the largest reduction in variance, which is why we choose ear shape as the feature to split on.** 
 
@@ -433,9 +433,9 @@ _ = plot_entropy()
 
 ```
 
-![](2024-02-16-13-08-55.png)
+![](./img/2024-02-16-13-08-55.png)
 
-![](2024-02-16-13-09-02.png)
+![](./img/2024-02-16-13-09-02.png)
 
 We will use **one-hot encoding** to encode the categorical features. They will be as follows:
 
@@ -599,7 +599,7 @@ generate_tree_viz([0,1,2,3,4,5,6,7,8,9], y_train, tree)
 #  - Right leaf node with indices [1, 2, 6, 8, 9]
 ```
 
-![](2024-02-16-13-13-21.png)
+![](./img/2024-02-16-13-13-21.png)
 
 The process is **recursive**, which means we must perform these calculations for each node until we meet a stopping criteria:
 
@@ -623,4 +623,4 @@ generate_tree_viz([0,1,2,3,4,5,6,7,8,9], y_train, tree)
 #   -- Right leaf node with indices [2, 6, 8, 9]
 ```
 
-![](2024-02-16-13-14-09.png)
+![](./img/2024-02-16-13-14-09.png)
