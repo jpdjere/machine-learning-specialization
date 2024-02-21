@@ -12,97 +12,187 @@
 
 ## What is clustering? 
 
-What is clustering? A clustering algorithm looks at a number of data points and automatically finds data points that are related or similar to each other. Let's take a look at what that means. Let me contrast clustering, which is an unsupervised learning algorithm, with what we had previously seen with supervised learning for binary classification. 
+What is clustering? **A clustering algorithm looks at a number of data points and automatically finds data points that are related or similar to each other.** What does that mean?
 
-Given a dataset like this with features $x_1$ and $x_2$. With supervised learning, we had a training set with both the input features $x$ as well as the labels y. We could plot a dataset like this and fit, say, a logistic regression algorithm or a neural network to learn a decision boundary like that. 
+Let's contrast **clustering**, which is an **unsupervised learning algorithm**, with what we had previously seen with supervised learning for binary classification:
 
-In supervised learning, the dataset included both the inputs $x$ as well as the target outputs y. In contrast, in unsupervised learning, we are given a dataset like this with just x, but not the labels or the target labels y. That's why when I plot a dataset, it looks like this, with just dots rather than two classes denoted by the x's and the o's. 
+Given a dataset like this with features $x_1$ and $x_2$:
 
-Because we don't have target labels y, we're not able to tell the algorithm what is the "right answer, y" that we wanted to predict. Instead, we're going to ask the algorithm to find something interesting about the data, that is to find some interesting structure about this data. But the first unsupervised learning algorithm that we learn about is called a clustering algorithm, which looks for one particular type of structure in the data. 
+![](2024-02-19-22-14-18.png)
 
-Namely, look at the dataset like this and try to see if it can be grouped into clusters, meaning groups of points that are similar to each other. A clustering algorithm, in this case, might find that this dataset comprises of data from two clusters shown here. Here are some applications of clustering. 
+With supervised learning, we had a training set with both the input features $x$ as well as the labels $y$. We could therefore plot a dataset like the above and fit, say, a logistic regression algorithm or a neural network to learn a decision boundary like so:
 
-In the first week of the first course, we heard me talk about grouping similar news articles together, like the story about Pandas or market segmentation, where at deeplearning.ai, we discovered that there are many learners that come here because we may want to grow our skills, or develop our careers, or stay updated with AI and understand how it affects our field of work. We want to help everyone with any of these skills to learn about machine learning, or if we don't fall into one of these clusters, that's totally fine too. I hope deeplearning.ai and Stanford Online's materials will be useful to we as well. 
+![](2024-02-19-22-15-05.png)
 
-Clustering has also been used to analyze DNA data, where we will look at the genetic expression data from different individuals and try to group them into people that exhibit similar traits. I find astronomy and space exploration fascinating. One application that I thought was very exciting was astronomers using clustering for astronomical data analysis to group bodies in space together for their own analysis of what's going on in space. 
+And, in supervised learning, the dataset included both the inputs $x$ as well as the target outputs $y$. 
 
-One of the applications I found fascinating was astronomers using clustering to group bodies together to figure out which ones form one galaxy or which one form coherent structures in space. Clustering today is used for all of these applications and many more. In the next section, let's take a look at the most commonly used clustering algorithm called the k-means algorithm, and let's take a look at how it works. 
+In contrast, in unsupervised learning, we are given a dataset like this:
+
+![](2024-02-19-22-15-46.png)
+
+Notice that we have with just $x$, but not the labels or the target labels $y$. That's why when I plot a dataset, it looks like the above, with just dots rather than two classes denoted by the x's and the o's. 
+
+**Because we don't have target labels $y$, we're not able to tell the algorithm what is the "right answer", $y$ that we wanted to predict.** 
+
+Instead, we're going to ask the algorithm to find something interesting about the data, that is, to **find some interesting structure about this data.** 
+
+The first unsupervised learning algorithm that we will learn about is called a **clustering algorithm**, which looks for one particular type of structure in the data:
+
+![](2024-02-19-22-18-32.png)
+
+Namely, the clustering algorithm looks at a dataset like this and tries to see **if the data can be grouped into clusters, meaning groups of points that are similar to each other**. A clustering algorithm, in this case, might find that this dataset comprises of data from two clusters shown here: 
+
+![](2024-02-19-22-19-41.png)
+
+Here are some applications of clustering:
+
+- grouping similar news articles together
+- market segmentation
+- analyze DNA data, where we will look at the genetic expression data from different individuals and try to group them into people that exhibit similar traits. 
+- astronomical data analysis: group bodies in space together to figure out which ones form one galaxy or which one form coherent structures in space
 
 ## K-means intuition
 
-Let's take a look at what the K-means clustering algorithm does. Let me start with an example. Here I've plotted a data set with 30 unlabeled training examples. 
+Let's see what the **K-means clustering algorithm** does. 
 
-So there are 30 points. And what we like to do is run K-means on this data set. The first thing that the K-means algorithm does is it will take a random guess at where might be the centers of the two clusters that we might ask it to find. 
+Let's start with the example of a dataset with 30 unlabeled training examples"
 
-In this example we're going to ask it to try to find two clusters. Later in this week we'll talk about how we might decide how many clusters to find. But the very first step is it will randomly pick two points, which I've shown here as a red cross and the blue cross, at where might be the centers of two different clusters. 
+![](2024-02-19-22-23-09.png)
 
-This is just a random initial guess and they're not particularly good guesses. But it's a start. One thing I hope we take away from this section is that K-means will repeatedly do two different things. 
+The first thing that the K-means algorithm does is: it will take a random guess at where the centers of the two clusters that we might ask it to find might be.
 
-The first is assign points to cluster centroids and the second is move cluster centroids. Let's take a look at what this means. The first of the two steps is it will go through each of these points and look at whether it is closer to the red cross or to the blue cross. 
+In this example we're going to ask it to try to find two clusters. (Later we'll talk about how we might decide how many clusters to find) 
 
-The very first thing that K-means does is it will take a random guess at where are the centers of the cluster? And the centers of the cluster are called cluster centroids. After it's made an initial guess at where the cluster centroid is, it will go through all of these examples, x(1) through x(30), my 30 data points. 
+But the very first step is it will randomly pick two points, which we see here as a red cross and the blue cross, at where might be the centers of two different clusters. Note that this is just a random initial guess and they're not particularly good guesses: 
 
-And for each of them it will check if it is closer to the red cluster centroid, shown by the red cross, or if it's closer to the blue cluster centroid, shown by the blue cross. And it will assign each of these points to whichever of the cluster centroids It is closer to. we're going to illustrate that by painting each of these examples, each of these little round dots, either red or blue, depending on whether that example is closer to the red or to the blue cluster centroid. 
+![](2024-02-19-22-28-30.png)
 
-So this point up here is closer to the red centroid, which is why it's painted red. Whereas this point down there is closer to the blue cluster centroid, which is why I've now painted it blue. So that was the first of the two things that K-means does over and over. 
+**K-means will repeatedly do two different things:**
 
-Which is a sign points to clusters centroids. And all that means is it will associate which we're illustrating with the color, every point of one of the cluster centroids. The second of the two steps that K-means does is, it'll look at all of the red points and take an average of them. 
+**First, it will assign points to cluster centroids and, secondly, it will move cluster centroids to the average of the new clusters.**
 
-And it will move the red cross to whatever is the average location of the red dots, which turns out to be here. And so the red cross, that is the red cluster centroid will move here. And then we do the same thing for all the blue dots. 
+Let's take a look at each step. The first of the two steps is: the algorithm will go through each of these points and look at whether it is closer to centers of the clusters, called cluster centroids, which were provided by initial guesses.
 
-Look at all the blue dots, and take an average of them, and move the blue cross over there. So we now have a new location for the blue cluster centroid as well. In the next section we'll look at the mathematical formulas for how to do both of these steps. 
+![](2024-02-19-22-33-15.png)
 
-But now that we have these new and hopefully slightly improved guesses for the locations of the to cluster centroids, we'll look through all of the 30 training examples again. And check for every one of them, whether it's closer to the red or the blue cluster centroid for the new locations. And then we will associate them which are indicated by the color again, every point to the closer cluster centroid. 
+For each of them it will check if it is closer to the red cluster centroid, or if it's closer to the blue cluster centroid. **And it will assign each of these points to whichever of the cluster centroids tt is closer to**:
 
-And if we do that, we see that the field points change color. So for example, this point is colored red, because it was closer to the red cluster centroid previously. But if we now look again, it's now actually closer to the blue cluster centroid, because the blue and red cluster centroids have moved. 
+![](2024-02-19-22-33-33.png)
 
-So if we go through and associate each point with the closer cluster centroids, we end up with this. And then we just repeat the second part of K-means again. Which is look at all of the red dots and compute the average. 
+The **second** of the two steps that K-means does is: it will take all the data points of one cluster and take an average of them. And it will move the cluster centroid to whatever the average location of the dots in that cluster is:
 
-And also look at all of the blue dots and compute the average location of all of the blue dots. And it turns out that we end up moving the red cross over there and the blue cross over here. And we repeat. 
+![](2024-02-19-22-35-35.png)
+![](2024-02-19-22-35-42.png)
 
-Let's look at all of the points again and we color them, either red or blue, depending on which cluster centroid that is closer to. So we end up with this. And then again, look at all of the red dots and take their average location, and look at all the blue dots and take the average location, and move the clusters to the new locations. 
+But now that we have these new and hopefully slightly improved guesses for the locations of the to cluster centroids, the algorithm will go through all of the 30 training examples again, and check for every one of them, whether it's closer to the new red or the blue cluster centroids. And we will reassign them to a cluster based on which cluster centroid is the nearset.
 
-And it turns out that if we were to keep on repeating these two steps, that is look at each point and assign it to the nearest cluster centroid and then also move each cluster centroid to the mean of all the points with the same color. If we keep on doing those two steps, we find that there are no more changes to the colors of the points or to the locations of the clusters centroids. And so this means that at this point the K-means clustering algorithm has converged. 
+![](2024-02-19-22-39-22.png)
 
-Because applying those two steps over and over, results in no further changes to either the assignment to point to the centroids or the location of the cluster centroids. In this example, it looks like K-means has done a pretty good job. It has found that these points up here correspond to one cluster, and these points down here correspond to a second cluster. 
+So if we go through and associate each point with the closer cluster centroids, we end up with this:
 
-So now we've seen an illustration of how K-means works. The two key steps are, assign every point to the cluster centroid, depending on what cluster centroid is nearest to. And second move each cluster centroid to the average or the mean of all the points that were assigned to it. 
+![](2024-02-19-22-39-44.png)
 
-In the next section, we'll look at how to formalize this and write out the algorithm that does what we just saw in this section. Let's go on to the next section. ## K-means algorithm
+And then we just repeat the second part of K-means again, which is look at all of the data points in a cluster, compute the average and move the cluster centroids:
 
-In the last section, we saw an illustration of the k-means algorithm running. 
+![](2024-02-19-22-40-48.png)
 
-Now let's write out the K-means algorithm in detail so that we'd be able to implement it for yourself. Here's the K-means algorithm. The first step is to randomly initialize K cluster centroids, Mu 1 Mu 2, through Mu k. 
+If we were to keep on repeating these two steps, we find that we reach a point in which there are no more changes to the colors of the points or to the locations of the clusters centroids. This means that at this point **the K-means clustering algorithm has converged:**
 
-In the example that we had, this corresponded to when we randomly chose a location for the red cross and for the blue cross corresponding to the two cluster centroids. In our example, K was equal to two. If the red cross was cluster centroid one and the blue cross was cluster centroid two. 
+![](2024-02-19-22-42-04.png)
 
-These are just two indices to denote the first and the second cluster. Then the red cross would be the location of Mu 1 and the blue cross would be the location of Mu 2. Just to be clear, Mu 1 and Mu 2 are vectors which have the same dimension as our training examples, X1 through say X30, in our example. 
+In this example, it looks like K-means has done a pretty good job and it has found two clusters.
 
-All of these are lists of two numbers or they're two-dimensional vectors or whatever dimension the training data had. We had n equals two features for each of the training examples then Mu 1 and Mu 2 will also be two-dimensional vectors, meaning vectors with two numbers in them. Having randomly initialized the K cluster centroids, K-means will then repeatedly carry out the two steps that we saw in the last section. 
+## K-means algorithm
 
-The first step is to assign points to clusters, centroids, meaning color, each of the points, either red or blue, corresponding to assigning them to cluster centroids one or two when K is equal to two. Rinse it out enough. That means that we're going to, for I equals one through m for all m training examples, we're going to set c^i to be equal to the index, which can be anything from one to K of the cluster centroid closest to the training example x^i. 
+In the last section, we saw an illustration of the k-means algorithm running. Now let's write out the K-means algorithm in detail.
 
-Mathematically we can write this out as computing the distance between x^i and Mu k. In math, the distance between two points is often written like this. It is also called the L2 norm. 
+Here's the K-means algorithm: 
 
-What we want to find is the value of k that minimizes this, because that corresponds to the cluster centroid Mu k that is closest to the training example x^i. Then the value of k that minimizes this is what gets set to c^i. When we implement this algorithm, we find that it's actually a little bit more convenient to minimize the squared distance because the cluster centroid with the smallest square distance should be the same as the cluster centroid with the smallest distance. 
+1. Randomly initialize $K$ cluster centroids, $\mu_1, \mu_2, ..., \mu_k$
 
-When we look at this week's optional labs and practice labs, we see how to implement this in code for yourself. As a concrete example, this point up here is closer to the red or two cluster centroids 1. If this was training example x^1, we will set c^1 to be equal to 1. 
+![](2024-02-19-22-44-24.png)
 
-Whereas this point over here, if this was the 12th training example, this is closer to the second cluster centroids the blue one. We will set this, the corresponding cluster assignment variable to two because it's closer to cluster centroid 2. That's the first step of the K-means algorithm, assign points to cluster centroids. 
+In the example that we had, $K$ was equal to 2and the red cross would be the location of $\mu_1$ and the blue cross would be the location of $\mu_2$. 
 
-The second step is to move the cluster centroids. What that means is for lowercase k equals 1 to capital K, the number of clusters. We're going to set the cluster centroid location to be updated to be the average or the mean of the points assigned to that cluster k. 
+**$\mu_1$ and $\mu_2$ are vectors which have the same dimension as our training examples, $x_1$ through say $x_{30}$, in our example.**
 
-Concretely, what that means is, we'll look at all of these red points, say, and look at their position on the horizontal axis and look at the value of the first feature x^1, and average that out. Compute the average value on the vertical axis as well. After computing those two averages, we find that the mean is here, which is why Mu 1, that is the location that the red cluster centroid gets updated as follows. 
+![](2024-02-19-22-46-34.png)
 
-Similarly, we will look at all of the points that were colored blue, that is, with c^i equals 2 and computes the average of the value on the horizontal axis, the average of their feature x1. Compute the average of the feature x2. Those two averages give we the new location of the blue cluster centroid, which therefore moves over here. 
+Having randomly initialized the K cluster centroids, K-means will then repeatedly carry out the two steps that we saw in the last section:
 
-Just to write those out in math. If the first cluster has assigned to it training examples 1,5,6,10. Just as an example. 
+**2. Repeat:**
+  
+- **2.1: assign points to cluster centroids**
 
-Then what that means is we will compute the average this way. Notice that x^1, x^5, x^6, and x^10 are training examples. Four training examples, so we divide by 4 and this gives we the new location of Mu1, the new cluster centroid for cluster 1. 
+The first substep is to assign points to clusters centroids: that is, to color each of the points either red or blue, corresponding to assigning them to cluster centroids 1 or 2 when $K$ is equal to 2. 
 
-To be clear, each of these $x$ values are vectors with two numbers in them, or n numbers in them if we have n features, and so Mu will also have two numbers in it or n numbers in it if we have n features instead of two. Now, there is one corner case of this algorithm, which is what happens if a cluster has zero training examples assigned to it. In that case, the second step, Mu k, would be trying to compute the average of zero points. 
+That means that we're going to:
 
-That's not well-defined. If that ever happens, the most common thing to do is to just eliminate that cluster. we end up with K minus 1 clusters. 
+
+$$
+\begin{align*}
+    \text{for } i &= 1 \text{ to } m: \\
+    c^{(i)} &:= \text{index (from 1 to K of cluster centroid closest to } x^{(i)}) \\
+\end{align*}
+$$
+
+This means that, for each datapoint, we're going to set $c^i$ to be equal to the index of the cluster closest to the training example $x^i$, which can be anything from one to $K$ of the cluster centroid. 
+
+Mathematically we can write this out as computing the distance between $x^i$ and $\mu_k$. 
+
+In math, the distance between two points is often written with the **L2 norm:**
+
+$$ \min {|| x^{(i)} - \mu_k ||}^2 $$
+
+What we want to find is the value of $k$ that minimizes this, because that corresponds to the cluster centroid $\mu_k$ that is closest to the training example $x^{(i)}$. 
+
+Then the value of $k$ that minimizes this is what gets set to $c^i$. 
+
+When we implement this algorithm, we find that it's actually  more convenient to minimize the squared distance, because the cluster centroid with the smallest square distance should be the same as the cluster centroid with the smallest distance. 
+
+![](2024-02-19-23-02-13.png)
+
+As a concrete example, this point up here is closer to the red or two cluster centroids 1. If this was training example x^1, we will set c^1 to be equal to 1. 
+
+Whereas this point over here, if this was the 12th training example, this is closer to the second cluster centroids the blue one. We will set this, the corresponding cluster assignment variable to two because it's closer to cluster centroid 2. 
+
+![](2024-02-19-23-03-04.png)
+
+That's the first step of the K-means algorithm, assign points to cluster centroids. 
+
+- **2.1: move cluster centroids**
+
+The second step is to move the cluster centroids. What that means is:
+
+$$
+\begin{align*}
+    \text{for } k &= 1 \text{ to } K: \\
+    \mu_k &:= \text{average (mean) of points assigned to cluster k} \\
+\end{align*}
+$$
+
+
+This means: for each of the cluster, we're going to set the cluster centroid location to be updated to be the average (or the mean) of the points assigned to that cluster $k$.
+
+![](2024-02-19-23-20-39.png)
+
+Concretely, what that means is: we'll look at all of the red points, look at their position on the horizontal axis -the value of the first feature $x^1$- and average that out. The, compute the average value on the vertical axis as well, the featrue $x_2$. Those two values gives us the coordinates of the new centroid of the cluster in vector form:
+
+![](2024-02-19-23-22-24.png)
+
+And the same for the blue points:
+
+![](2024-02-19-23-22-59.png)
+
+The mathematical formula would be:
+
+![](2024-02-19-23-24-04.png)
+
+Again, each of these $x$ values are vectors with two numbers in them, or $n$ numbers in them if we have $n$ features. So, $\mu_k$ will also have two numbers in it, or $n$ numbers if we have $n$ features instead of two. 
+
+Now, there is one **corner case** of this algorithm: **what happens if a cluster has zero training examples assigned to it?**. In that case, the second step, we would be trying to compute the average of zero points. 
+
+If that ever happens, the most common thing to do is to just eliminate that cluster. we end up with K minus 1 clusters. 
 
 Or if we really, really need K clusters an alternative would be to just randomly reinitialize that cluster centroid and hope that it gets assigned at least some points next time round. But it's actually more common when running K-means to just eliminate a cluster if no points are assigned to it. Even though I've mainly been describing K-means for clusters that are well separated. 
 
@@ -116,7 +206,9 @@ The medium-size t-shirt to try to fit these individuals well, and the large t-sh
 
 Assign cluster centroids randomly and then repeatedly assign points to cluster centroids and move the cluster centroids. But what this algorithm really doing and do we think this algorithm will converge or they just keep on running forever and never converge. To gain deeper intuition about the K-means algorithm and also see why we might hope this algorithm does converge, let's go on to the next section where we see that K-means is actually trying to optimize a specific cost function. 
 
-Let's take a look at that in the next section. ## Optimization objective
+Let's take a look at that in the next section. 
+
+## Optimization objective
 
 In the earlier courses, courses one and two of the specialization, we saw a lot of supervised learning algorithms as taking training set posing a cost function. And then using grading descent or some other algorithms to optimize that cost function. 
 
@@ -170,7 +262,9 @@ That usually means K means has converged and we should just stop running the alg
 
 we might also just say this is good enough. we're just going to say it's close enough to convergence and not spend even more compute cycles running the algorithm for even longer. So these are some of the ways that computing the cost function is helpful helps we figure out if the algorithm has converged. 
 
-It turns out that there's one other very useful way to take advantage of the cost function, which is to use multiple different random initialization of the cluster centroid. It turns out if we do this, we can often find much better clusters using K means, let's take a look at the next section of how to do that. ## Initilizing K-means
+It turns out that there's one other very useful way to take advantage of the cost function, which is to use multiple different random initialization of the cluster centroid. It turns out if we do this, we can often find much better clusters using K means, let's take a look at the next section of how to do that. 
+
+## Initilizing K-means
 
 The very first step of the K means clustering algorithm, was to choose random locations as the initial guesses for the cluster centroids mu one through mu K. 
 
