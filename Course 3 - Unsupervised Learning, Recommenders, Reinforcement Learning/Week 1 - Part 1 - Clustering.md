@@ -349,21 +349,33 @@ When we're using this method, **repeating the process somewhere between 50 to 10
 
 ## Choosing the number of clusters
 
-The k-means algorithm requires as one of its inputs, k, the number of clusters we want it to find, but how do we decide how many clusters to used. Do we want two clusters or three clusters of five clusters or 10 clusters? Let's take a look. 
+The k-means algorithm requires as one of its inputs, $K$, **the number of clusters we want it to find**. But **how do we decide how many clusters to use?**
 
-For a lot of clustering problems, the right value of $K$ is truly ambiguous. If I were to show different people the same data set and ask, how many clusters do we see? There will definitely be people that will say, it looks like there are two distinct clusters and they will be right. 
+**For a lot of clustering problems, the right value of $K$ is truly ambiguous.** If we show different people the same data set and ask, how many clusters do you see? There will definitely be people that will say there are two distinct clusters:
 
-There would also be others that will see actually four distinct clusters. They would also be right. Because clustering is unsupervised learning algorithm we're not given the quote right answers in the form of specific labels to try to replicate. 
+![](2024-02-22-23-58-25.png)
 
-There are lots of applications where the data itself does not give a clear indicator for how many clusters there are in it. I think it truly is ambiguous if this data has two or four, or maybe three clusters. If we take say, the red one here and the two blue ones here say. 
+There would also be others that will see actually four distinct clusters:
 
-If we look at the academic literature on K-means, there are a few techniques to try to automatically choose the number of clusters to use for a certain application. I'll briefly mention one here that we may see others refer to, although I had to say, I personally do not use this method myself. But one way to try to choose the value of $K$ is called the elbow method and what that does is we would run K-means with a variety of values of $K$ and plot the cost function or the distortion function J as a function of the number of clusters. 
+![](2024-02-22-23-58-44.png)
 
-What we find is that when we have very few clusters, say one cluster, the distortion function or the cost function J will be high and as we increase the number of clusters, it will go down, maybe as follows. and if the curve looks like this, we say, well, it looks like the cost function is decreasing rapidly until we get to three clusters but the decrease is more slowly after that. Let's choose $K$ equals 3 and this is called an elbow, by the way, because think of it as analogous to that's our hand and that's our elbow over here. 
+Both would be right. **Because clustering is an unsupervised learning algorithm, we're not given the "right" answers in the form of specific labels to try to replicate.** 
 
-Plotting the cost function as a function of $K$ could help, it could help we gain some insight. I personally hardly ever use the the elbow method myself to choose the right number of clusters because I think for a lot of applications, the right number of clusters is truly ambiguous and we find that a lot of cost functions look like this with just decreases smoothly and it doesn't have a clear elbow by wish we could use to pick the value of K. By the way, one technique that does not work is to choose $K$ so as to minimize the cost function J because doing so would cause we to almost always just choose the largest possible value of $K$ because having more clusters will pretty much always reduce the cost function J. 
+There are lots of applications where the data itself does not give a clear indicator for how many clusters there are in it.
 
-Choosing $K$ to minimize the cost function J is not a good technique. How do we choose the value of $K$ and practice? Often we're running K-means in order to get clusters to use for some later or some downstream purpose. 
+If we look at the academic literature on K-means, there are a few techniques to try to automatically choose the number of clusters to use for a certain application. 
+
+We'll briefly mention one here that we may see others refer to, although I have to say, I personally do not use this method myself. But **one way to try to choose the value of $K$ is called the "elbow method": run K-means with a variety of values of $K$ and plot the cost function or the distortion function $J$ as a function of the number of clusters.** 
+
+![](2024-02-23-00-02-00.png)
+
+For very few clusters, the distortion function or the cost function $J$ will be high, and as we increase the number of clusters, it will go down, maybe as follows. The cost function decreases rapidly until we get to three clusters but the decrease is more slowly after that. So we choose $K$ equals 3. This is called an elbow, because of the shape of the curve.
+
+I personally hardly ever use the the elbow method myself to choose the right number of clusters because I think for a lot of applications, the right number of clusters is truly ambiguous and we find that a lot of cost functions look just decrease smoothly and don't have a clear elbow by which we can pick the value of K. 
+
+Also: one technique that does not work is to choose $K$ so as to minimize the cost function $J$ because doing so would cause we to almost always just choose the largest possible value of $K$,since having more clusters will pretty much always reduce the cost function $J$. 
+
+How do we choose the value of $K$ and practice? Often we're running K-means in order to get clusters to use for some later or some downstream purpose. 
 
 That is, we're going to take the clusters and do something with those clusters. What I usually do and what I recommend we do is to evaluate K-means based on how well it performs for that later downstream purpose. Let me illustrate to the example of t-shirt sizing. 
 
