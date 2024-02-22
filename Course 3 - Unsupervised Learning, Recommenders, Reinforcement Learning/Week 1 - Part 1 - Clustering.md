@@ -118,7 +118,7 @@ In the example that we had, $K$ was equal to 2and the red cross would be the loc
 
 ![](2024-02-19-22-46-34.png)
 
-Having randomly initialized the K cluster centroids, K-means will then repeatedly carry out the two steps that we saw in the last section:
+Having randomly initialized the $K$ cluster centroids, K-means will then repeatedly carry out the two steps that we saw in the last section:
 
 **2. Repeat:**
   
@@ -132,7 +132,7 @@ That means that we're going to:
 $$
 \begin{align*}
     \text{for } i &= 1 \text{ to } m: \\
-    c^{(i)} &:= \text{index (from 1 to K of cluster centroid closest to } x^{(i)}) \\
+    c^{(i)} &:= \text{index (from 1 to $K$ of cluster centroid closest to } x^{(i)}) \\
 \end{align*}
 $$
 
@@ -166,7 +166,7 @@ The second step is to move the cluster centroids. What that means is:
 
 $$
 \begin{align*}
-    \text{for } k &= 1 \text{ to } K: \\
+    \text{for } $K$ &= 1 \text{ to } K: \\
     \mu_k &:= \text{average (mean) of points assigned to cluster k} \\
 \end{align*}
 $$
@@ -221,7 +221,7 @@ It turns out that **the K-means algorithm is also optimizing a specific cost fun
 
 Let's take a look at what is the cost function for K-means: to get started, a reminder of the notation until now:
 
-$$c^{(i)} = \text{index of cluster (1, 2, ... K) to which example} \space x^{(i)}\space \text{is currently assigned} $$ $$ \mu_k = \text{cluster centroid} \space k $$
+$$c^{(i)} = \text{index of cluster (1, 2, ... K) to which example} \space x^{(i)}\space \text{is currently assigned} $$ $$ \mu_k = \text{cluster centroid} \space $K$ $$
 
 And let's introduce one more piece of notation:
 
@@ -242,7 +242,7 @@ So, the cost function is the average of the squared distance between every train
 
 In other words, **the cost function for K-means is the average squared distance between every training example andd the location of the cluster centroid to which the training example has been assigned.**
 
-What the K means algorithm is doing is trying to find are two things:
+What the K-means algorithm is doing is trying to find are two things:
 
 **1. assignments of points of clusters centroid** 
 **2. locations of clusters centroid**
@@ -291,65 +291,79 @@ In some rare cases we will run K-means for a long time and the cost function of 
 
 ## Initilizing K-means
 
-The very first step of the K means clustering algorithm, was to choose random locations as the initial guesses for the cluster centroids mu one through mu K. 
+The first step of the K-means clustering algorithm **was to choose random locations as the initial guesses for the cluster centroids**, $\mu_{1}$ through $\mu_{K}$. 
 
-But how do we actually take that random guess. Let's take a look at that in this section, as well as how we can take multiple attempts at the initial guesses with mu one through mu K. That will result in our finding a better set of clusters. 
+But how do we actually take that random gues?. Let's take a look at that, as well as how we can **take multiple attempts at the initial guesses** for $\mu_{1}$ through $\mu_{K}$, which **will result in our finding a better set of clusters.**
 
-Let's take a look, here again is the K means algorithm and in this section let's take a look at how we can implement this first step. When running K means we should pretty much always choose the number of cluster centroids K to be lessened to training examples m. It doesn't really make sense to have K greater than m because then there won't even be enough training examples to have at least one training example per cluster centroids. 
+Here again is the K-means algorithm: let's take a look at how we can implement this first step, step 0: 
 
-So in our earlier example we had K equals two and m equals 30. In order to choose the cluster centroids, the most common way is to randomly pick K training examples. So here is a training set where if I were to randomly pick two training examples, maybe I end up picking this one and this one. 
+![](2024-02-22-10-07-57.png)
 
-And then we would set new one through mu K equal to these K training examples. So I might initialize my red cluster centroid here, and initialize my blue cluster centroids over here, in the example where K was equal to two. And it turns out that if this was our random initialization and we were to run K means we pray end up with K means deciding that these are the two classes in the data set. 
+When running K-means we should **always choose the number of cluster centroids $K$ to be less than the amount of training examples $m$**: it doesn't really make sense to have $K$ greater than $m$ because then there won't even be enough training examples to have at least one training example per cluster centroid:
 
-Notes that this method of initializing the cost of central is a little bit different than what I had used in the illustration in the earlier sections. Where I was initializing the cluster centroids mu one and mu two to be just random points rather than sitting on top of specific training examples. I've done that to make the illustrations clearer in the earlier sections. 
+![](2024-02-22-10-09-58.png)
 
-But what we're showing in this slide is actually a much more commonly used way of initializing the clusters centroids. Now with this method there is a chance that we end up with an initialization of the cluster centroids where the red cross is here and maybe the blue cross is here. And depending on how we choose the random initial central centroids K-means will end up picking a difference set of causes for our data set. 
+In our earlier example we had $K$ equals 2 and *m* equals 30. In order to choose the cluster centroids, the most common way is to **randomly pick $K$ training examples and set $\mu_{1}$ through $\mu_{K}$ in those locations**. For example, in the following training, I would randomly pick two training examples and initialize my red cluster centroid and my blue cluster centroids  here, in the example where $K$ was equal to 2:
 
-Let's look at a slightly more complex example, where we're going to look at this data set and try to find three clusters so k equals three in this data. If we were to run K means with one random initialization of the cluster centroid, we may get this result up here and this looks like a pretty good choice. Pretty good clustering of the data into three different clusters. 
+![](2024-02-22-10-13-39.png)
 
-But with a different initialization, say we had happened to initialize two of the cluster centroids within this group of points. And one within this group of points, after running k means we might end up with this clustering, which doesn't look as good. And this turns out to be a local optima, in which K-means is trying to minimize the distortion cost function, that cost function J of C one through CM and mu one through mu K that we saw in the last section. 
+If this was our random initialization and we were to run K-means we pray end up with K-means deciding that these are the two classes in the data set:
 
-But with this less fortunate choice of random initialization, it had just happened to get stuck in a local minimum. And here's another example of a local minimum, where a different random initialization course came in to find this clustering of the data into three clusters, which again doesn't seem as good as the one that we saw up here on top. So if we want to give k means multiple shots at finding the best local optimum. 
+![](2024-02-22-10-13-56.png)
 
-If we want to try multiple random initialization, so give it a better chance of finding this good clustering up on top. One other thing we could do with the K-means algorithm is to run it multiple times and then to try to find the best local optima. And it turns out that if we were to run k means three times say, and end up with these three distinct clusterings. 
+Notes that this method of initializing the cost of central is a little bit different than what I had used in the illustration in the earlier sections. Where I was initializing the cluster centroids mu one and mu two to be just random points rather than sitting on top of specific training examples. That was only to make the illustrations clearer in the earlier sections.But ,initialization by choosing random datapoints is actually a much more commonly used way of initializing the clusters centroids. 
 
-Then one way to choose between these three solutions, is to compute the cost function J for all three of these solutions, all three of these choices of clusters found by k means. And then to pick one of these three according to which one of them gives we the lowest value for the cost function J. And in fact, if we look at this grouping of clusters up here, this green cross has relatively small square distances, all the green dots. 
+However, with this method **there is a chance that, depending on how we choose the random initial central centroids, K-means will end up picking a difference set of clusters for our data set.**
 
-The red cross is relatively small distance and red dots and similarly the blue cross. And so the cost function J will be relatively small for this example on top. But here, the blue cross has larger distances to all of the blue dots. 
+Let's look at a slightly more complex example, where we're going to look at this data set and try to find three clusters, so $K$ equals 3:
 
-And here the red cross has larger distances to all of the red dots, which is why the cost function J, for these examples down below would be larger. Which is why if we pick from these three options, the one with the smallest distortion of the smallest cost function J. we end up selecting this choice of the cluster centroids. 
+![](2024-02-22-10-17-18.png)
 
-So let me write this out more formally into an algorithm, and wish we would run K-means multiple times using different random initialization. Here's the algorithm, if we want to use 100 random initialization for K-means, then we would run 100 times randomly initialized K-means using the method that we saw earlier in this section. Pick K training examples and let the cluster centroids initially be the locations of those K training examples. 
+If we were to run K-means with random initialization of the cluster centroid, we may get the result in the top, which looks like a pretty good choice. 
 
-Using that random initialization, run the K-means algorithm to convergence. And that will give we a choice of cluster assignments and cluster centroids. And then finally, we would compute the distortion compute the cost function as follows. 
+But with a different initialization, we might end up with the other two alternatives seen below, which **are not fully optimized: with this less fortunate choice of random initialization, ithe algorithm gets stuck in a local minimum.**
 
-After doing this, say 100 times, we would finally pick the set of clusters, that gave the lowest cost. And it turns out that if we do this will often give we a much better set of clusters, with a much lower distortion function than if we were to run K means only a single time. I plugged in the number up here as 100. 
+So, **if we want to give K-means multiple shots at finding the best local optimum**, by trying  multiple random initialization, **we can run the algorithm multiple times and then to try to find the best local optima**. 
 
-When we're using this method, doing this somewhere between say 50 to 1000 times would be pretty common. Where, if we run this procedure a lot more than 1000 times, it tends to get computational expensive. And we tend to have diminishing returns when we run it a lot of times. 
+If we were to run K-means 3 times, for example, and end up with these three distinct clusterings, one way to choose between these three solutions is to **compute the cost function $J$ for all three solutions**, all three of these choices of clusters found by K-means, and get $J_1$, $J_2$ and $J_3$. **And then to pick one of these three according to which one of them gives we the lowest value for the cost function**.
 
-Whereas trying at least maybe 50 or 100 random initializations, will often give we a much better result than if we only had one shot at picking a good random initialization. But with this technique we are much more likely to end up with this good choice of clusters on top. And these less superior local minima down at the bottom. 
+You can see this graphically, by the distance of each of the dots assigned to each cluster to each cluster centroid, and how it would end up being much less on the top graph:
 
-So that's it, when we're using the K means algorithm myself, I will almost always use more than one random initialization. Because it just causes K means to do a much better job minimizing the distortion cost function and finding a much better choice for the cluster centroids. Before we wrap up our discussion of K means, there's just one more section in which I hope to discuss with we. 
+![](2024-02-22-10-24-42.png)
 
-The question of how do we choose the number of clusters centroids? How do we choose the value of K? Let's go on to the next section to take a look at that. 
+Let's more formally into an algorithm: 
+
+![](2024-02-22-10-27-08.png)
+
+- If we want to use 100 random initialization for K-means, then we would run 100 times randomly initialized K-means using the method that we saw earlier in this section. 
+
+- Pick $K$ training examples and let the cluster centroids initially be the locations of those $K$ training examples. 
+
+- Using that random initialization, run the K-means algorithm to convergence. And that will give us a choice of cluster assignments and cluster centroids.
+
+- Compute the distortion compute the cost function $J$.
+
+- After doing this, say 100 times, we would finally pick the set of clusters that gave the lowest cost. 
+
+When we're using this method, **repeating the process somewhere between 50 to 1000 times would be pretty common**. After 1000 times, it tends to get computational expensive and have diminishing returns.
 
 ## Choosing the number of clusters
 
 The k-means algorithm requires as one of its inputs, k, the number of clusters we want it to find, but how do we decide how many clusters to used. Do we want two clusters or three clusters of five clusters or 10 clusters? Let's take a look. 
 
-For a lot of clustering problems, the right value of K is truly ambiguous. If I were to show different people the same data set and ask, how many clusters do we see? There will definitely be people that will say, it looks like there are two distinct clusters and they will be right. 
+For a lot of clustering problems, the right value of $K$ is truly ambiguous. If I were to show different people the same data set and ask, how many clusters do we see? There will definitely be people that will say, it looks like there are two distinct clusters and they will be right. 
 
 There would also be others that will see actually four distinct clusters. They would also be right. Because clustering is unsupervised learning algorithm we're not given the quote right answers in the form of specific labels to try to replicate. 
 
 There are lots of applications where the data itself does not give a clear indicator for how many clusters there are in it. I think it truly is ambiguous if this data has two or four, or maybe three clusters. If we take say, the red one here and the two blue ones here say. 
 
-If we look at the academic literature on K-means, there are a few techniques to try to automatically choose the number of clusters to use for a certain application. I'll briefly mention one here that we may see others refer to, although I had to say, I personally do not use this method myself. But one way to try to choose the value of K is called the elbow method and what that does is we would run K-means with a variety of values of K and plot the cost function or the distortion function J as a function of the number of clusters. 
+If we look at the academic literature on K-means, there are a few techniques to try to automatically choose the number of clusters to use for a certain application. I'll briefly mention one here that we may see others refer to, although I had to say, I personally do not use this method myself. But one way to try to choose the value of $K$ is called the elbow method and what that does is we would run K-means with a variety of values of $K$ and plot the cost function or the distortion function J as a function of the number of clusters. 
 
-What we find is that when we have very few clusters, say one cluster, the distortion function or the cost function J will be high and as we increase the number of clusters, it will go down, maybe as follows. and if the curve looks like this, we say, well, it looks like the cost function is decreasing rapidly until we get to three clusters but the decrease is more slowly after that. Let's choose K equals 3 and this is called an elbow, by the way, because think of it as analogous to that's our hand and that's our elbow over here. 
+What we find is that when we have very few clusters, say one cluster, the distortion function or the cost function J will be high and as we increase the number of clusters, it will go down, maybe as follows. and if the curve looks like this, we say, well, it looks like the cost function is decreasing rapidly until we get to three clusters but the decrease is more slowly after that. Let's choose $K$ equals 3 and this is called an elbow, by the way, because think of it as analogous to that's our hand and that's our elbow over here. 
 
-Plotting the cost function as a function of K could help, it could help we gain some insight. I personally hardly ever use the the elbow method myself to choose the right number of clusters because I think for a lot of applications, the right number of clusters is truly ambiguous and we find that a lot of cost functions look like this with just decreases smoothly and it doesn't have a clear elbow by wish we could use to pick the value of K. By the way, one technique that does not work is to choose K so as to minimize the cost function J because doing so would cause we to almost always just choose the largest possible value of K because having more clusters will pretty much always reduce the cost function J. 
+Plotting the cost function as a function of $K$ could help, it could help we gain some insight. I personally hardly ever use the the elbow method myself to choose the right number of clusters because I think for a lot of applications, the right number of clusters is truly ambiguous and we find that a lot of cost functions look like this with just decreases smoothly and it doesn't have a clear elbow by wish we could use to pick the value of K. By the way, one technique that does not work is to choose $K$ so as to minimize the cost function J because doing so would cause we to almost always just choose the largest possible value of $K$ because having more clusters will pretty much always reduce the cost function J. 
 
-Choosing K to minimize the cost function J is not a good technique. How do we choose the value of K and practice? Often we're running K-means in order to get clusters to use for some later or some downstream purpose. 
+Choosing $K$ to minimize the cost function J is not a good technique. How do we choose the value of $K$ and practice? Often we're running K-means in order to get clusters to use for some later or some downstream purpose. 
 
 That is, we're going to take the clusters and do something with those clusters. What I usually do and what I recommend we do is to evaluate K-means based on how well it performs for that later downstream purpose. Let me illustrate to the example of t-shirt sizing. 
 
@@ -357,11 +371,11 @@ One thing we could do is run K-means on this data set to find the clusters, in w
 
 This will let shoe size t-shirts according to extra small, small, medium, large, and extra large. Both of these are completely valid and completely fine groupings of the data into clusters, but whether we want to use three clusters or five clusters can now be decided based on what makes sense for our t-shirt business. Does a trade-off between how well the t-shirts will fit, depending on whether we have three sizes or five sizes, but there will be extra costs as well associated with manufacturing and shipping five types of t-shirts instead of three different types of t-shirts. 
 
-What I would do in this case is to run K-means with K equals 3 and K equals 5 and then look at these two solutions to see based on the trade-off between fits of t-shirts with more sizes, results in better fit versus the extra cost of making more t-shirts where making fewer t-shirts is simpler and less expensive to try to decide what makes sense for the t-shirt business. When we get to the programming exercise, we also see there an application of K-means to image compression. This is actually one of the most fun visual examples of K-means and there we see that there'll be a trade-off between the quality of the compressed image,
+What I would do in this case is to run K-means with $K$ equals 3 and $K$ equals 5 and then look at these two solutions to see based on the trade-off between fits of t-shirts with more sizes, results in better fit versus the extra cost of making more t-shirts where making fewer t-shirts is simpler and less expensive to try to decide what makes sense for the t-shirt business. When we get to the programming exercise, we also see there an application of K-means to image compression. This is actually one of the most fun visual examples of K-means and there we see that there'll be a trade-off between the quality of the compressed image,
 
 that is, how good the image looks versus how much we can compress the image to save the space. 
 
-In that program exercise, we see that we can use that trade-off to maybe manually decide what's the best value of K based on how good do we want the image to look versus how large we want the compress image size to be. That's it for the K-means clustering algorithm. Congrats on learning our first unsupervised learning algorithm. 
+In that program exercise, we see that we can use that trade-off to maybe manually decide what's the best value of $K$ based on how good do we want the image to look versus how large we want the compress image size to be. That's it for the K-means clustering algorithm. Congrats on learning our first unsupervised learning algorithm. 
 
 we now know not just how to do supervised learning, but also unsupervised learning. I hope we also have fun with the practice lab, is actually one of the most fun exercises I know of the K-means. With that, we're ready to move on to our second unsupervised learning algorithm, which is anomaly detection. 
 
