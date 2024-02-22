@@ -192,77 +192,102 @@ Again, each of these $x$ values are vectors with two numbers in them, or $n$ num
 
 Now, there is one **corner case** of this algorithm: **what happens if a cluster has zero training examples assigned to it?**. In that case, the second step, we would be trying to compute the average of zero points. 
 
-If that ever happens, the most common thing to do is to just eliminate that cluster. we end up with K minus 1 clusters. 
+If that ever happens, **the most common thing to do is to just eliminate that cluster. We end up with $K - 1$ clusters.**
 
-Or if we really, really need K clusters an alternative would be to just randomly reinitialize that cluster centroid and hope that it gets assigned at least some points next time round. But it's actually more common when running K-means to just eliminate a cluster if no points are assigned to it. Even though I've mainly been describing K-means for clusters that are well separated. 
+**If really need $K$ clusters, an alternative is to just randomly reinitialize that cluster centroid and hope that it gets assigned at least some points next time round.** 
 
-Clusters that may look like this. Where if we asked her to find three clusters, hopefully they will find these three distinct clusters. It turns out that K-means is also frequently applied to data sets where the clusters are not that well separated. 
+---
+K-means is also frequently applied to data sets where the clusters are not that well separated, like the plot on the right:
 
-For example, if we are a designer and manufacturer of cool t-shirts, and we want to decide, how do I size my small, medium, and large t-shirts. How small should a small be, how large should a large be, and what should a medium-size t-shirt really be? One thing we might do is collect data of people likely to buy our t-shirts based on their heights and weights. 
+![](2024-02-19-23-27-58.png)
 
-we find that the height and weight of people tend to vary continuously on the spectrum without some very clear clusters. Nonetheless, if we were to run K-means with say, three clusters centroids, we might find that K-means would group these points into one cluster, these points into a second cluster, and these points into a third cluster. If we're trying to decide exactly how to size our small, medium, and large t-shirts, we might then choose the dimensions of our small t-shirt to try to make it fit these individuals well. 
+For example, we are a designer and manufacturer of T-shirts, and we want to decide how to size my small, medium, and large t-shirts. How small should a small be, how large should a large be, and what should a medium-size t-shirt really be? 
 
-The medium-size t-shirt to try to fit these individuals well, and the large t-shirt to try to fit these individuals well with potentially the cluster centroids giving we a sense of what is the most representative height and weight that we will want our three t-shirt sizes to fit. This is an example of K-means working just fine and giving a useful results even if the data does not lie in well-separated groups or clusters. That was the K-means clustering algorithm. 
+One thing we might do is collect data of people likely to buy our t-shirts based on their heights and weights. We find that the height and weight of people tend to vary continuously on the spectrum without some very clear clusters. 
 
-Assign cluster centroids randomly and then repeatedly assign points to cluster centroids and move the cluster centroids. But what this algorithm really doing and do we think this algorithm will converge or they just keep on running forever and never converge. To gain deeper intuition about the K-means algorithm and also see why we might hope this algorithm does converge, let's go on to the next section where we see that K-means is actually trying to optimize a specific cost function. 
+Nonetheless, if we were to run K-means with three clusters centroids, we might find that K-means would group the points as follows:
 
-Let's take a look at that in the next section. 
+![](2024-02-19-23-29-52.png)
+
+If we're trying to decide exactly how to size our small, medium, and large t-shirts, we might then choose the dimensions of each size to try to fit the datapoints in each cluster. **Potentially, the cluster centroids might provide a sense of what is the most representative height and weight that we will want our three t-shirt sizes to fit.** 
+
+This is an example of K-means working just fine and giving a useful results even if the data does not lie in well-separated groups or clusters.
 
 ## Optimization objective
 
-In the earlier courses, courses one and two of the specialization, we saw a lot of supervised learning algorithms as taking training set posing a cost function. And then using grading descent or some other algorithms to optimize that cost function. 
+We have seen a lot of supervised learning algorithms that take atraining set, present a cost function, and then, using grading descent or some other algorithm, they attempt to optimize that cost function. 
 
-It turns out that the K-means algorithm that we saw in the last section is also optimizing a specific cost function. Although the optimization algorithm that it uses to optimize that is not gradient descent is actually the algorithm that we already saw in the last section. Let's take a look at what all this means. 
+It turns out that **the K-means algorithm is also optimizing a specific cost function**, although the optimization algorithm that it uses to optimize that is not gradient descent; it is actually the algorithm that we saw in the last section. Let's take a look at what all this means. 
 
-Let's take a look at what is the cost function for K-means, to get started as a reminder this is a notation we've been using whereas CI is the index of the cluster. So CI is some number from one Su K of the index of the cluster to which training example XI is currently assigned and new K is the location of cluster centroid k. Let me introduce one more piece of notation, which is when lower case K equals CI. 
+Let's take a look at what is the cost function for K-means: to get started, a reminder of the notation until now:
 
-So mu subscript CI is the cluster centroid of the cluster to which example XI has been assigned. So for example, if I were to look at some training example C train example 10 and I were to ask What's the location of the clustering centroids to which the 10th training example has been assigned? Well, I would then look up C10. 
+$$c^{(i)} = \text{index of cluster (1, 2, ... K) to which example} \space x^{(i)}\space \text{is currently assigned} $$ $$ \mu_k = \text{cluster centroid} \space k $$
 
-This will give me a number from one to K. That tells me was example 10 assigned to the red or the blue or some other cluster centroid, and then mu subscript C- 10 is the location of the cluster centroid to which extent has been assigned. So armed with this notation, let me now write out the cost function that K means turns out to be minimizing. 
+And let's introduce one more piece of notation:
 
-The cost function J, which is a function of C1 through CM. These are all the assignments of points to clusters Androids as well as new one through mu capsule K. These are the locations of all the clusters centroid is defined as this expression on the right. 
+$$ \mu_{c^{(i)}} = \text{cluster centroid of cluster to which example }x^{(i)}\space \text{has benn assigned}$$
 
-It is the average, so one over M some from i equals to m of the squared distance between every training example XI as I goes from one through M it is a square distance between X I. And Nu subscript C high. So this quantity up here, in other words, the cost function good for K is the average squared distance between every training example XI. 
+So for example, if I were to look at some training example $x^{(10)}$ and I were to ask: what's the location of the clustering centroidsto which that training example has been assigned? 
 
-And the location of the cluster centroid to which the training example exile has been assigned. So for this example up here we've been measuring the distance between X10 and mu subscript C10. The cluster centroid to which extent has been assigned and taking the square of that distance and that would be one of the terms over here that we're averaging over. 
+Well, I would then look up $c^{(10)}$ and that would give me a number from $1$ to $K$, which tells me to which cluster centroid my data point was assigned to. And then $\mu_{c^{10}}$ would be the location of the cluster centroid to which $x^{(10)}$ was assigned to. 
 
-And it turns out that what the K means algorithm is doing is trying to find assignments of points of clusters centroid as well as find locations of clusters centroid that minimizes the squared distance. Visually, here's what we saw part way into the run of K means in the earlier section. And at this step the cost function. 
+Armed with this notation, let's now write out **the cost function that K-means minimizes:**
 
-If we were to computer it would be to look at everyone at the blue points and measure these distances and computer square. And then also similarly look at every one of the red points and compute these distances and compute the square. And then the average of the squares of all of these differences for the red and the blue points is the value of the cost function J, at this particular configuration of the parameters for K-means. 
+$$ J(c^{(1)}, ..., c^{(m)}, \mu_1, ..., \mu_{K}) = \frac{1}{m} \sum_{i = 1}^m {|| x^{(i)} - \mu_{c^{(i)}} ||}^2 $$
 
-And what they will do on every step is try to update the cluster assignments C1 through C30 in this example. Or update the positions of the cluster centralism, U1 and U2. In order to keep on reducing this cost function J. 
+- $c^{(1)}$ to $c^{(m)}$: all the assignments of points to clusters centroids
+- $\mu_{c^{(1)}}$ to $\mu_{c^{(k)}}$ : the locations of all the clusters centroids
 
-By the way, this cost function J also has a name in the literature is called the distortion function. I don't know that this is a great name. But if we hear someone talk about the key news algorithm and the distortion or the distortion cost function, that's just what this formula J is computing. 
+So, the cost function is the average of the squared distance between every training example $x^{(i)}$ (as $i$ goes from $1$ through $m$) and $\mu_{c^{(i)}}$. 
 
-Let's now take a deeper look at the algorithm and why the algorithm is trying to minimize this cost function J. Or why is trying to minimize the distortion here on top of copied over the cost function from the previous slide. It turns out that the first part of K means where we assign points to cluster centroid. 
+In other words, **the cost function for K-means is the average squared distance between every training example andd the location of the cluster centroid to which the training example has been assigned.**
 
-That turns out to be trying to update C1 through CM. To try to minimize the cost function J as much as possible while holding mu one through mu K fix. And the second step, in contrast where we move the custom centroid, it turns out that is trying to leave C1 through CM fix. 
+What the K means algorithm is doing is trying to find are two things:
 
-But to update new one through mu K to try to minimize the cost function or the distortion as much as possible. Let's take a look at why this is the case. During the first step, if we want to choose the values of C1 through CM or save a particular value of Ci to try to minimize this. 
+**1. assignments of points of clusters centroid** 
+**2. locations of clusters centroid**
 
-Well, what would make Xi minus mu CI as small as possible? This is the distance or the square distance between a training example XI. And the location of the class is central to which has been assigned. 
+which in combination that minimize the squared distance. 
 
-So if we want to minimize this distance or the square distance, what we should do is assign XI to the closest cluster centroid. So to take a simplified example, if we have two clusters centroid say close to central is one and two and just a single training example, XI. If we were to sign it to cluster centroid one, this square distance here would be this large distance, well squared. 
+Visually, here's what the cost function is trying to minimize. At each step:
 
-And if we were to assign it to cluster centroid 2 then this square distance would be the square of this much smaller distance. So if we want to minimize this term, we will take X I and assign it to the closer centroid, which is exactly what the algorithm is doing up here. So that's why the step where we assign points to a cluster centroid is choosing the values for CI to try to minimize J. 
+![](2024-02-21-23-58-00.png)
 
-Without changing, we went through the mu K for now, but just choosing the values of C1 through CM to try to make these terms as small as possible. How about the second step of the K-means algorithm that is to move to clusters centroids? It turns out that choosing mu K to be average and the mean of the points assigned is the choice of these terms mu that will minimize this expression. 
+the algorithm is taking the distances of the red points to the red cluster centroid and calculating its squares, doing the same with the blue points and then averaging all of them, which is the value of the cost function $J$, at this particular configuration of the parameters for K-means. 
 
-To take a simplified example, say we have a cluster with just two points assigned to it shown as follows. And so with the cluster centroid here, the average of the square distances would be a distance of one here squared plus this distance here, which is 9 squared. And then we take the average of these two numbers. 
+And the, what the algorithm they will do on every step is try to update the cluster assignments $c^{(i)}$, or update the positions of the cluster centroids $\mu_{c^{(i)}}$, in order to keep on reducing this cost function J. 
 
-And so that turns out to be one half of 1 plus 81, which turns out to be 41. But if we were to take the average of these two points, so 1+ 11/2, that's equal to 6. And if we were to move the cluster centroid over here to middle than the average of these two square distances, turns out to be a distance of five and five here. 
+**This cost function $J$ also has the name of distortion function**.
 
-So we end up with one half of 5 squared plus 5 squared, which is equal to 25. And this is a much smaller average squared distance than 41. And in fact, we can play around with the location of this cluster centroid and maybe convince yourself that taking this mean location. 
+Let's now take a deeper look at the algorithm and tru to understand why the algorithm is trying to minimize this cost function $J$:
 
-This average location in the middle of these two training examples, that is really the value that minimizes the square distance. So the fact that the K-means algorithm is optimizing a cost function J means that it is guaranteed to converge, that is on every single iteration. The distortion cost function should go down or stay the same, but if it ever fails to go down or stay the same, in the worst case, if it ever goes up. 
+![](2024-02-22-00-03-48.png)
 
-That means there's a bug in the code, it should never go up because every single step of K means is setting the value CI and mu K to try to reduce the cost function. Also, if the cost function ever stops going down, that also gives we one way to test if K means has converged. Once there's a single iteration where it stays the same. 
+- In the **first part of K-means**, where we assign points to cluster centroids, that is actually trying to update $c^{(1)}$ through $c^{(im)}$ in order to try to minimize the cost function $J$ while holding $\mu_{1}$ through $\mu_{K}$ fixed. 
 
-That usually means K means has converged and we should just stop running the algorithm even further or in some rare cases we will run K means for a long time. And the cost function of the distortion is just going down very, very slowly, and that's a bit like gradient descent where maybe running even longer might help a bit. But if the rate at which the cost function is going down has become very, very slow. 
+- **And the second step**, where we move the custom centroids, that is trying to update $\mu_{1}$ through $\mu_{K}$, while leaving $c^{(1)}$ through $c^{(im)}$ fixed.
 
-we might also just say this is good enough. we're just going to say it's close enough to convergence and not spend even more compute cycles running the algorithm for even longer. So these are some of the ways that computing the cost function is helpful helps we figure out if the algorithm has converged. 
+Going back to the first step, if we want to minimize this distance or the square distance, what we should do is assign $x^{(i)}$ to the closest cluster centroid. So to take a simplified example:
+![](2024-02-22-00-09-26.png)
 
-It turns out that there's one other very useful way to take advantage of the cost function, which is to use multiple different random initialization of the cluster centroid. It turns out if we do this, we can often find much better clusters using K means, let's take a look at the next section of how to do that. 
+We have the two clusters centroids above and just a single training example, $x^{(i)}$. If we were to assign that data point to the blue cluster, this square distance betwen the data point and the blue cluster centroid would be much larger that between the data point and the red cluster centroid.
+
+So if we want to minimize the term, we will take $x^{(i)}$ and assign it to the closer centroid, the blue centroid. And that's what the algorithm is doing, without changing the values for $\mu$ which are the location of the cluster centroids themselves. 
+
+How about the second step of the K-means algorithm, where we move the clusters centroids? It turns out that **choosing $\mu_k$, the location of the centroid, to be average of the points assigned to that cluster is the best choice, that will minimize this expression.**
+
+To take a simplified example, say we have a cluster with just two points assigned to it shown as follows: 
+![](2024-02-22-00-15-30.png)
+
+With the cluster centroid on the left, the average of the square distances would turn out to be 41. 
+
+But if we were to take the average of these two points, so $(1 + 11) / 2$, that's equal to 6. And if we were to move the cluster centroid to the average of these two square distances, a distance of 5 and 5, we end up with a squared distance of 25. And this is a much smaller average squared distance than 41.
+
+**The fact that the K-means algorithm is optimizing a cost function $J$ means that it is guaranteed to converge**, that is, on every single iteration, the distortion cost function should go down or stay the same.
+
+If the cost function stops going down, once there's a single iteration where it stays the same,that gives an indications that Komeans has converged and we should just stop running the algorithm.
+
+In some rare cases we will run K-means for a long time and the cost function of the distortion will go down very, very slowly: that's similar to might what happen with gradient descent, where maybe running even longer might help, but if the rate at which the cost function is going down has become very slow, we might also decide we have reached a good-enough state, close enough to the point of convergence.
 
 ## Initilizing K-means
 
