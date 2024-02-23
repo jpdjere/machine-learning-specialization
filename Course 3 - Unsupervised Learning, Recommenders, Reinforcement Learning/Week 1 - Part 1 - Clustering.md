@@ -375,22 +375,18 @@ I personally hardly ever use the the elbow method myself to choose the right num
 
 Also: one technique that does not work is to choose $K$ so as to minimize the cost function $J$ because doing so would cause we to almost always just choose the largest possible value of $K$,since having more clusters will pretty much always reduce the cost function $J$. 
 
-How do we choose the value of $K$ and practice? Often we're running K-means in order to get clusters to use for some later or some downstream purpose. 
+**So, how do we choose the value of $K$ in practice?** 
 
-That is, we're going to take the clusters and do something with those clusters. What I usually do and what I recommend we do is to evaluate K-means based on how well it performs for that later downstream purpose. Let me illustrate to the example of t-shirt sizing. 
+Often we're running K-means in order to get clusters to use for some later or some downstream purpose. That is, we're going to take the clusters and do something with those clusters. 
 
-One thing we could do is run K-means on this data set to find the clusters, in which case we may find clusters like that and this would be how we size our small, medium, and large t-shirts, but how many t-shirt sizes should there be? Well, it's ambiguous. If we were to also run K-means with five clusters, we might get clusters that look like this. 
+So, **what we do is to evaluate K-means based on how well it performs for that later downstream purpose**. Let's illustrate that with the example of t-shirt sizing:
 
-This will let shoe size t-shirts according to extra small, small, medium, large, and extra large. Both of these are completely valid and completely fine groupings of the data into clusters, but whether we want to use three clusters or five clusters can now be decided based on what makes sense for our t-shirt business. Does a trade-off between how well the t-shirts will fit, depending on whether we have three sizes or five sizes, but there will be extra costs as well associated with manufacturing and shipping five types of t-shirts instead of three different types of t-shirts. 
+![](2024-02-23-00-07-10.png)
 
-What I would do in this case is to run K-means with $K$ equals 3 and $K$ equals 5 and then look at these two solutions to see based on the trade-off between fits of t-shirts with more sizes, results in better fit versus the extra cost of making more t-shirts where making fewer t-shirts is simpler and less expensive to try to decide what makes sense for the t-shirt business. When we get to the programming exercise, we also see there an application of K-means to image compression. This is actually one of the most fun visual examples of K-means and there we see that there'll be a trade-off between the quality of the compressed image,
+One thing we could do is run K-means on this data set to find the clusters, in which case we may find clusters for sizes small, medium, and large t-shirts.
 
-that is, how good the image looks versus how much we can compress the image to save the space. 
+But how many t-shirt sizes should there actually be? It's ambiguous: if we were to also run K-means with five clusters, we might get clusters for sizes extra small, small, medium, large, and extra large. 
 
-In that program exercise, we see that we can use that trade-off to maybe manually decide what's the best value of $K$ based on how good do we want the image to look versus how large we want the compress image size to be. That's it for the K-means clustering algorithm. Congrats on learning our first unsupervised learning algorithm. 
+**Both of these are completely valid and completely fine groupings of the data into clusters**, but whether we want to use three clusters or five clusters can now be decided based on what makes sense for our t-shirt business. There's a trade-off between how well the t-shirts will fit, between having three sizes or five sizes, with the extra costs associated with manufacturing and shipping five types of t-shirts instead of three.
 
-we now know not just how to do supervised learning, but also unsupervised learning. I hope we also have fun with the practice lab, is actually one of the most fun exercises I know of the K-means. With that, we're ready to move on to our second unsupervised learning algorithm, which is anomaly detection. 
-
-How do we look at the data set and find unusual or anomalous things in it. This turns out to be another, one of the most commercially important applications of unsupervised learning. I've used this myself many times in many different applications. 
-
-Let's go on to the next section to talk about anomaly detection.
+So, what we can do in this case is to run K-means with $K$ = 3 and $K$ = 5 and then look at these two solutions to see, if the tradeoff is worth it, and what makes more sense from the business point of view.
