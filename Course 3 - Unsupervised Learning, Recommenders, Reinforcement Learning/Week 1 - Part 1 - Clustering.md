@@ -390,3 +390,24 @@ But how many t-shirt sizes should there actually be? It's ambiguous: if we were 
 **Both of these are completely valid and completely fine groupings of the data into clusters**, but whether we want to use three clusters or five clusters can now be decided based on what makes sense for our t-shirt business. There's a trade-off between how well the t-shirts will fit, between having three sizes or five sizes, with the extra costs associated with manufacturing and shipping five types of t-shirts instead of three.
 
 So, what we can do in this case is to run K-means with $K$ = 3 and $K$ = 5 and then look at these two solutions to see, if the tradeoff is worth it, and what makes more sense from the business point of view.
+
+## Lab: K-means Clustering
+
+
+In this exercise, you will implement the K-means algorithm and use it for image compression. 
+
+* You will start with a sample dataset that will help you gain an intuition of how the K-means algorithm works. 
+* After that, you will use the K-means algorithm for image compression by reducing the number of colors that occur in an image to only those that are most common in that image.
+
+### Outline
+- [ 1 - Implementing K-means](#1)
+  - [ 1.1 Finding closest centroids](#1.1)
+    - [ Exercise 1](#ex01)
+  - [ 1.2 Computing centroid means](#1.2)
+    - [ Exercise 2](#ex02)
+- [ 2 - K-means on a sample dataset ](#2)
+- [ 3 - Random initialization](#3)
+- [ 4 - Image compression with K-means](#4)
+  - [ 4.1 Dataset](#4.1)
+  - [ 4.2 K-Means on image pixels](#4.2)
+  - [ 4.3 Compress the image](#4.3)
