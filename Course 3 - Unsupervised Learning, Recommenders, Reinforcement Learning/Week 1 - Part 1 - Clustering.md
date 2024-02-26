@@ -500,3 +500,52 @@ where
  * $||x^{(i)} - \mu_j||$ is the L2-norm
  
 If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C1
+# GRADED FUNCTION: find_closest_centroids
+
+def find_closest_centroids(X, centroids):
+    """
+    Computes the centroid memberships for every example
+    
+    Args:
+        X (ndarray): (m, n) Input values      
+        centroids (ndarray): (K, n) centroids
+    
+    Returns:
+        idx (array_like): (m,) closest centroids
+    
+    """
+
+    # Set K
+    K = centroids.shape[0]
+
+    # You need to return the following variables correctly
+    idx = np.zeros(X.shape[0], dtype=int)
+
+    ### START CODE HERE ###
+    
+    # Loop through every datapoint
+    for i in range(X.shape[0]):
+        # Create an array where to store the distance of the current
+        # datapoint to all the possible centroids
+        distances = []
+        
+        # Loop thorugh all the centroids
+        for centroid in centroids:
+            # Calculate the L2 norm from the datapoint to the centroid
+            # and append it to the distances array
+            dist = np.linalg.norm(X[i]-centroid)**2
+            distances.append(dist)
+            
+        # Now in distances we have all the distances, and the index of
+        # each represents also K, the index of the cluster. The value
+        # of each element is the distance. So we get the index of the
+        # lowest element and assign it to idx.
+        idx[i] = np.argmin(distances)
+        
+     ### END CODE HERE ###
+    
+    return idx
+```
