@@ -549,3 +549,153 @@ def find_closest_centroids(X, centroids):
     
     return idx
 ```
+
+Now let's check your implementation using an example dataset.
+
+```py
+# Load an example dataset that we will be using
+X = load_data()
+```
+
+The code below prints the first five elements in the variable `X` and the dimensions of the variable.
+
+```py
+print("First five elements of X are:\n", X[:5]) 
+print('The shape of X is:', X.shape)
+
+# First five elements of X are:
+#  [[1.84207953 4.6075716 ]
+#  [5.65858312 4.79996405]
+#  [6.35257892 3.2908545 ]
+#  [2.90401653 4.61220411]
+#  [3.23197916 4.93989405]]
+# The shape of X is: (300, 2)
+```
+
+```py
+# Select an initial set of centroids (3 Centroids)
+initial_centroids = np.array([[3,3], [6,2], [8,5]])
+
+# Find closest centroids using initial_centroids
+idx = find_closest_centroids(X, initial_centroids)
+
+# Print closest centroids for the first three elements
+print("First three elements in idx are:", idx[:3])
+
+# UNIT TEST
+from public_tests import *
+
+find_closest_centroids_test(find_closest_centroids)
+
+# First three elements in idx are: [0 2 1]
+# All tests passed!
+```
+
+<a name="1.2"></a>
+### 1.2 Computing centroid means
+
+Given assignments of every point to a centroid, the second phase of the
+algorithm recomputes, for each centroid, the mean of the points that
+were assigned to it.
+
+
+<a name="ex02"></a>
+### Exercise 2
+
+Please complete the `compute_centroids` below to recompute the value for each centroid
+
+* Specifically, for every centroid $\mu_k$ we set
+$$\mu_k = \frac{1}{|C_k|} \sum_{i \in C_k} x^{(i)}$$ 
+
+    where 
+    * $C_k$ is the set of examples that are assigned to centroid $k$
+    * $|C_k|$ is the number of examples in the set $C_k$
+
+
+* Concretely, if two examples say $x^{(3)}$ and $x^{(5)}$ are assigned to centroid $k=2$,
+then you should update $\mu_2 = \frac{1}{2}(x^{(3)}+x^{(5)})$.
+
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+
+**My approach**
+```py
+# UNQ_C2
+# GRADED FUNCTION: compute_centroids
+
+def compute_centroids(X, idx, K):
+    """
+    Returns the new centroids by computing the means of the 
+    data points assigned to each centroid.
+    
+    Args:
+        X (ndarray):   (m, n) Data points
+        idx (ndarray): (m,) Array containing index of closest centroid for each 
+                       example in X. Concretely, idx[i] contains the index of 
+                       the centroid closest to example i
+        K (int):       number of centroids
+    
+    Returns:
+        centroids (ndarray): (K, n) New centroids computed
+    """
+    
+    # Useful variables
+    m, n = X.shape
+    
+    # You need to return the following variables correctly
+    centroids = np.zeros((K, n))
+    num_elements_per_cluster = np.zeros((K))
+    
+    
+    ### START CODE HERE ###
+    for index_example, index_centroid in enumerate(idx):
+        centroids[index_centroid] += X[index_example]
+        num_elements_per_cluster[index_centroid] += 1
+        
+    for i in range(len(centroids)):
+        centroids[i] = centroids[i]/num_elements_per_cluster[i]
+        
+    ### END CODE HERE ## 
+    
+    return centroids
+```
+
+**Best approach**
+
+```py
+# UNQ_C2
+# GRADED FUNCTION: compute_centroids
+
+def compute_centroids(X, idx, K):
+    """
+    Returns the new centroids by computing the means of the 
+    data points assigned to each centroid.
+    
+    Args:
+        X (ndarray):   (m, n) Data points
+        idx (ndarray): (m,) Array containing index of closest centroid for each 
+                       example in X. Concretely, idx[i] contains the index of 
+                       the centroid closest to example i
+        K (int):       number of centroids
+    
+    Returns:
+        centroids (ndarray): (K, n) New centroids computed
+    """
+    
+    # Useful variables
+    m, n = X.shape
+    
+    # You need to return the following variables correctly
+    centroids = np.zeros((K, n))
+    num_elements_per_cluster = np.zeros((K))
+    
+    
+    ### START CODE HERE ###
+    for k in range(K):
+      points = X[idx == k]
+      centroids[k] = np.mean(points, axis=0)
+        
+    ### END CODE HERE ## 
+    
+    return centroids
+```
