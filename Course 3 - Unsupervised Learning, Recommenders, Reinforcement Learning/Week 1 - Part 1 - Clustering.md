@@ -699,3 +699,172 @@ def compute_centroids(X, idx, K):
     
     return centroids
 ```
+
+Now check your implementation by running the cell below:
+
+```py
+K = 3
+centroids = compute_centroids(X, idx, K)
+
+print("The centroids are:", centroids)
+
+# UNIT TEST
+compute_centroids_test(compute_centroids)
+
+# The centroids are: [[2.42830111 3.15792418]
+#  [5.81350331 2.63365645]
+#  [7.11938687 3.6166844 ]]
+# All tests passed!
+```
+
+<a name="2"></a>
+## 2 - K-means on a sample dataset 
+
+After you have completed the two functions (`find_closest_centroids`
+and `compute_centroids`) above, the next step is to run the
+K-means algorithm on a toy 2D dataset to help you understand how
+K-means works. 
+* We encourage you to take a look at the function (`run_kMeans`) below to understand how it works. 
+* Notice that the code calls the two functions you implemented in a loop.
+
+When you run the code below, it will produce a
+visualization that steps through the progress of the algorithm at
+each iteration. 
+* At the end, your figure should look like the one displayed in Figure 1.
+* The final centroids are the black X-marks in the middle of the colored clusters.
+* You can see how these centroids got to their final location by looking at the other X-marks connected to it.
+
+![](2024-02-28-14-34-42.png)
+
+
+**Note**: You do not need to implement anything for this part. Simply run the code provided below
+
+```py
+# You do not need to implement anything for this part
+
+def run_kMeans(X, initial_centroids, max_iters=10, plot_progress=False):
+    """
+    Runs the K-Means algorithm on data matrix X, where each row of X
+    is a single example
+    """
+    
+    # Initialize values
+    m, n = X.shape
+    K = initial_centroids.shape[0]
+    centroids = initial_centroids
+    previous_centroids = centroids    
+    idx = np.zeros(m)
+    plt.figure(figsize=(8, 6))
+
+    # Run K-Means
+    for i in range(max_iters):
+        
+        #Output progress
+        print("K-Means iteration %d/%d" % (i, max_iters-1))
+        
+        # For each example in X, assign it to the closest centroid
+        idx = find_closest_centroids(X, centroids)
+        
+        # Optionally plot progress
+        if plot_progress:
+            plot_progress_kMeans(X, centroids, previous_centroids, idx, K, i)
+            previous_centroids = centroids
+            
+        # Given the memberships, compute new centroids
+        centroids = compute_centroids(X, idx, K)
+    plt.show() 
+    return centroids, idx
+```
+
+```py
+# Load an example dataset
+X = load_data()
+
+# Set initial centroids
+initial_centroids = np.array([[3,3],[6,2],[8,5]])
+
+# Number of iterations
+max_iters = 10
+
+# Run K-Means
+centroids, idx = run_kMeans(X, initial_centroids, max_iters, plot_progress=True)
+```
+
+```py
+# K-Means iteration 0/9
+# K-Means iteration 1/9
+# K-Means iteration 2/9
+# K-Means iteration 3/9
+# K-Means iteration 4/9
+# K-Means iteration 5/9
+# K-Means iteration 6/9
+# K-Means iteration 7/9
+# K-Means iteration 8/9
+# K-Means iteration 9/9
+```
+
+![](2024-02-28-14-36-14.png)
+
+<a name="3"></a>
+## 3 - Random initialization
+
+The initial assignments of centroids for the example dataset was designed so that you will see the same figure as in Figure 1. In practice, a good strategy for initializing the centroids is to select random examples from the
+training set.
+
+In this part of the exercise, you should understand how the function `kMeans_init_centroids` is implemented.
+* The code first randomly shuffles the indices of the examples (using `np.random.permutation()`). 
+* Then, it selects the first $K$ examples based on the random permutation of the indices. 
+* This allows the examples to be selected at random without the risk of selecting the same example twice.
+
+**Note**: You do not need to implement anything for this part of the exercise.
+
+```py
+# You do not need to modify this part
+
+def kMeans_init_centroids(X, K):
+    """
+    This function initializes K centroids that are to be 
+    used in K-Means on the dataset X
+    
+    Args:
+        X (ndarray): Data points 
+        K (int):     number of centroids/clusters
+    
+    Returns:
+        centroids (ndarray): Initialized centroids
+    """
+    
+    # Randomly reorder the indices of examples
+    randidx = np.random.permutation(X.shape[0])
+    
+    # Take the first K examples as centroids
+    centroids = X[randidx[:K]]
+    
+    return centroids
+```
+
+You can run K-Means again but this time with random initial centroids. Run the cell below several times and observe how different clusters are created based on the initial points chosen.
+
+```py
+# Run this cell repeatedly to see different outcomes.
+
+# Set number of centroids and max number of iterations
+K = 3
+max_iters = 10
+
+# Set initial centroids by picking random examples from the dataset
+initial_centroids = kMeans_init_centroids(X, K)
+
+# Run K-Means
+centroids, idx = run_kMeans(X, initial_centroids, max_iters, plot_progress=True)
+```
+
+![](2024-02-28-14-38-19.png)
+
+![](2024-02-28-14-38-32.png)
+
+![](2024-02-28-14-38-53.png)
+
+![](2024-02-28-14-39-16.png)
+
+Note that the last initialization resulted in "wrong" clusters.
