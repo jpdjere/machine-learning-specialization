@@ -894,3 +894,58 @@ $^{2}$<sub>The provided photo used in this exercise belongs to Frank Wouters and
 **Load image**
 
 First, you will use `matplotlib` to read in the original image, as shown below.
+
+```py
+# Load an image of a bird
+original_img = plt.imread('bird_small.png')
+```
+
+**Visualize image**
+
+You can visualize the image that was just loaded using the code below.
+
+```py
+# Visualizing the image
+plt.imshow(original_img)
+```
+
+![](2024-03-02-14-26-51.png)
+
+**Check the dimension of the variable**
+
+As always, you will print out the shape of your variable to get more familiar with the data.
+
+```py
+print("Shape of original_img is:", original_img.shape)
+
+# Shape of original_img is: (128, 128, 3)
+```
+
+As you can see, this creates a three-dimensional matrix `original_img` where 
+* the first two indices identify a pixel position, and
+* the third index represents red, green, or blue. 
+
+For example, `original_img[50, 33, 2]` gives the blue intensity of the pixel at row 50 and column 33.
+
+![](2024-03-02-14-30-24.png)
+
+#### Processing data
+
+To call the `run_kMeans`, you need to first transform the matrix `original_img` into a two-dimensional matrix.
+
+* The code below reshapes the matrix `original_img` to create an $m \times 3$ matrix of pixel colors (where
+$m=16384 = 128\times128$)
+
+*Note: If you'll try this exercise later on a JPG file, you first need to divide the pixel values by 255 so it will be in the range 0 to 1. This is not necessary for PNG files (e.g. `bird_small.png`) because it is already loaded in the required range (as mentioned in the [plt.imread() documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.imread.html)). We commented a line below for this so you can just uncomment it later in case you want to try a different file.* 
+
+```py
+# Divide by 255 so that all values are in the range 0 - 1 (not needed for PNG files)
+# original_img = original_img / 255
+
+# Reshape the image into an m x 3 matrix where m = number of pixels
+# (in this case m = 128 x 128 = 16384)
+# Each row will contain the Red, Green and Blue pixel values
+# This gives us our dataset matrix X_img that we will use K-Means on.
+
+X_img = np.reshape(original_img, (original_img.shape[0] * original_img.shape[1], 3))
+```
