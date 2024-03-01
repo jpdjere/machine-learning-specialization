@@ -949,3 +949,110 @@ $m=16384 = 128\times128$)
 
 X_img = np.reshape(original_img, (original_img.shape[0] * original_img.shape[1], 3))
 ```
+
+<a name="4.2"></a>
+### 4.2 K-Means on image pixels
+
+Now, run the cell below to run K-Means on the pre-processed image.
+
+```py
+# Run your K-Means algorithm on this data
+# You should try different values of K and max_iters here
+K = 16
+max_iters = 10
+
+# Using the function you have implemented above. 
+initial_centroids = kMeans_init_centroids(X_img, K)
+
+# Run K-Means - this can take a couple of minutes depending on K and max_iters
+centroids, idx = run_kMeans(X_img, initial_centroids, max_iters)
+
+# K-Means iteration 0/9
+# K-Means iteration 1/9
+# K-Means iteration 2/9
+# K-Means iteration 3/9
+# K-Means iteration 4/9
+# K-Means iteration 5/9
+# K-Means iteration 6/9
+# K-Means iteration 7/9
+# K-Means iteration 8/9
+# K-Means iteration 9/9
+```
+
+```py
+print("Shape of idx:", idx.shape)
+print("Closest centroid for the first five elements:", idx[:5])
+
+# Shape of idx: (16384,)
+# Closest centroid for the first five elements: [10 10 10 10 10]
+```
+
+The code below will plot all the colors found in the original image. As mentioned earlier, the color of each pixel is represented by RGB values so the plot should have 3 axes -- R, G, and B. You'll notice a lot of dots below representing thousands of colors in the original image. The red markers represent the centroids after running K-means. These will be the 16 colors that you will use to compress the image.
+
+```py
+# Plot the colors of the image and mark the centroids
+plot_kMeans_RGB(X_img, centroids, idx, K)
+```
+
+![](2024-03-02-14-34-58.png)
+
+You can visualize the colors at each of the red markers (i.e. the centroids) above with the function below. You will only see these colors when you generate the new image in the next section. The number below each color is its index and these are the numbers you see in the `idx` array.
+
+```py
+# Visualize the 16 colors selected
+show_centroid_colors(centroids)
+```
+
+![](2024-03-02-14-35-37.png)
+
+<a name="4.3"></a>
+### 4.3 Compress the image
+
+After finding the top $K=16$ colors to represent the image, you can now
+assign each pixel position to its closest centroid using the
+`find_closest_centroids` function. 
+* This allows you to represent the original image using the centroid assignments of each pixel. 
+* Notice that you have significantly reduced the number of bits that are required to describe the image. 
+    * The original image required 24 bits (i.e. 8 bits x 3 channels in RGB encoding) for each one of the $128\times128$ pixel locations, resulting in total size of $128 \times 128 \times 24 = 393,216$ bits. 
+    * The new representation requires some overhead storage in form of a dictionary of 16 colors, each of which require 24 bits, but the image itself then only requires 4 bits per pixel location. 
+    * The final number of bits used is therefore $16 \times 24 + 128 \times 128 \times 4 = 65,920$ bits, which corresponds to compressing the original image by about a factor of 6.
+
+```py
+# Find the closest centroid of each pixel
+idx = find_closest_centroids(X_img, centroids)
+
+# Replace each pixel with the color of the closest centroid
+X_recovered = centroids[idx, :] 
+
+# Reshape image into proper dimensions
+X_recovered = np.reshape(X_recovered, original_img.shape) 
+```
+
+Finally, you can view the effects of the compression by reconstructing
+the image based only on the centroid assignments. 
+* Specifically, you replaced each pixel with the value of the centroid assigned to
+it. 
+* Figure 3 shows a sample reconstruction. Even though the resulting image retains most of the characteristics of the original, you will also see some compression artifacts because of the fewer colors used.
+
+![](2024-03-02-14-37-21.png)
+
+* Run the code below to see how the image is reconstructed using the 16 colors selected earlier.
+
+
+```py
+# Display original image
+fig, ax = plt.subplots(1,2, figsize=(16,16))
+plt.axis('off')
+
+ax[0].imshow(original_img)
+ax[0].set_title('Original')
+ax[0].set_axis_off()
+
+
+# Display compressed image
+ax[1].imshow(X_recovered)
+ax[1].set_title('Compressed with %d colours'%K)
+ax[1].set_axis_off()
+```
+
+![](2024-03-02-14-38-08.png)
