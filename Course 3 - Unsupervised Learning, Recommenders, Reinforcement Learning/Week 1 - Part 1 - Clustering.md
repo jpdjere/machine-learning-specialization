@@ -1,6 +1,6 @@
 # Welcome
 
-![](2024-02-18-22-05-54.png)
+![](./img/2024-02-18-22-05-54.png)
 
 - Week 1: Unsupervised Learning
   - Clustering
@@ -18,17 +18,17 @@ Let's contrast **clustering**, which is an **unsupervised learning algorithm**, 
 
 Given a dataset like this with features $x_1$ and $x_2$:
 
-![](2024-02-19-22-14-18.png)
+![](./img/2024-02-19-22-14-18.png)
 
 With supervised learning, we had a training set with both the input features $x$ as well as the labels $y$. We could therefore plot a dataset like the above and fit, say, a logistic regression algorithm or a neural network to learn a decision boundary like so:
 
-![](2024-02-19-22-15-05.png)
+![](./img/2024-02-19-22-15-05.png)
 
 And, in supervised learning, the dataset included both the inputs $x$ as well as the target outputs $y$. 
 
 In contrast, in unsupervised learning, we are given a dataset like this:
 
-![](2024-02-19-22-15-46.png)
+![](./img/2024-02-19-22-15-46.png)
 
 Notice that we have with just $x$, but not the labels or the target labels $y$. That's why when I plot a dataset, it looks like the above, with just dots rather than two classes denoted by the x's and the o's. 
 
@@ -38,11 +38,11 @@ Instead, we're going to ask the algorithm to find something interesting about th
 
 The first unsupervised learning algorithm that we will learn about is called a **clustering algorithm**, which looks for one particular type of structure in the data:
 
-![](2024-02-19-22-18-32.png)
+![](./img/2024-02-19-22-18-32.png)
 
 Namely, the clustering algorithm looks at a dataset like this and tries to see **if the data can be grouped into clusters, meaning groups of points that are similar to each other**. A clustering algorithm, in this case, might find that this dataset comprises of data from two clusters shown here: 
 
-![](2024-02-19-22-19-41.png)
+![](./img/2024-02-19-22-19-41.png)
 
 Here are some applications of clustering:
 
@@ -57,7 +57,7 @@ Let's see what the **K-means clustering algorithm** does.
 
 Let's start with the example of a dataset with 30 unlabeled training examples"
 
-![](2024-02-19-22-23-09.png)
+![](./img/2024-02-19-22-23-09.png)
 
 The first thing that the K-means algorithm does is: it will take a random guess at where the centers of the two clusters that we might ask it to find might be.
 
@@ -65,7 +65,7 @@ In this example we're going to ask it to try to find two clusters. (Later we'll 
 
 But the very first step is it will randomly pick two points, which we see here as a red cross and the blue cross, at where might be the centers of two different clusters. Note that this is just a random initial guess and they're not particularly good guesses: 
 
-![](2024-02-19-22-28-30.png)
+![](./img/2024-02-19-22-28-30.png)
 
 **K-means will repeatedly do two different things:**
 
@@ -73,32 +73,32 @@ But the very first step is it will randomly pick two points, which we see here a
 
 Let's take a look at each step. The first of the two steps is: the algorithm will go through each of these points and look at whether it is closer to centers of the clusters, called cluster centroids, which were provided by initial guesses.
 
-![](2024-02-19-22-33-15.png)
+![](./img/2024-02-19-22-33-15.png)
 
 For each of them it will check if it is closer to the red cluster centroid, or if it's closer to the blue cluster centroid. **And it will assign each of these points to whichever of the cluster centroids tt is closer to**:
 
-![](2024-02-19-22-33-33.png)
+![](./img/2024-02-19-22-33-33.png)
 
 The **second** of the two steps that K-means does is: it will take all the data points of one cluster and take an average of them. And it will move the cluster centroid to whatever the average location of the dots in that cluster is:
 
-![](2024-02-19-22-35-35.png)
-![](2024-02-19-22-35-42.png)
+![](./img/2024-02-19-22-35-35.png)
+![](./img/2024-02-19-22-35-42.png)
 
 But now that we have these new and hopefully slightly improved guesses for the locations of the to cluster centroids, the algorithm will go through all of the 30 training examples again, and check for every one of them, whether it's closer to the new red or the blue cluster centroids. And we will reassign them to a cluster based on which cluster centroid is the nearset.
 
-![](2024-02-19-22-39-22.png)
+![](./img/2024-02-19-22-39-22.png)
 
 So if we go through and associate each point with the closer cluster centroids, we end up with this:
 
-![](2024-02-19-22-39-44.png)
+![](./img/2024-02-19-22-39-44.png)
 
 And then we just repeat the second part of K-means again, which is look at all of the data points in a cluster, compute the average and move the cluster centroids:
 
-![](2024-02-19-22-40-48.png)
+![](./img/2024-02-19-22-40-48.png)
 
 If we were to keep on repeating these two steps, we find that we reach a point in which there are no more changes to the colors of the points or to the locations of the clusters centroids. This means that at this point **the K-means clustering algorithm has converged:**
 
-![](2024-02-19-22-42-04.png)
+![](./img/2024-02-19-22-42-04.png)
 
 In this example, it looks like K-means has done a pretty good job and it has found two clusters.
 
@@ -110,13 +110,13 @@ Here's the K-means algorithm:
 
 1. Randomly initialize $K$ cluster centroids, $\mu_1, \mu_2, ..., \mu_k$
 
-![](2024-02-19-22-44-24.png)
+![](./img/2024-02-19-22-44-24.png)
 
 In the example that we had, $K$ was equal to 2and the red cross would be the location of $\mu_1$ and the blue cross would be the location of $\mu_2$. 
 
 **$\mu_1$ and $\mu_2$ are vectors which have the same dimension as our training examples, $x_1$ through say $x_{30}$, in our example.**
 
-![](2024-02-19-22-46-34.png)
+![](./img/2024-02-19-22-46-34.png)
 
 Having randomly initialized the $K$ cluster centroids, K-means will then repeatedly carry out the two steps that we saw in the last section:
 
@@ -150,13 +150,13 @@ Then the value of $k$ that minimizes this is what gets set to $c^i$.
 
 When we implement this algorithm, we find that it's actually  more convenient to minimize the squared distance, because the cluster centroid with the smallest square distance should be the same as the cluster centroid with the smallest distance. 
 
-![](2024-02-19-23-02-13.png)
+![](./img/2024-02-19-23-02-13.png)
 
 As a concrete example, this point up here is closer to the red or two cluster centroids 1. If this was training example x^1, we will set c^1 to be equal to 1. 
 
 Whereas this point over here, if this was the 12th training example, this is closer to the second cluster centroids the blue one. We will set this, the corresponding cluster assignment variable to two because it's closer to cluster centroid 2. 
 
-![](2024-02-19-23-03-04.png)
+![](./img/2024-02-19-23-03-04.png)
 
 That's the first step of the K-means algorithm, assign points to cluster centroids. 
 
@@ -174,19 +174,19 @@ $$
 
 This means: for each of the cluster, we're going to set the cluster centroid location to be updated to be the average (or the mean) of the points assigned to that cluster $k$.
 
-![](2024-02-19-23-20-39.png)
+![](./img/2024-02-19-23-20-39.png)
 
 Concretely, what that means is: we'll look at all of the red points, look at their position on the horizontal axis -the value of the first feature $x^1$- and average that out. The, compute the average value on the vertical axis as well, the featrue $x_2$. Those two values gives us the coordinates of the new centroid of the cluster in vector form:
 
-![](2024-02-19-23-22-24.png)
+![](./img/2024-02-19-23-22-24.png)
 
 And the same for the blue points:
 
-![](2024-02-19-23-22-59.png)
+![](./img/2024-02-19-23-22-59.png)
 
 The mathematical formula would be:
 
-![](2024-02-19-23-24-04.png)
+![](./img/2024-02-19-23-24-04.png)
 
 Again, each of these $x$ values are vectors with two numbers in them, or $n$ numbers in them if we have $n$ features. So, $\mu_k$ will also have two numbers in it, or $n$ numbers if we have $n$ features instead of two. 
 
@@ -199,7 +199,7 @@ If that ever happens, **the most common thing to do is to just eliminate that cl
 ---
 K-means is also frequently applied to data sets where the clusters are not that well separated, like the plot on the right:
 
-![](2024-02-19-23-27-58.png)
+![](./img/2024-02-19-23-27-58.png)
 
 For example, we are a designer and manufacturer of T-shirts, and we want to decide how to size my small, medium, and large t-shirts. How small should a small be, how large should a large be, and what should a medium-size t-shirt really be? 
 
@@ -207,7 +207,7 @@ One thing we might do is collect data of people likely to buy our t-shirts based
 
 Nonetheless, if we were to run K-means with three clusters centroids, we might find that K-means would group the points as follows:
 
-![](2024-02-19-23-29-52.png)
+![](./img/2024-02-19-23-29-52.png)
 
 If we're trying to decide exactly how to size our small, medium, and large t-shirts, we might then choose the dimensions of each size to try to fit the datapoints in each cluster. **Potentially, the cluster centroids might provide a sense of what is the most representative height and weight that we will want our three t-shirt sizes to fit.** 
 
@@ -251,7 +251,7 @@ which in combination that minimize the squared distance.
 
 Visually, here's what the cost function is trying to minimize. At each step:
 
-![](2024-02-21-23-58-00.png)
+![](./img/2024-02-21-23-58-00.png)
 
 the algorithm is taking the distances of the red points to the red cluster centroid and calculating its squares, doing the same with the blue points and then averaging all of them, which is the value of the cost function $J$, at this particular configuration of the parameters for K-means. 
 
@@ -261,14 +261,14 @@ And the, what the algorithm they will do on every step is try to update the clus
 
 Let's now take a deeper look at the algorithm and tru to understand why the algorithm is trying to minimize this cost function $J$:
 
-![](2024-02-22-00-03-48.png)
+![](./img/2024-02-22-00-03-48.png)
 
 - In the **first part of K-means**, where we assign points to cluster centroids, that is actually trying to update $c^{(1)}$ through $c^{(im)}$ in order to try to minimize the cost function $J$ while holding $\mu_{1}$ through $\mu_{K}$ fixed. 
 
 - **And the second step**, where we move the custom centroids, that is trying to update $\mu_{1}$ through $\mu_{K}$, while leaving $c^{(1)}$ through $c^{(im)}$ fixed.
 
 Going back to the first step, if we want to minimize this distance or the square distance, what we should do is assign $x^{(i)}$ to the closest cluster centroid. So to take a simplified example:
-![](2024-02-22-00-09-26.png)
+![](./img/2024-02-22-00-09-26.png)
 
 We have the two clusters centroids above and just a single training example, $x^{(i)}$. If we were to assign that data point to the blue cluster, this square distance betwen the data point and the blue cluster centroid would be much larger that between the data point and the red cluster centroid.
 
@@ -277,7 +277,7 @@ So if we want to minimize the term, we will take $x^{(i)}$ and assign it to the 
 How about the second step of the K-means algorithm, where we move the clusters centroids? It turns out that **choosing $\mu_k$, the location of the centroid, to be average of the points assigned to that cluster is the best choice, that will minimize this expression.**
 
 To take a simplified example, say we have a cluster with just two points assigned to it shown as follows: 
-![](2024-02-22-00-15-30.png)
+![](./img/2024-02-22-00-15-30.png)
 
 With the cluster centroid on the left, the average of the square distances would turn out to be 41. 
 
@@ -297,19 +297,19 @@ But how do we actually take that random gues?. Let's take a look at that, as wel
 
 Here again is the K-means algorithm: let's take a look at how we can implement this first step, step 0: 
 
-![](2024-02-22-10-07-57.png)
+![](./img/2024-02-22-10-07-57.png)
 
 When running K-means we should **always choose the number of cluster centroids $K$ to be less than the amount of training examples $m$**: it doesn't really make sense to have $K$ greater than $m$ because then there won't even be enough training examples to have at least one training example per cluster centroid:
 
-![](2024-02-22-10-09-58.png)
+![](./img/2024-02-22-10-09-58.png)
 
 In our earlier example we had $K$ equals 2 and *m* equals 30. In order to choose the cluster centroids, the most common way is to **randomly pick $K$ training examples and set $\mu_{1}$ through $\mu_{K}$ in those locations**. For example, in the following training, I would randomly pick two training examples and initialize my red cluster centroid and my blue cluster centroids  here, in the example where $K$ was equal to 2:
 
-![](2024-02-22-10-13-39.png)
+![](./img/2024-02-22-10-13-39.png)
 
 If this was our random initialization and we were to run K-means we pray end up with K-means deciding that these are the two classes in the data set:
 
-![](2024-02-22-10-13-56.png)
+![](./img/2024-02-22-10-13-56.png)
 
 Notes that this method of initializing the cost of central is a little bit different than what I had used in the illustration in the earlier sections. Where I was initializing the cluster centroids mu one and mu two to be just random points rather than sitting on top of specific training examples. That was only to make the illustrations clearer in the earlier sections.But ,initialization by choosing random datapoints is actually a much more commonly used way of initializing the clusters centroids. 
 
@@ -317,7 +317,7 @@ However, with this method **there is a chance that, depending on how we choose t
 
 Let's look at a slightly more complex example, where we're going to look at this data set and try to find three clusters, so $K$ equals 3:
 
-![](2024-02-22-10-17-18.png)
+![](./img/2024-02-22-10-17-18.png)
 
 If we were to run K-means with random initialization of the cluster centroid, we may get the result in the top, which looks like a pretty good choice. 
 
@@ -329,11 +329,11 @@ If we were to run K-means 3 times, for example, and end up with these three dist
 
 You can see this graphically, by the distance of each of the dots assigned to each cluster to each cluster centroid, and how it would end up being much less on the top graph:
 
-![](2024-02-22-10-24-42.png)
+![](./img/2024-02-22-10-24-42.png)
 
 Let's more formally into an algorithm: 
 
-![](2024-02-22-10-27-08.png)
+![](./img/2024-02-22-10-27-08.png)
 
 - If we want to use 100 random initialization for K-means, then we would run 100 times randomly initialized K-means using the method that we saw earlier in this section. 
 
@@ -353,11 +353,11 @@ The k-means algorithm requires as one of its inputs, $K$, **the number of cluste
 
 **For a lot of clustering problems, the right value of $K$ is truly ambiguous.** If we show different people the same data set and ask, how many clusters do you see? There will definitely be people that will say there are two distinct clusters:
 
-![](2024-02-22-23-58-25.png)
+![](./img/2024-02-22-23-58-25.png)
 
 There would also be others that will see actually four distinct clusters:
 
-![](2024-02-22-23-58-44.png)
+![](./img/2024-02-22-23-58-44.png)
 
 Both would be right. **Because clustering is an unsupervised learning algorithm, we're not given the "right" answers in the form of specific labels to try to replicate.** 
 
@@ -367,7 +367,7 @@ If we look at the academic literature on K-means, there are a few techniques to 
 
 We'll briefly mention one here that we may see others refer to, although I have to say, I personally do not use this method myself. But **one way to try to choose the value of $K$ is called the "elbow method": run K-means with a variety of values of $K$ and plot the cost function or the distortion function $J$ as a function of the number of clusters.** 
 
-![](2024-02-23-00-02-00.png)
+![](./img/2024-02-23-00-02-00.png)
 
 For very few clusters, the distortion function or the cost function $J$ will be high, and as we increase the number of clusters, it will go down, maybe as follows. The cost function decreases rapidly until we get to three clusters but the decrease is more slowly after that. So we choose $K$ equals 3. This is called an elbow, because of the shape of the curve.
 
@@ -381,7 +381,7 @@ Often we're running K-means in order to get clusters to use for some later or so
 
 So, **what we do is to evaluate K-means based on how well it performs for that later downstream purpose**. Let's illustrate that with the example of t-shirt sizing:
 
-![](2024-02-23-00-07-10.png)
+![](./img/2024-02-23-00-07-10.png)
 
 One thing we could do is run K-means on this data set to find the clusters, in which case we may find clusters for sizes small, medium, and large t-shirts.
 
@@ -734,7 +734,7 @@ each iteration.
 * The final centroids are the black X-marks in the middle of the colored clusters.
 * You can see how these centroids got to their final location by looking at the other X-marks connected to it.
 
-![](2024-02-28-14-34-42.png)
+![](./img/2024-02-28-14-34-42.png)
 
 
 **Note**: You do not need to implement anything for this part. Simply run the code provided below
@@ -803,7 +803,7 @@ centroids, idx = run_kMeans(X, initial_centroids, max_iters, plot_progress=True)
 # K-Means iteration 9/9
 ```
 
-![](2024-02-28-14-36-14.png)
+![](./img/2024-02-28-14-36-14.png)
 
 <a name="3"></a>
 ## 3 - Random initialization
@@ -859,13 +859,13 @@ initial_centroids = kMeans_init_centroids(X, K)
 centroids, idx = run_kMeans(X, initial_centroids, max_iters, plot_progress=True)
 ```
 
-![](2024-02-28-14-38-19.png)
+![](./img/2024-02-28-14-38-19.png)
 
-![](2024-02-28-14-38-32.png)
+![](./img/2024-02-28-14-38-32.png)
 
-![](2024-02-28-14-38-53.png)
+![](./img/2024-02-28-14-38-53.png)
 
-![](2024-02-28-14-39-16.png)
+![](./img/2024-02-28-14-39-16.png)
 
 Note that the last initialization resulted in "wrong" clusters.
 
@@ -909,7 +909,7 @@ You can visualize the image that was just loaded using the code below.
 plt.imshow(original_img)
 ```
 
-![](2024-03-02-14-26-51.png)
+![](./img/2024-03-02-14-26-51.png)
 
 **Check the dimension of the variable**
 
@@ -927,7 +927,7 @@ As you can see, this creates a three-dimensional matrix `original_img` where
 
 For example, `original_img[50, 33, 2]` gives the blue intensity of the pixel at row 50 and column 33.
 
-![](2024-03-02-14-30-24.png)
+![](./img/2024-03-02-14-30-24.png)
 
 #### Processing data
 
@@ -994,7 +994,7 @@ The code below will plot all the colors found in the original image. As mentione
 plot_kMeans_RGB(X_img, centroids, idx, K)
 ```
 
-![](2024-03-02-14-34-58.png)
+![](./img/2024-03-02-14-34-58.png)
 
 You can visualize the colors at each of the red markers (i.e. the centroids) above with the function below. You will only see these colors when you generate the new image in the next section. The number below each color is its index and these are the numbers you see in the `idx` array.
 
@@ -1003,7 +1003,7 @@ You can visualize the colors at each of the red markers (i.e. the centroids) abo
 show_centroid_colors(centroids)
 ```
 
-![](2024-03-02-14-35-37.png)
+![](./img/2024-03-02-14-35-37.png)
 
 <a name="4.3"></a>
 ### 4.3 Compress the image
@@ -1034,7 +1034,7 @@ the image based only on the centroid assignments.
 it. 
 * Figure 3 shows a sample reconstruction. Even though the resulting image retains most of the characteristics of the original, you will also see some compression artifacts because of the fewer colors used.
 
-![](2024-03-02-14-37-21.png)
+![](./img/2024-03-02-14-37-21.png)
 
 * Run the code below to see how the image is reconstructed using the 16 colors selected earlier.
 
@@ -1055,4 +1055,4 @@ ax[1].set_title('Compressed with %d colours'%K)
 ax[1].set_axis_off()
 ```
 
-![](2024-03-02-14-38-08.png)
+![](./img/2024-03-02-14-38-08.png)
