@@ -24,6 +24,13 @@ def process_md_file(file_path):
     # Replace "w^1" with "$w^{1}$", "B^12" with "$b^{12}$", etc
     content = re.sub(r'\b([wbWB])\^(\d+)\b', lambda match: f"${match.group(1).lower()}^{match.group(2)}$", content)
 
+    # Replace x1, x2, ..., x100 with $x_1$, $x_2$, ..., $x_{100}$
+    content = re.sub(r'\bx(\d+)\b', lambda match: f"$x_{match.group(1)}$", content)
+
+    # Replace " m " with " $m$ "
+    content = re.sub(r' m ', lambda match: f" ${match.group(0).strip()}$ ", content)
+    content = re.sub(r' m. ', lambda match: f" ${match.group(0).strip()}$ ", content)
+
     # Use regex to replace standalone "w"
     content = re.sub(r'\s+(w)\s+', r' $\1$ ', content)
     # Use regex to replace standalone "b"
