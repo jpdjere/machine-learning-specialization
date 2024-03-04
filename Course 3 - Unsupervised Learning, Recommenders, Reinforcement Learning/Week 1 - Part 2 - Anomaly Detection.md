@@ -70,7 +70,7 @@ It looks vaguely bell-shaped. What this curve on the left indicates is not if we
 
 The formula for $p(x)$ is given by the expression:
 
-$$ p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
+$$ $p(x)$ = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
 
 Let's look at a few examples of how changing $\mu$  and $\sigma$ will affect the Gaussian distribution. First, let me set $\mu$ equals 0 and $\sigma$ equals 1. Here's my plot of the Gaussian distribution with mean 0, $\mu$ equals 0, and standard deviation $\sigma$ equals 1. 
 
@@ -120,66 +120,98 @@ If we were to get an example near the tip of the bell, then $p(x)$ is pretty hig
 
 ![](2024-03-04-23-12-52.png)
 
-
-Now, we've done this only for when $x$ is a number, as if we had only a single feature for our anomaly detection problem. But for practical anomaly detection applications, we will have many features, two or three or some even larger number n of features. Let's take what we saw for a single Gaussian and use it to build a more sophisticated anomaly detection algorithm that can handle multiple features.
+Now, we've done this only for when $x$ is a number, as if we had only a single feature for our anomaly detection problem. But for practical anomaly detection applications, we will have many features, two or three or some even larger number $n$ of features. Let's take what we saw for a single Gaussian and use it to build a more sophisticated anomaly detection algorithm that can handle multiple features.
 
 ## Anomaly detection algorithm
 
 Now that we've seen how the Gaussian or the normal distribution works for a single number, we're ready to build our anomaly detection algorithm. 
 
-Let's dive in. we have a training set $x_1$ through xm, where here each example $x$ has n features. So, each example $x$ is a vector with n numbers. 
+Let's dive in. We have a training set $x_1$ through $x_m$, where here each example $x$ has $n$ features. So, each example $x$ is a vector with $n$ numbers. 
 
-In the case of the airplane engine example, we had two features corresponding to the heat and the vibrations. And so, each of these Xi's would be a two dimensional vector and n would be equal to 2. But for many practical applications n can be much larger and we might do this with dozens or even hundreds of features. 
+In the case of the airplane engine example, we had two features corresponding to the heat and the vibrations. And so, each of these $\vec{\mathbf{x}}^{(i)}$'s would be a two dimensional vector and $n$ would be equal to 2. But for many practical applications $n$ can be much larger and we might do this with dozens or even hundreds of features.
 
-Given this training set, what we would like to do is to carry out density estimation and all that means is, we will build a model or estimate the probability for p(x). What's the probability of any given feature vector? And our model for p(x) is going to be as follows, $x$ is a feature vector with values $x_1$, $x_2$ and so on down to xn. 
+![](2024-03-04-23-24-57.png)
 
-And we're going to model p(x) as the probability of $x_1$, times the probability of $x_2$, times the probability of x3 times the probability of xn, for the n th features in the feature vectors. If we've taken an advanced class in probably in statistics before, we may recognize that this equation corresponds to assuming that the features $x_1$, $x_2$ and so on up to xm are statistically independent. But it turns out this algorithm often works fine even that the features are not actually statistically independent. 
+Given this training set, what we would like to do is to carry out density estimation and all that means is, we will build a model or estimate the probability for $p(x)$. What's the probability of any given feature vector? And our model for $p(x)$ is going to be as follows:
 
-But if we don't understand what I just said, don't worry about it. Understanding statistical independence is not needed to fully complete this class and also, be able to very effectively use anomaly detection algorithm. Now, to fill in this equation a little bit more, we are saying that the probability of all the features of this vector features x, is the product of p(x) 1 and p($x_2$) and so on up through p(xn). 
+$$ p(\vec{\mathbf{x}}) = p(x_1; \mu_1, \sigma_1^2) \space*\space p(x_2; \mu_2, \sigma_2^2) \space*\space p(x_3; \mu_3, \sigma_3^2)\space*\space \cdots \space*\space p(x_n; \mu_n, \sigma_n^2) $$
 
-And in order to model the probability of $x_1$, say the heat feature in this example we're going to have two parameters, $\mu$ 1 and $\sigma$ 1 or $\sigma$ squared is 1. And what that means is we're going to estimate, the mean of the feature $x_1$ and also the variance of feature $x_1$ and that will be new 1 and $\sigma$ 1. To model p($x_2$) $x_2$ is a totally different feature measuring the vibrations of the airplane engine. 
+$x$ is a feature vector with values $x_1$, $x_2$ and so on, down to $x_n$. 
 
-We're going to have two different parameters, which we're going to write as $\mu$ 2, $\sigma$ 2 squared. And it turns out this will correspond to the mean or the average of the vibration feature and the variance of the vibration feature and so on. If we have additional features $\mu$ 3 $\sigma$ 3 squared up through $\mu$ n and $\sigma$ n squared. 
+And we're going to model $p(x)$ as the probability of $x_1$, times the probability of $x_2$, times the probability of $x_3$ times the probability of $x_n$, for the $n$ th features in the feature vectors. 
 
-In case we're wondering why we multiply probabilities, maybe here's 1 example that could build intuition. Suppose for an aircraft engine there's a 1/10 chance that it is really hot, unusually hot and maybe there is a 1 in 20 chance that it vibrates really hard. Then, what is the chance that it runs really hot and vibrates really hard. 
+This equation corresponds to assuming that the features $x_1$, $x_2$ and so on up to $x_n$ are statistically independent. But tis algorithm often works fine even that the features are not actually statistically independent. 
 
-We're saying that the chance of that is 1/10 times 1/20 which is 1/200. So it's really unlikely to get an engine that both run really hot and vibrates really hard. It's the product of these two probabilities A somewhat more compact way to write this equation up here,
+Note that we are saying that the probability of all the features of these vector features $x$ each correspond to a different $\mu$ $n$ and $\sigma$.
 
-is to say that this is equal to, the product from j =1 through n of p(xj). 
+In case we're wondering why we multiply probabilities: let's see an example for an aircraft engine that has a 1/10 chance that it is really hot, unusually hot. And there is a 1 in 20 chance that it vibrates really hard. Then, what is the chance that it runs really hot and vibrates really hard?
 
-Would parameters $\mu$ j and $\sigma$ squared j. And this symbol here is a lot like the summation symbol except that whereas the summation symbol corresponds to addition, this symbol here corresponds to multiplying these terms over here for j =1 through n. So let's put it all together to see how we can build an anamoly detection system. 
+We're saying that the chance of that is 1/10 times 1/20 which is 1/200. So it's really unlikely to get an engine that both run really hot and vibrates really hard. 
 
-The first step is to choose features xi that we think might be indicative of anomalous examples. Having come up with the features we want to use, we would then fit the parameters $\mu$ 1 through $\mu$ n and $\sigma$ square 1 through $\sigma$ squared n, for the n features in our data set. As we might guess, the parameter $\mu$ j will be just the average of xj of the feature j of all the examples in our training set. 
+![](2024-03-04-23-31-10.png)
 
-And $\sigma$ square j will be the average of the square difference between the feature and the value $\mu$ j, that we just computed. And by the way, if we have a vectorized implementation, we can also compute $\mu$ as the average of the training examples as follows, we're here, $x$ and $\mu$ are both vectors. And so this would be the vectorized way of computing $\mu$ 1 through $\mu$ and all at the same time. 
+A somewhat more compact way to write this equation up here is:
 
-And by estimating these parameters on our unlabeled training set, we've now computed all the parameters of our model. Finally, when we are given a new example, $x$ test or we're just going to write a new example as $x$ here, what we would do is compute p(x) and see if it's large or small. So p(x) as we saw on the last slide is the product from j = 1 through n of the probability of the individual features. 
+$$ p(\vec{\mathbf{x}}) = \prod_{j=1}^n p(x_j; \mu_j, \sigma _j^2) $$
 
-So p(x) j with parameters $\mu$ j and single square j. And if we substitute in, the formula for this probability, we end up with this expression 1 over root 2 pi $\sigma$ j of e to this expression over here. And so xj are the features, this is a j feature of our new example, $\mu$ j and $\sigma$ j are numbers or parameters we have computed in the previous step. 
+So let's put it all together to see how we can build an anamoly detection system. 
 
-And if we compute out this formula, we get some number for p(x). And the final step is to see a p(x) is less than epsilon. And if it is then we flag that it is an anomaly. 
+The first step is to choose features $x^{(i)}$ that we think might be indicative of anomalous examples.
 
-1 intuition behind what this algorithm is doing is that it will tend to flag an example as anomalous if 1 or more of the features are either very large or very small relative to what it has seen in the training set. So for each of the features $x$ j, we're fitting a Gaussian distribution like this. And so if even 1 of the features of the new example was way out here, say, then P f xJ would be very small. 
+![](2024-03-04-23-33-19.png)
 
-And if just 1 of the terms in this product is very small, then this overall product, when we multiply together will tend to be very small and does p(x) will be small. And what anomaly detection is doing in this algorithm is a systematic way of quantifying whether or not this new example $x$ has any features that are unusually large or unusually small. Now, let's take a look at what all this actually means on 1 example, Here's the data set with features $x$ 1 and $x$ 2. 
+Having come up with the features we want to use, we would then fit the parameters $\mu_1$  through $\mu_n$ and $\sigma_1^2$  1 through \sigma_n^2$, for the $n$ features in our data set. As we might guess, the parameter $\mu_j$ j will be just the average of $x_j$ of the feature $j$ of all the examples in our training set. And $\sigma_j^2$ will be the average of the square difference between the feature and the value $\mu_j$, that we just computed.
 
-And we notice that the features $x$ 1 take on a much larger range of values than the features $x$ 2. If we were to compute the mean of the Features $x$ 1, we end up with five, which is why we want is equal to 1. And it turns out that for this data said, if we compute $\sigma$ 1, it will be equal to about 2. 
+![](2024-03-04-23-35-11.png)
 
-And if we were to compute $\mu$ to the average of the features on next to the average is three and similarly is variance or standard deviation is much smaller, which is why $\sigma$ 2 is equal to 1. So that corresponds to this Gaussian distribution for $x$ 1 and this Gaussian distribution for $x$ 2. If we were to actually multiply p(x) 1 and p(x) 2, then we end up with this three D surface plot for p(x) where any point, the height of this is the product of p(x) 1 times p(x) 2. 
+And by the way, if we have a vectorized implementation, we can also compute $\mu$ as the average of the training examples as follows: here $x$ and $\mu$ are both vectors. And so this would be the vectorized way of computing $\mu_1$ through $\mu_n$ and all at the same time.
 
-For the corresponding values of $x$ 1 and $x$ 2. And this signifies that values where p(x) is higher or more likely. So, values near the middle kind of here are more likely. 
+![](2024-03-04-23-36-00.png)
 
-Whereas values far out here, values out here are much less likely. I have much lower chance. Now, let me pick two test examples, the first 1 here, we're going to write this $x$ test 1 and the second 1 down here as $x$ test 2. 
+And by estimating these parameters on our unlabeled training set, we've now computed all the parameters of our model. 
 
-And let's see which of these 2 examples the algorithm will flag as anomalous. we're going to pick The Parameter ε to be equal to 0.02. And if we were to compute p(x) test 1, it turns out to be about 0.4 and this is much bigger than epsilon. 
+Finally, when we are given a new example, $x_{test}$  what we would do is compute $p(x)$ and see if it's large or small. So $p(x)$ as we saw on the last slide is the product from $j = 1$ to $n$ of the probability of the individual features:
 
-And so the album will say this looks okay, doesn't look like an anomaly. Whereas in contrast, if we were to compute p(x) for this point down here corresponding to $x$ 1 equals about eight and $x$ 2 equals about 0.5. Kind of down here, then p(x) test 2 is 0.0021. 
+$$ p(x) = \prod_{j=1}^n p(x_j; \mu_j, \sigma_j^2) = \prod_{j=1}^n \frac{1}{\sqrt{2\pi}\sigma_j} e^{-\frac{(x_j - \mu_j)^2}{2\sigma_j^2}} $$
 
-So this is much smaller than epsilon. And so the album will flag this as a likely anomaly. So, pretty much as we might hope it decides that $x$ test 1 looks pretty normal. 
+![](2024-03-04-23-37-25.png)
 
-Whereas excess to which is much further away than anything we see in the training set looks like it could be an anomaly. So we've seen the process of how to build an anomaly detection system. But how do we choose the parameter epsilon? 
+And if we compute out this formula, we get some number for $p(x)$. 
 
-And how do we know if our anomaly detection system is working well in the next section, let's dive a little bit more deeply into the process of developing and evaluating the performance of an anomaly detection system. Let's go on to the next section
+
+And the final step is to see a $p(x)$ is less than epsilon. And if it is then we flag that it is an anomaly.
+
+![](2024-03-04-23-38-16.png)
+
+One intuition behind what this algorithm is doing is that it will tend to flag an example as anomalous if one or more of the features are either very large or very small relative to what it has seen in the training set. 
+
+So for each of the features $x_j$, we're fitting a Gaussian distribution like this. And so if even one of the features of the new example was way out here, say, then $p(x_j)$ would be very small. And if just one of the terms in this product is very small, then this overall product, when we multiply together will tend to be very small and does $p(x)$ will be small.
+
+![](2024-03-04-23-39-46.png)
+
+So, what anomaly detection is doing in this algorithm is a systematic way of quantifying whether or not this new example $x$ has any features that are unusually large or unusually small. 
+
+Now, let's take a look at what all this actually means on one example. Up ahead, a data set with features $x_1$ and $x_2$.
+
+Notice that the features $x_1$ take on a much larger range of values than the features $x_2$. If we were to compute the mean of the Features $x_1$ , we end up with five, which is why we want is equal to 1. And it turns out that for this data said, if we compute $\sigma_1$, it will be equal to about 2. 
+
+And if we were to compute $\mu$ to the average of the features on next to the average is 3 and similarly is variance or standard deviation is much smaller, which is why $\sigma_2$ is equal to 1.
+
+![](2024-03-04-23-42-07.png)
+
+If we were to actually multiply $p(x_1)$  and $p(x_2)$, then we end up with this  3D surface plot for $p(x)$ where any point, the height of this is the product of $p(x_1)$ times $p(x_2)$. 
+
+![](2024-03-04-23-44-04.png)
+
+And this signifies that values where $p(x)$ is higher are more likely. So, values near the middle kind of here are more likely, whereas values far outare much less likely. 
+
+Now, let's pick two test examples, $x^1_{test}$  and $x^2_{test}$ and see what the algorithm is doing; which of these 2 examples the algorithm will flag as anomalous. We're going to pick the parameter ε to be equal to 0.02. 
+
+If we were to compute $p(x^1_test)$, it turns out to be about 0.4, which is much bigger than epsilon $\epsilon$. The algorithm will say this looks okay, doesn't look like an anomaly. 
+
+In contrast, if we were to compute $p(x^1_{test})$ for the point corresponding to $x_1$ equals about 8 and $x_2$ equals about 0.5. Then $p(x^2_{test})$ is 0.0021. 
+
+So this is much smaller than epsilon $\epsilon$. And so the algorithm will flag this as a likely anomaly.
 
 ## Developing and evaluating an anomaly detection system
 
@@ -189,7 +221,7 @@ Let's take a look at what that means. When we are developing a learning algorith
 
 This is how it's often done in anomaly detection. Which is, even though we've mainly been talking about unlabeled data, we're going to change that assumption a bit and assume that we have some labeled data, including just a small number usually of previously observed anomalies. Maybe after making airplane engines for a few years, we've just seen a few airplane engines that were anomalous, and for examples that we know are anomalous, we're going to associate a label $y$ equals 1 to indicate this anomalous, and for examples that we think are normal, we're going to associate the label $y$ equals 0. 
 
-The training set that the anomaly detection algorithm will learn from is still this unlabeled training set of $x_1$ through xm, and we're going to think of all of these examples as ones that we'll just assume are normal and not anomalous, so $y$ is equal to 0. In practice, we have a few anomalous examples where to slip into this training set, our algorithm will still usually do okay. To evaluate our algorithm, come up with a way for we to have a real number evaluation, it turns out to be very useful if we have a small number of anomalous examples so that we can create a cross validation set, which we're going to denote $x_cv$^1, $y_cv$^1 through $x_cv$^mcv, $y_cv$^mcv. 
+The training set that the anomaly detection algorithm will learn from is still this unlabeled training set of $x_1$ through $x_m$, and we're going to think of all of these examples as ones that we'll just assume are normal and not anomalous, so $y$ is equal to 0. In practice, we have a few anomalous examples where to slip into this training set, our algorithm will still usually do okay. To evaluate our algorithm, come up with a way for we to have a real number evaluation, it turns out to be very useful if we have a small number of anomalous examples so that we can create a cross validation set, which we're going to denote $x_cv$^1, $y_cv$^1 through $x_cv$^mcv, $y_cv$^mcv. 
 
 This is similar notation as we had seen in the second course of this specialization. As similarly, have a test set of some number of examples where both the cross validation and test sets hopefully includes a few anomalous examples. In other words, the cross validation and test sets will have a few examples of $y$ equals 1, but also a lot of examples where $y$ is equal to 0. 
 
