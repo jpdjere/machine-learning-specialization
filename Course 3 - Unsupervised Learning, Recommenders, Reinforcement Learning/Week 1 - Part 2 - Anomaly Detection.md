@@ -215,45 +215,99 @@ So this is much smaller than epsilon $\epsilon$. And so the algorithm will flag 
 
 ## Developing and evaluating an anomaly detection system
 
-I'd like to share with we some practical tips for developing an anomaly detection system. One of the key ideas will be that if we can have a way to evaluate a system, even as it's being developed, we'll be able to make decisions and change the system and improve it much more quickly. 
+Let's see some practical tips for developing an anomaly detection system. The key idea will be that if we can have a way to evaluate a system, even as it's being developed, we'll be able to make decisions and change the system and improve it much more quickly. 
 
-Let's take a look at what that means. When we are developing a learning algorithm, say choosing different features or trying different values of the parameters like epsilon, making decisions about whether or not to change a feature in a certain way or to increase or decrease epsilon or other parameters, making those decisions is much easier if we have a way of evaluating the learning algorithm. This is sometimes called real number evaluation, meaning that if we can quickly change the algorithm in some way, such as change a feature or change a parameter and have a way of computing a number that tells we if the algorithm got better or worse, then it makes it much easier to decide whether or not to stick with that change to the algorithm. 
+When we are developing a learning algorithm (for example, choosing different features or trying different values of the parameters like $\epsilon$) **making decisions about whether or not to change a feature is much easier if we have a way of evaluating the learning algorithm.** 
 
-This is how it's often done in anomaly detection. Which is, even though we've mainly been talking about unlabeled data, we're going to change that assumption a bit and assume that we have some labeled data, including just a small number usually of previously observed anomalies. Maybe after making airplane engines for a few years, we've just seen a few airplane engines that were anomalous, and for examples that we know are anomalous, we're going to associate a label $y$ equals 1 to indicate this anomalous, and for examples that we think are normal, we're going to associate the label $y$ equals 0. 
+![](2024-03-05-17-56-07.png)
 
-The training set that the anomaly detection algorithm will learn from is still this unlabeled training set of $x_1$ through $x_m$, and we're going to think of all of these examples as ones that we'll just assume are normal and not anomalous, so $y$ is equal to 0. In practice, we have a few anomalous examples where to slip into this training set, our algorithm will still usually do okay. To evaluate our algorithm, come up with a way for we to have a real number evaluation, it turns out to be very useful if we have a small number of anomalous examples so that we can create a cross validation set, which we're going to denote $x_cv$^1, $y_cv$^1 through $x_cv$^mcv, $y_cv$^mcv. 
+This is called **real number evaluation**, meaning that if we can quickly change the algorithm in some way (such as change a feature or change a parameter) and have a way of computing a number that tells us if the algorithm got better or worse, then it makes it much easier to decide whether or not to stick with that change.
 
-This is similar notation as we had seen in the second course of this specialization. As similarly, have a test set of some number of examples where both the cross validation and test sets hopefully includes a few anomalous examples. In other words, the cross validation and test sets will have a few examples of $y$ equals 1, but also a lot of examples where $y$ is equal to 0. 
+This is how it's often done in anomaly detection. 
 
-Again, in practice, anomaly detection algorithm will work okay if there are some examples that are actually anomalous, but there were accidentally labeled with $y$ equals 0. Let's illustrate this with the aircraft engine example. Let's say we have been manufacturing aircraft engines for years and so we've collected data from 10,000 good or normal engines, but over the years we had also collected data from 20 flawed or anomalous engines. 
+Rven though we've mainly been talking about unlabeled data, we're going to change that assumption and assume that we have some labeled data, including  a small number usually of previously observed anomalies. (For example, after making airplane engines for a few years, we've just seen a few airplane engines that were anomalous, and we're going to associate those to a label $y = 1$to indicate this anomaly, while normal = 0).
 
-Usually the number of anomalous engines, that is $y$ equals 1, will be much smaller. It will not be a typical to apply this type of algorithm with anywhere from, say, 2-50 known anomalies. We're going to take this dataset and break it up into a training set, a cross validation set, and the test set. 
+![](2024-03-05-18-06-23.png)
 
-Here's one example. we're going to put 6,000 good engines into the training set. Again, if there are couple of anomalous engines that got slipped into this set is actually okay, I wouldn't worry too much about that. 
+**The training set that the anomaly detection algorithm will learn from is still this unlabeled training set of $x_1$ through $x_m$**, and we're going to think of all of these examples as ones that we'll just assume are normal -not anomalous-, so $y$ is equal to 0. 
 
-Then let's put 2,000 good engines and 10 of the known anomalies into the cross-validation set, and a separate 2,000 good and 10 anomalous engines into the test set. What we can do then is train the algorithm on the training set, fit the Gaussian distributions to these 6,000 examples and then on the cross-validation set, we can see how many of the anomalous engines it correctly flags. For example, we could use the cross validation set to tune the parameter epsilon and set it higher or lower depending on whether the algorithm seems to be reliably detecting these 10 anomalies without taking too many of these 2,000 good engines and flagging them as anomalies. 
+![](2024-03-05-18-07-18.png)
 
-After we have tuned the parameter epsilon and maybe also added or subtracted or tuned to features $X_J$ we can then take the algorithm and evaluate it on our test set to see how many of these 10 anomalous engines it finds, as well as how many mistakes it makes by flagging the good engines as anomalous ones. Notice that this is still primarily an unsupervised learning algorithm because the training sets really has no labels or they all have labels that we're assuming to be $y$ equals 0 and so we learned from the training set by fitting the Gaussian distributions as we saw in the previous section. But it turns out if we're building a practical anomaly detection system, having a small number of anomalies to use to evaluate the algorithm that our cross validation and test sets is very helpful for tuning the algorithm. 
+In practice, if a few anomalous examples where to slip into this training set, our algorithm will still usually perform okay. 
 
-Because the number of flawed engines is so small there's one other alternative that I often see people use for anomaly detection, which is to not use a test set, like to have just a training set and a cross-validation set. In this example, we will set train on 6,000 good engines, but take the remainder of the data, the 4,000 remaining good engines as well as all the anomalies, and put them in the cross validation set. we would then tune the parameters Epsilon and add or subtract features $x_j$ to try to get it to do as well as possible as evaluated on the cross validation set. 
 
-If we have very few flawed engines, so if we had only two flawed engines, then this really makes sense to put all of that in the cross validation set. we just don't have enough data to create a totally separate test set that is distinct from our cross-validation set. The downside of this alternative here is that after we've tuned our algorithm, we don't have a fair way to tell how well this will actually do on future examples because we don't have the test set. 
+To evaluate our algorithm, that is, to come up with a way for we to have a real number evaluation, it turns out to be very useful i**f we have a small number of anomalous examples so that we can create a cross validation set**, which we're going to denote $x_{cv}^1$, $y_{cv}^1$ through $x_{cv}^m$, $y_{cv}^m$.
 
-But when our dataset is small, especially when the number of anomalies we have, our dataset is small, this might be the best alternative we have. I see this done quite often as well when we just don't have enough data to create a separate test set. If this is the case, just be aware that there's a higher risk that we will have over-fit some of our decisions around Epsilon and choice of features and so on to the cross-validation set and so its performance on real data in the future may not be as good as we were expecting. 
 
-Now, let's take a closer look at how to actually evaluate the algorithm on our cross-validation sets or on the test set. Here's what we'd do. we would first fit the model $p(x)$ on the training set. 
+Also, we'd like to have a test set of some number of examples where both the cross validation and test sets hopefully includes a few anomalous examples. In other words, the cross validation and test sets will have a few examples of $y$ equals 1, but also a lot of examples where $y$ is equal to 0.
 
-This was a 6,000 examples of goods engines. Then on any cross validation or test example x, we would compute $p(x)$ and we will predict $y$ equals 1. That is anomalous if $p(x)$ is less than Epsilon and we predict $y$ is 0, if $p(x)$ is greater than or equal to Epsilon. 
+![](2024-03-05-18-11-02.png)
 
-Based on this, we can now look at how accurately this algorithm's predictions on the cross validation or test set matches the labels, $y$ we have in the cross validation or the test sets. In the third week of the second course, we had had a couple of optional sections on how to handle highly skewed data distributions where the number of positive examples, $y$ equals 1, can be much smaller than the number of negative examples where $y$ equals 0. This is the case as well for many anomaly detection in the applications where the number of anomalies in our cross-validation set is much smaller. 
+Let's illustrate this with the aircraft engine example. Let's say we have been manufacturing aircraft engines for years and so we've collected data from 10,000 good or normal engines, but over the years we had also collected data from 20 flawed or anomalous engines:
 
-In our previous example, we had maybe 10 positive examples and 2,000 negative examples because we had 10 anomalies and 2,000 normal examples. If we saw those optional sections, we may recall that we saw it can be useful to compute things like the true positive, false positive, false negative, and true negative rates. Also compute precision recall or $F_1$ score and that these are alternative metrics and classification accuracy that could work better when our data distribution is very skewed. 
+![](2024-03-05-18-11-28.png)
 
-If we saw that section, we might consider applying those types of evaluation metrics as well to tell how well our learning algorithm is doing at finding that small handful of anomalies or positive examples amidst this much larger set of negative examples of normal plane engines. If we didn't watch that section, don't worry about it. It's okay. 
+Usually the number of anomalous engines, that is $y$ equals 1, will be much smaller. It will not be a typical to apply this type of algorithm with anywhere from, say, 2-50 known anomalies. We're going to take this dataset and break it up into a training set, a cross validation set, and the test set:
 
-The intuition I hope we get is to use the cross-validation set to just look at how many anomalies is finding and also how many normal engines is incorrectly flagging as an anomaly. Then to just use that to try to choose a good choice for the parameter Epsilon. we find that the practical process of building an anomaly detection system is much easier if we actually have just a small number of labeled examples of known anomalies. 
+![](2024-03-05-18-11-51.png)
 
-Now, this does raise the question, if we have a few labeled examples, since we'll still be using an unsupervised learning algorithm, why not take those labeled examples and use a supervised learning algorithm instead? In the next section, let's take a look at a comparison between anomaly detection and supervised learning and when we might prefer one over the other. Let's go on to the next section. 
+Here's one example. We're going to put 6,000 good engines into the training set. (Again, if there are couple of anomalous engines that got slipped into this set is actually okay)
+
+Then let's put 2,000 good engines and 10 of the known anomalies into the cross-validation set, and a separate 2,000 good and 10 anomalous engines into the test set. 
+
+![](2024-03-05-18-12-34.png)
+
+What we can do then is **train the algorithm on the training set, fit the Gaussian distributions to these 6,000 examples**.
+
+And then **on the cross-validation set, we can see how many of the anomalous engines it correctly flags.** 
+
+For example, we could use the cross validation set to **tune the parameter epsilon**: set it higher or lower depending on whether the algorithm seems to be reliably detecting these 10 anomalies without taking too many of these 2,000 good engines and flagging them as anomalies. 
+
+![](2024-03-05-18-14-04.png)
+
+After we have tuned the parameter epsilon and maybe **also added or subtracted or tuned features $X_J$** we can then take the algorithm and **evaluate it on our test set to see how many of these 10 anomalous engines it finds, as well as how many mistakes it makes by flagging the good engines as anomalous ones.** 
+
+Notice that this is still primarily an unsupervised learning algorithm because the training sets really has no labels or they all have labels that we're assuming to be $y$ equals 0. So, we learned from the training set by fitting the Gaussian distributions as we saw in the previous section. But it turns out if we're building a practical anomaly detection system, having a small number of anomalies to use to evaluate the algorithm that our cross validation and test sets is very helpful for tuning the algorithm. 
+
+Because the number of flawed engines is so small there's one other alternative used for anomaly detection: **not use a test set, but to have just a training set and a cross-validation set**. 
+
+
+In this example, we will set train on 6,000 good engines, but take the remainder of the data, the 4,000 remaining good engines as well as all the anomalies, and put them in the cross validation set. We would then tune the parameters $\epsilon$ and add or subtract features $x_j$ to try to get it to do as well as possible as evaluated on the cross validation set. 
+
+![](2024-03-05-18-18-14.png)
+
+If we have very few flawed engines, so if we had only two flawed engines, then this really makes sense to put all of that in the cross validation set. Since we just don't have enough data to create a totally separate test set that is distinct from our cross-validation set. The downside of this alternative here is that after we've tuned our algorithm, we don't have a fair way to tell how well this will actually do on future examples because we don't have the test set. 
+
+Just be aware that there's a higher risk that we will have over-fitted some of our decisions around $\epsilon$ and choice of features and so on, to the cross-validation set, and so its performance on real data in the future may not be as good as we were expecting.
+
+![](2024-03-05-18-19-33.png)
+
+### Algorithm evaluation
+
+**Let's take a closer look at how to actually evaluate the algorithm on our cross-validation sets or on the test set.** Here's what we'd do. 
+
+- We would first fit the model $p(x)$ on the training set. This was a 6,000 examples of goods engines.
+
+![](2024-03-05-18-21-17.png)
+
+- Then on any cross validation or test example $x$, we would compute $p(x)$ and we will predict $y$ equals 1. That is, anomalous if $p(x)$ is less than $\epsilon$ and we predict $y$ is 0, if $p(x)$ is greater than or equal to $\epsilon$. 
+
+![](2024-03-05-18-22-45.png)
+
+- Based on this, we can now look at how accurately this algorithm's predictions on the cross validation or test set matches the labels $y$ that we have in the cross validation or the test sets. 
+
+
+In the third week of the second course, we had had a couple of optional sections on how to handle highly skewed data distributions where the number of positive examples, $y$ equals 1, can be much smaller than the number of negative examples where $y$ equals 0. This is the case as well for many anomaly detection in the applications where the number of anomalies in our cross-validation set is much smaller. 
+
+In our previous example, we had maybe 10 positive examples and 2,000 negative examples because we had 10 anomalies and 2,000 normal examples. If we saw those optional sections, we may recall that we saw it can be useful to compute things like the true positive, false positive, false negative, and true negative rates. Also compute precision recall or $F_1$ score and that these are alternative metrics and classification accuracy that could work better when our data distribution is very skewed.
+
+![](2024-03-05-18-23-51.png)
+
+So, we might consider applying those types of evaluation metrics as well to tell how well our learning algorithm is doing at finding that small handful of anomalies or positive examples amidst this much larger set of negative examples of normal plane engines.
+
+The intuition I hope we get is to use the cross-validation set to just look at how many anomalies is finding and also how many normal engines is incorrectly flagging as an anomaly. Then to just use that to try to choose a good choice for the parameter $\epsilon$.
+
+![](2024-03-05-18-24-50.png)
 
 ## Anomaly detection vs. supervised learning
 
