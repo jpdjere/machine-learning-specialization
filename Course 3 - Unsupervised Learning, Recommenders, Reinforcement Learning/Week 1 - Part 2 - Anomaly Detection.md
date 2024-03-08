@@ -311,51 +311,51 @@ The intuition I hope we get is to use the cross-validation set to just look at h
 
 ## Anomaly detection vs. supervised learning
 
-When we have a few positive examples with $y$ = 1 and a large number of negative examples say $y$ = 0? When should we use anomaly detection and when should we use supervised learning? 
+When we have a few positive examples with $y = 1$ and a large number of negative examples -$y = 0$-, **when should we use anomaly detection and when should we use supervised learning?** 
 
-The decision is actually quite subtle in some applications. So let me share with we some thoughts and some suggestions for how to pick between these two types of algorithms. And anomaly detection algorithm will typically be the more appropriate choice when we have a very small number of positive examples, 0-20 positive examples is not uncommon. 
+The decision is actually quite subtle in some applications. So, let's see some suggestions for how to pick between these two types of algorithms. 
 
-And a relatively large number of negative examples with which to try to build a model for p of x. When we recall that the parameters for $p(x)$ are learned only from the negative examples and this much smaller. So the positive examples is only used in our cross validation set and test set for parameter tuning and for evaluation. 
+**An anomaly detection algorithm will typically be the more appropriate choice when we have a very small number of positive examples (0-20 positive examples is not uncommon) and a relatively large number of negative examples with which to try to build a model for $p(x)$.**
 
-In contrast, if we have a larger number of positive and negative examples, then supervised learning might be more applicable. Now, even if we have only 20 positive training examples, it might be okay to apply a supervised learning algorithm. But it turns out that the way anomaly detection looks at the data set versus the way supervised learning looks at the data set are quite different. 
+![](2024-03-08-23-55-12.png)
 
-Here is the main difference, which is that if we think there are many different types of anomalies or many different types of positive examples. Then anomaly detection might be more appropriate when there are many different ways for an aircraft engine to go wrong. And if tomorrow there may be a brand new way for an aircraft engine to have something wrong with it. 
+Recall that the parameters for $p(x)$ are learned only from the negative examples and this much smaller set of positive examples is only used in our cross validation set and test set for parameter tuning and for evaluation. 
 
-Then our 20 say positive examples may not cover all of the ways that an aircraft engine could go wrong. That makes it hard for any algorithm to learn from the small set of positive examples what the anomalies, what the positive examples look like. And future anomalies may look nothing like any of the anomalous examples we've seen so far. 
+In contrast, **if we have a larger number of positive and negative examples, then supervised learning might be more applicable.** 
 
-If we believe this to be true for our problem, then I would gravitate to using an anomaly detection algorithm. Because what anomaly detection does is it looks at the normal examples that is the $y$ = 0 negative examples and just try to model what they look like. And anything that deviates a lot from normal It flags as an anomaly. 
+![](2024-03-08-23-56-45.png)
 
-Including if there's a brand new way for an aircraft engine to fail that had never been seen before in our data set. In contrast, supervised learning has a different way of looking at the problem. When we're applying supervised learning ideally we would hope to have enough positive examples for the average to get a sense of what the positive examples are like. 
+Now, even if we have only 20 positive training examples, it might be okay to apply a supervised learning algorithm. But it turns out that the way anomaly detection looks at the data set versus the way supervised learning looks at the data set are quite different. 
 
-And with supervised learning, we tend to assume that the future positive examples are likely to be similar to the ones in the training set. So let me illustrate this with one example, if we are using a system to find, say financial fraud. There are many different ways unfortunately that some individuals are trying to commit financial fraud. 
+Here is the main difference: **if we think there are many different types of anomalies or many different types of positive examples, then anomaly detection might be more appropriate.**
 
-And unfortunately there are new types of financial fraud attempts every few months or every year. And what that means is that because they keep on popping up completely new. And unique forms of financial fraud anomaly detection is often used to just look for anything that's different, then transactions we've seen in the past. 
+![](2024-03-08-23-58-20.png)
+
+For example: when there are many different ways for an aircraft engine to go wrong, and if tomorrow there may be a brand new way for an aircraft engine to have something wrong with it, then our 20 positive examples may not cover all of the ways that an aircraft engine could go wrong. **That makes it hard for any algorithm to learn from the small set of positive examples what the anomalies, what the positive examples look like. And future anomalies may look nothing like any of the anomalous examples we've seen so far.** 
+
+If we believe this to be true for our problem, then I would gravitate to using an anomaly detection algorithm. Because what anomaly detection does is it looks at the normal examples that is the $y = 0$ negative examples and just try to model what they look like. And anything that deviates a lot from normal it flags as an anomaly, including if there's a brand new way for an aircraft engine to fail that had never been seen before in our data set.
+
+In contrast, **supervised learning has a different way of looking at the problem: when we're applying supervised learning ideally we would hope to have enough positive examples for the average to get a sense of what the positive examples are like.**
+
+And **with supervised learning, we tend to assume that the future positive examples are likely to be similar to the ones in the training set**.
+
+![](2024-03-09-00-02-52.png)
+
+
+Let's illustrate this with one example, if we are using a system to find, say financial fraud. There are many different ways unfortunately that some individuals are trying to commit financial fraud. 
+
+And unfortunately there are new types of financial fraud attempts every few months or every year. And what that means is that because they keep on popping up completely new, and unique forms of financial fraud anomaly detection is often used to just look for anything that's different, then transactions we've seen in the past. 
 
 In contrast, if we look at the problem of email spam detection, well, there are many different types of spam email, but even over many years. Spam emails keep on trying to sell similar things or get we to go to similar websites and so on. Spam email that we will get in the next few days is much more likely to be similar to spam emails that we have seen in the past. 
 
-So that's why supervised learning works well for spam because it's trying to detect more of the types of spam emails that we have probably seen in the past in our training set. Whereas if we're trying to detect brand new types of fraud that have never been seen before, then anomaly detection maybe more applicable. Let's go through a few more examples. 
+So that's why supervised learning works well for spam because it's trying to detect more of the types of spam emails that we have probably seen in the past in our training set. Whereas if we're trying to detect brand new types of fraud that have never been seen before, then anomaly detection maybe more applicable.
 
-We have already seen fraud detection being one use case of anomaly detection. Although supervised learning is used to find previously observed forms of fraud. And we've seen email spam classification typically being address using supervised learning. 
+![](2024-03-09-00-03-48.png)
 
-we've also seen the example of manufacturing where we may want to find new previously unseen defects. Such as if there are brand new ways for an aircraft engine to fail in the future that we still want to detect. Even if we don't have any positive example like that in our training set. 
+Let's go through a few more examples:
 
-It turns out that the manufacturing supervised learning is also used to find defects. The more for finding known and previously seen defects. For example, if we are a smartphone maker, we're making cell phones. 
+![](2024-03-09-00-05-45.png)
 
-And we know that occasionally our machine for making the case of the smartphone will accidentally scratch the cover. So scratches are a common defect on smartphones and so we can get enough training examples of scratched smartphones responding to label $y$ =1. And just train the system to decide if a new smartphone that we just manufactured has any scratches in it. 
-
-And the difference is if we just see scratched smartphones over and over and we want to check if our phones are scratched, then supervised learning works well. Whereas if we suspect that they're going to be brand new ways for something to go wrong in the future, then anomaly detection will work well. Some other examples we've heard me talk about monitoring machines in the data center, especially the machine's been hacked. 
-
-It can behave differently in a brand new way unlike any previous way in his behavior. So that would feel more like an anomaly detection application. In fact, one theme is that many security related applications because hackers are often finding brand new ways to hack into systems. 
-
-Many security related applications will use anomaly detection. Whereas returning to supervised learning, if we want to learn to predict the weather well, there's only a handful types of weather that we typically see. Is it sunny, rainy, is it going to snow? 
-
-And so because we see the same output labels over and over, weather prediction would tend to be a supervised learning task. Or if we want to use the symptoms of the patient to see if the patient has a specific disease that we've seen before. Then that would also tend to be a supervised learning application. 
-
-So I hope that gives we a framework for deciding when we have a small set of positive examples as well as maybe a large set of negative examples. Whether to use anomaly detection or supervised learning. Anomaly detection tries to find brand new positive examples that may be unlike anything we've seen before. 
-
-Where supervised learning looks at our positive examples and tries to decide if a future example is similar to the positive examples that we've already seen. Now, it turns out that when building an anomaly detection algorithm, the choice of features is very important and when building anomaly detection systems. I often spend a bit of time trying to tune the features I use for the system in the next section. 
-
-Let me share some practical tips on how to tune the features we feed to anomaly detection algorithm.
 
 ## Choosing what features to use
 
