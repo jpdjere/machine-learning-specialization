@@ -359,78 +359,555 @@ Let's go through a few more examples:
 
 ## Choosing what features to use
 
-When building an anomaly detection algorithm, I found that choosing a good choice of features turns out to be really important. In supervised learning, if we don't have the features quite right, or if we have a few extra features that are not relevant to the problem, that often turns out to be okay. 
+**When building an anomaly detection algorithm, making a good choice of features turns out to be really important.** 
 
-Because the algorithm has to supervised signal that is enough labels why for the algorithm to figure out what features ignore, or how to re scale feature and to take the best advantage of the features we do give it. But for anomaly detection which runs, or learns just from unlabeled data, is harder for the algorithm to figure out what features to ignore. So I found that carefully choosing the features, is even more important for anomaly detection, than for supervised learning approaches. 
+In supervised learning, if we don't have the features quite right, or if we have a few extra features that are not relevant to the problem, that often turns out to be acceptable, because the algorithm has the supervised signal -that is, the labels for $y$- for the algorithm to figure out what features to ignore, or how to re-scale feature and to take the best advantage of the features we do give it. 
 
-Let's take a look at this section as some practical tips, for how to tune the features for anomaly detection, to try to get we the best possible performance. One step that can help our anomaly detection algorithm, is to try to make sure the features we give it are more or less Gaussian. And if our features are not Gaussian, sometimes we can change it to make it a little bit more Gaussian. 
+But for anomaly detection, which runs and learns from unlabeled data, it is harder for the algorithm to figure out what features to ignore. So carefully choosing the features, is far more important for anomaly detection than for supervised learning approaches. 
 
-Let me show we what I mean. If we have a feature X, I will often plot a histogram of the feature which we can do using the python command PLT. Though we see this in the practice lab as well, in order to look at the histogram of the data. 
+Let's take a look in this section at some practical tips, for how to tune the features for anomaly detection, to try to get the best possible performance. 
 
-This distribution here looks pretty Gaussian. So this would be a good candidate feature. If we think this is a feature that helps distinguish between anomalies and normal examples. 
+One step that can take to help our anomaly detection algorithm is to **try to make sure the features we give it are more or less gaussian**. If our features are not gaussian, sometimes we can change it to make it a little bit more gaussian. 
 
-But quite often when we plot a histogram of our features, we may find that the feature has a distribution like this. This does not at all look like that symmetric bell shaped curve. When that is the case, I would consider if we can take this feature X, and transform it in order to make a more Gaussian. 
+If we have a feature $x$, we can plot a histogram of the feature:
 
-For example, maybe if we were to compute the log of X and plot a histogram of log of X, look like this, and this looks much more Gaussian. And so if this feature was feature X one, then instead of using the original feature X one which looks like this on the left, we might instead replace that feature with log of X one, to get this distribution over here. Because when X one is made more Gaussian. 
+![](2024-03-09-00-14-04.png)
 
-When anomaly detection models P of X one using a Gaussian distribution like that, is more likely to be a good fit to the data. Other than the log function, other things we might do is, given a different feature X two, we may replace it with X two, log of X two plus one. This would be a different way of transforming X two. 
+This distribution here looks pretty gaussia, so this would be a good candidate feature, if we think this is a feature that helps distinguish between anomalies and normal examples. 
 
-And more generally, log of X two plus C, would be one example of a formula we can use, to change X to try to make it more Gaussian. Or for a different feature, we might try taking the square root or really the square would have executed this X lead to the power of one half,and we may change that exponentially term. So for a different feature X four, we might use X four to the power of one third, for example. 
+But quite often when we plot a histogram of our features, we may find that the feature has a distribution like this: 
 
-So when we're building an anomaly detection system, I'll sometimes take a look at my features, and if I see any highly non Gaussian by plotting histogram, I might choose transformations like these or others, In order to try to make it more Gaussian. It turns out a larger value of C, will end up transforming this distribution less. But in practice I just try a bunch of different values of C, and then try to take a look to pick one that looks better in terms of making the distribution more Gaussian. 
+![](2024-03-09-00-15-22.png)
 
-Now, let me illustrate how I actually do this and that we put a notebook. So this is what the process of exploring different transformations in the features might look like. When we have a feature X, we can plot a histogram of it as follows. 
+This does not at all look like a symmetric bell shaped curve. When that is the case, we need to take this feature $x$, and transform it in order to make a more gaussian distribution.
 
-It actually looks like there's a pretty cause histogram. Let me increase the number of bins in my history gram to 50. So bins equals 50 there. 
+![](2024-03-09-00-16-07.png)
 
-That's what histogram bins. And by the way, if we want to change the color, we can also do so as follows. And if we want to try a different transformation, we can try for example to plot X square root of X. 
+For example: if we compute the $log(x)$ and plot its histogram its looks much more gaussian. So we can replace the feature $x$ with the feature $log(x)$:
 
-So X to the power of 0.5 with again 50 histogram bins, in which case it might look like this. And this actually looks somewhat more Gaussian. But not perfectly, and let's try a different parameter. 
+![](2024-03-09-00-17-39.png)
 
-So let me try to the power of 4.25. Maybe I just a little bit too far. It's the old 0.4 that looks pretty Gaussian. 
+Other than than we might apply the following transformations:
 
-So one thing we could do is replace X with excellent power of 0.4. And so we would set X to be equal to X to the power of 0.4. And just use the value of X in our training process instead. 
+- $x \rightarrow log(x) $
+- $x \rightarrow log(x + c) $
+- $x \rightarrow \sqrt{x} $
+- $x \rightarrow x^c $ where $c$ can be fractions
 
-Or let me show we another transformation. Here, we're going to try taking the log of X. So log of X spotted with 50 bins, we're going to use the numpy log function as follows. 
+Let's see how to actually do this in Python:
 
-And it turns out we get an error, because it turns out that excellent. This example has some values that are equal to zero, and we'll log of zero is negative infinity is not defined. So common trick is to add just a very tiny number there. 
+First you can plot the histogram with:
+```py
+plt.hist(x, bins=50, color='blue')
+```
+![](2024-03-09-00-23-53.png)
 
-So exports 0.001, becomes non negative. And so we get the histogram that looks like this. But if we want the distribution to look more Gaussian, we can also play around with this parameter, to try to see if there's a value of that. 
+We want to try a transformation to make this distribution gaussian, so we can try for example to plot $\sqrt(x)$.
 
-Cause user data to look more symmetric and maybe look more Gaussian as follows. And just as we're doing right now in real time, we can see that, we can very quickly change these parameters and plot the histogram. In order to try to take a look and try to get something a bit more Gaussian, than was the original data next that we saw in this histogram up above. 
+```py
+plt.hist(x**0.5, bins=50, color='blue')
+```
+![](2024-03-09-00-25-45.png)
 
-If we read the machine learning literature, there are some ways to automatically measure how close these distributions are to Gaussian. But I found it in practice, it doesn't make a big difference, if we just try a few values and pick something that looks right to we, that will work well for all practical purposes. So, by trying things out in Jupiter notebook, we can try to pick a transformation that makes our data more Gaussian. 
+This actually looks somewhat more gaussian. But not perfectly, asond let's try a different parameter. 
 
-And just as a reminder, whatever transformation we apply to the training set, please remember to apply the same transformation to our cross validation and test set data as well. Other than making sure that our data is approximately Gaussian, after we've trained our anomaly detection algorithm, if it doesn't work that well on our cross validation set, we can also carry out an error analysis process for anomaly detection. In other words, we can try to look at where the algorithm is not yet doing well whereas making errors, and then use that to try to come up with improvements. 
+```py
+plt.hist(x**0.25, bins=50, color='blue')
+```
+![](2024-03-09-00-26-32.png)
 
-So as a reminder, what we want is for P of X to be large. For normal examples X, so greater than equal to epsilon, and p f X to be small or less than epsilon, for the anomalous examples X. When we've learned the model P of X from our unlabeled data, the most common problem that we may run into is that, P of X is comparable in value say is, large for both normal and for anomalous examples. 
+That overdid it a little bit. So let's try 0.4:
+```py
+plt.hist(x**0.4, bins=50, color='blue')
+```
+![](2024-03-09-00-27-33.png)
+That looks pretty gaussian. 
 
-As a concrete example, if this is our data set, we might fit that Gaussian into it. And if we have an example in our cross validation set or test set, that is over here, that is anomalous, then this has a pretty high probability. And in fact, it looks quite similar to the other examples in our training set. 
+So we would set $x$ to be equal to X to the power of 0.4, and just use the value of thew new $x$ in our training process instead.
 
-And so, even though this is an anomaly, P of X is actually pretty large. And so the algorithm will fail to flag this particular example as an anomaly. In that case, what I would normally do is, try to look at that example and try to figure out what is it that made me think is an anomaly, even if this feature X one took on values similar to other training examples. 
+```py
+xNew = x**0.4
+```
 
-And if I can identify some new feature say X two, that helps distinguish this example from the normal examples. Then adding that feature, can help improve the performance of the algorithm. Here's a picture showing what I mean. 
+We can also transform it using log:
 
-If I can come up with a new feature X two, say, we're trying to detect fraudulent behavior, and if X one is the number of transactions they make, maybe this user looks like they're making some of the transactions as everyone else. But if I discover that this user has some insanely fast typing speed, and if I were to add a new feature X two, that is the typing speed of this user. And if it turns out that when I plot this data using the old feature X one and this new feature X two, causes X two to stand out over here. 
+```py
+plt.hist(np.log(x+7), bins=50)
+```
+![](2024-03-09-00-30-21.png)
 
-Then it becomes much easier for the anomaly detection algorithm to recognize an X two is an anomalous user. Because when we have this new feature X two, the learning algorithm may fit a Gaussian distribution that assigns high probability to points in this region, a bit lower in this region, and a bit lower in this region. And so this example, because of the very anomalous value of X two, becomes easier to detect as an anomaly. 
+A reminder: **whatever transformation we apply to the training set, we also need to apply the same transformation to our cross validation and test set data as well.**
 
-So just to summarize the development process will often go through is, to train the model and then to see what anomalies in the cross validation set the algorithm is failing to detect. And then to look at those examples to see if that can inspire the creation of new features that would allow the algorithm to spot. That example takes on unusually large or unusually small values on the new features, so that we can now successfully flag those examples as anomalies. 
+### Error analists for anomaly detection
 
-Just as one more example, let's say we're building an anomaly detection system to monitor computers in the data center. To try to figure out if a computer may be behaving strangely and deserves a closer look, maybe because of a hardware failure, or because it's been hacked into or something. So what we'd like to do is, to choose features that might take on unusually large or small values in the event of an anomaly. 
+Other than making sure that our data is approximately gaussian, after we've trained our anomaly detection algorithm, if it doesn't work that well on our cross validation set, **we can also carry out an error analysis process for anomaly detection.** In other words, we can try to look at where the algorithm is not yet doing well whereas making errors, and then use that to try to come up with improvements. 
 
-we might start off with features like X one is the memory use, X two is the number of disk accesses per second, then the CPU load, and the volume of network traffic. And if we train the algorithm, we may find that it detects some anomalies but fails to detect some other anomalies. In that case, it's not unusual to create new features by combining old features. 
+So as a reminder, we want:
 
-So, for example, if we find that there's a computer that is behaving very strangely, but neither is CPU load nor network traffic is that unusual. But what is unusual is, it has a really high CPU load, while having a very low network traffic volume. If we're running the data center that streams sections, then computers may have high CPU load and high network traffic, or low CPU load and no network traffic. 
+- $p(x)$ to be large for normal examples $x$ - greater than equal than $\epsilon$
+- $p(x)$ to be small or less than $\epsilon$, for the anomalous examples $x$. 
 
-But what's unusual about this one machine is a very high CPU load, despite a very low traffic volume. In that case, we might create a new feature X five, which is a ratio of CPU load to network traffic. And this new feature with hope, the anomaly detection algorithm flagged future examples like the specific machine we may be seeing as anomalous. 
+When we've learned the model $p(x)$ from our unlabeled data, the most common problem that we may run into is that $p(x)$ is a comparable value for both normal and for anomalous examples (for example, a large value)
 
-Or we can also consider other features like the square of the CPU load, divided by the network traffic volume. And we can play around with different choices of these features. In order to try to get it so that P of X is still large for the normal examples but it becomes small in the anomalies in our cross validation set. 
+![](2024-03-09-00-34-45.png)
 
-So that's it. Thanks for sticking with me to the end of this week. I hope we enjoy hearing about both clustering algorithms and anomaly detection algorithms. 
+As a concrete example: if this is our data set:
 
-And that we also enjoy playing with these ideas in the practice labs. Next week, we'll go on to talk about recommender systems. When we go to a website and recommends products, or movies, or other things to we. 
+![](2024-03-09-00-35-19.png)
 
-How does that algorithm actually work? This is one of the most commercially important algorithms in machine learning that gets talked about surprisingly little but next week we'll take a look at how these algorithms work so that we understand the next time we go to the website and then recommend something to we. Maybe how that came about. 
+And if we have an example in our cross validation set or test set, that is to the right as marked above and is anomalous, then it has a pretty high probability, and in fact, it looks quite similar to the other examples in our training set. 
 
-As was we'll be able to build other algorithms like that for yourself as well. So have fun with the labs and they look forward to seeing we next week.
+And so, even though this is an anomaly, $p(x)$ is actually pretty large. And so the algorithm will fail to flag this particular example as an anomaly. In that case, we need to to look at that example and try to figure out what is it that made us think is an anomaly, even if this feature $x_1$ took on values similar to other training examples. 
+
+If we can identify some new feature $x_2$ that helps distinguish this example from the normal examples, then adding that feature can help improve the performance of the algorithm. 
+
+Here's a picture showing that:
+
+![](2024-03-09-00-38-18.png)
+
+If we can come up with a new feature $x_2$, say, we're trying to detect fraudulent behavior, and if $x_1$ is the number of transactions they make, maybe this user looks like they're making some of the transactions as everyone else. 
+
+But if we discover that this user has some insanely fast typing speed, we can add a new feature $x_2$, that is the typing speed of this user. And if it turns out that when we plot this data using the old feature $x_1$ and this new feature $x_2$, causes $x_2$ to stand out to the upper right, then it becomes much easier for the anomaly detection algorithm to recognize from $x_2$ that we're dealing with an anomalous user.
+
+![](2024-03-09-00-40-03.png)
+
+## Practice Lab: Anomaly Detection
+
+In this exercise, you will implement the anomaly detection algorithm and apply it to detect failing servers on a network. 
+
+### Outline
+- [ 1 - Packages ](#1)
+- [ 2 - Anomaly detection](#2)
+  - [ 2.1 Problem Statement](#2.1)
+  - [ 2.2  Dataset](#2.2)
+  - [ 2.3 Gaussian distribution](#2.3)
+    - [ Exercise 1](#ex01)
+    - [ Exercise 2](#ex02)
+  - [ 2.4 High dimensional dataset](#2.4)
+
+<a name="1"></a>
+### 1 - Packages 
+
+First, let's run the cell below to import all the packages that you will need during this assignment.
+- [numpy](www.numpy.org) is the fundamental package for working with matrices in Python.
+- [matplotlib](http://matplotlib.org) is a famous library to plot graphs in Python.
+- ``utils.py`` contains helper functions for this assignment. You do not need to modify code in this file.
+
+```py
+import numpy as np
+import matplotlib.pyplot as plt
+from utils import *
+
+%matplotlib inline
+```
+
+<a name="2"></a>
+### 2 - Anomaly detection
+
+<a name="2.1"></a>
+#### 2.1 Problem Statement
+
+In this exercise, you will implement an anomaly detection algorithm to
+detect anomalous behavior in server computers.
+
+The dataset contains two features - 
+   * throughput (mb/s) and 
+   * latency (ms) of response of each server.
+
+While your servers were operating, you collected $m=307$ examples of how they were behaving, and thus have an unlabeled dataset $\{x^{(1)}, \ldots, x^{(m)}\}$. 
+* You suspect that the vast majority of these examples are “normal” (non-anomalous) examples of the servers operating normally, but there might also be some examples of servers acting anomalously within this dataset.
+
+You will use a Gaussian model to detect anomalous examples in your
+dataset. 
+* You will first start on a 2D dataset that will allow you to visualize what the algorithm is doing.
+* On that dataset you will fit a Gaussian distribution and then find values that have very low probability and hence can be considered anomalies. 
+* After that, you will apply the anomaly detection algorithm to a larger dataset with many dimensions. 
+
+<a name="2.2"></a>
+#### 2.2  Dataset
+
+You will start by loading the dataset for this task. 
+- The `load_data()` function shown below loads the data into the variables `X_train`, `X_val` and `y_val` 
+    - You will use `X_train` to fit a Gaussian distribution 
+    - You will use `X_val` and `y_val` as a cross validation set to select a threshold and determine anomalous vs normal examples
+
+```py
+# Load the dataset
+X_train, X_val, y_val = load_data()
+```
+
+##### View the variables
+Let's get more familiar with your dataset.  
+- A good place to start is to just print out each variable and see what it contains.
+
+The code below prints the first five elements of each of the variables
+
+```py
+# Display the first five elements of X_train
+print("The first 5 elements of X_train are:\n", X_train[:5])
+
+# The first 5 elements of X_train are:
+#  [[13.04681517 14.74115241]
+#  [13.40852019 13.7632696 ]
+#  [14.19591481 15.85318113]
+#  [14.91470077 16.17425987]
+#  [13.57669961 14.04284944]]
+```
+
+```py
+# Display the first five elements of X_val
+print("The first 5 elements of X_val are\n", X_val[:5])
+
+# The first 5 elements of X_val are
+#  [[15.79025979 14.9210243 ]
+#  [13.63961877 15.32995521]
+#  [14.86589943 16.47386514]
+#  [13.58467605 13.98930611]
+#  [13.46404167 15.63533011]]
+```
+
+```py
+# Display the first five elements of y_val
+print("The first 5 elements of y_val are\n", y_val[:5])
+
+# The first 5 elements of y_val are
+#  [0 0 0 0 0]
+```
+
+##### Check the dimensions of your variables
+
+Another useful way to get familiar with your data is to view its dimensions.
+
+The code below prints the shape of `X_train`, `X_val` and `y_val`.
+
+```py
+print ('The shape of X_train is:', X_train.shape)
+print ('The shape of X_val is:', X_val.shape)
+print ('The shape of y_val is: ', y_val.shape)
+
+# The shape of X_train is: (307, 2)
+# The shape of X_val is: (307, 2)
+# The shape of y_val is:  (307,)
+```
+
+##### Visualize your data
+
+Before starting on any task, it is often useful to understand the data by visualizing it. 
+- For this dataset, you can use a scatter plot to visualize the data (`X_train`), since it has only two properties to plot (throughput and latency)
+
+```py
+# Create a scatter plot of the data. To change the markers to blue "x",
+# we used the 'marker' and 'c' parameters
+plt.scatter(X_train[:, 0], X_train[:, 1], marker='x', c='b') 
+
+# Set the title
+plt.title("The first dataset")
+# Set the y-axis label
+plt.ylabel('Throughput (mb/s)')
+# Set the x-axis label
+plt.xlabel('Latency (ms)')
+# Set axis range
+plt.axis([0, 30, 0, 30])
+plt.show()
+```
+
+![](2024-03-09-01-23-32.png)
+
+<a name="2.3"></a>
+#### 2.3 Gaussian distribution
+
+To perform anomaly detection, you will first need to fit a model to the data’s distribution.
+
+* Given a training set $\{x^{(1)}, ..., x^{(m)}\}$ you want to estimate the Gaussian distribution for each
+of the features $x_i$. 
+
+* Recall that the Gaussian distribution is given by
+
+   $$ p(x ; \mu,\sigma ^2) = \frac{1}{\sqrt{2 \pi \sigma ^2}}\exp^{ - \frac{(x - \mu)^2}{2 \sigma ^2} }$$
+
+   where $\mu$ is the mean and $\sigma^2$ is the variance.
+   
+* For each feature $i = 1\ldots n$, you need to find parameters $\mu_i$ and $\sigma_i^2$ that fit the data in the $i$-th dimension $\{x_i^{(1)}, ..., x_i^{(m)}\}$ (the $i$-th dimension of each example).
+
+##### 2.3.1 Estimating parameters for a Gaussian distribution
+
+**Implementation**: 
+
+Your task is to complete the code in `estimate_gaussian` below.
+
+<a name="ex01"></a>
+### Exercise 1
+
+Please complete the `estimate_gaussian` function below to calculate `mu` (mean for each feature in `X`) and `var` (variance for each feature in `X`). 
+
+You can estimate the parameters, ($\mu_i$, $\sigma_i^2$), of the $i$-th
+feature by using the following equations. To estimate the mean, you will
+use:
+
+$$\mu_i = \frac{1}{m} \sum_{j=1}^m x_i^{(j)}$$
+
+and for the variance you will use:
+$$\sigma_i^2 = \frac{1}{m} \sum_{j=1}^m (x_i^{(j)} - \mu_i)^2$$
+
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C1
+# GRADED FUNCTION: estimate_gaussian
+
+def estimate_gaussian(X): 
+    """
+    Calculates mean and variance of all features 
+    in the dataset
+    
+    Args:
+        X (ndarray): (m, n) Data matrix
+    
+    Returns:
+        mu (ndarray): (n,) Mean of all features
+        var (ndarray): (n,) Variance of all features
+    """
+
+    m, n = X.shape
+    
+    ### START CODE HERE ###
+    mu = np.mean(X, axis=0)
+    var = np.var(X, axis=0)
+    
+    
+    ### END CODE HERE ### 
+        
+    return mu, var
+```
+
+You can check if your implementation is correct by running the following test code:
+
+```py
+# Estimate mean and variance of each feature
+mu, var = estimate_gaussian(X_train)              
+
+print("Mean of each feature:", mu)
+print("Variance of each feature:", var)
+    
+# UNIT TEST
+from public_tests import *
+estimate_gaussian_test(estimate_gaussian)
+
+# Mean of each feature: [14.11222578 14.99771051]
+# Variance of each feature: [1.83263141 1.70974533]
+# All tests passed!
+```
+![](2024-03-09-01-24-35.png)
+
+Now that you have completed the code in `estimate_gaussian`, we will visualize the contours of the fitted Gaussian distribution. 
+
+You should get a plot similar to the figure below. 
+
+![](2024-03-09-01-24-50.png)
+
+From your plot you can see that most of the examples are in the region with the highest probability, while the anomalous examples are in the regions with lower probabilities.
+
+```py
+# Returns the density of the multivariate normal
+# at each data point (row) of X_train
+p = multivariate_gaussian(X_train, mu, var)
+
+#Plotting code 
+visualize_fit(X_train, mu, var)
+```
+
+![](2024-03-09-01-25-07.png)
+
+#### 2.3.2 Selecting the threshold $\epsilon$
+
+Now that you have estimated the Gaussian parameters, you can investigate which examples have a very high probability given this distribution and which examples have a very low probability.  
+
+* The low probability examples are more likely to be the anomalies in our dataset. 
+* One way to determine which examples are anomalies is to select a threshold based on a cross validation set. 
+
+In this section, you will complete the code in `select_threshold` to select the threshold $\varepsilon$ using the $F_1$ score on a cross validation set.
+
+* For this, we will use a cross validation set
+$\{(x_{\rm cv}^{(1)}, y_{\rm cv}^{(1)}),\ldots, (x_{\rm cv}^{(m_{\rm cv})}, y_{\rm cv}^{(m_{\rm cv})})\}$, where the label $y=1$ corresponds to an anomalous example, and $y=0$ corresponds to a normal example. 
+* For each cross validation example, we will compute $p(x_{\rm cv}^{(i)})$. The vector of all of these probabilities $p(x_{\rm cv}^{(1)}), \ldots, p(x_{\rm cv}^{(m_{\rm cv})})$ is passed to `select_threshold` in the vector `p_val`. 
+* The corresponding labels $y_{\rm cv}^{(1)}, \ldots, y_{\rm cv}^{(m_{\rm cv})}$ are passed to the same function in the vector `y_val`.
+
+<a name="ex02"></a>
+#### Exercise 2
+Please complete the `select_threshold` function below to find the best threshold to use for selecting outliers based on the results from the validation set (`p_val`) and the ground truth (`y_val`). 
+
+* In the provided code `select_threshold`, there is already a loop that will try many different values of $\varepsilon$ and select the best $\varepsilon$ based on the $F_1$ score. 
+
+* You need to implement code to calculate the F1 score from choosing `epsilon` as the threshold and place the value in `F1`. 
+
+  * Recall that if an example $x$ has a low probability $p(x) < \varepsilon$, then it is classified as an anomaly. 
+        
+  * Then, you can compute precision and recall by: 
+   $$\begin{aligned}
+   prec&=&\frac{tp}{tp+fp}\\
+   rec&=&\frac{tp}{tp+fn},
+   \end{aligned}$$ where
+    * $tp$ is the number of true positives: the ground truth label says it’s an anomaly and our algorithm correctly classified it as an anomaly.
+    * $fp$ is the number of false positives: the ground truth label says it’s not an anomaly, but our algorithm incorrectly classified it as an anomaly.
+    * $fn$ is the number of false negatives: the ground truth label says it’s an anomaly, but our algorithm incorrectly classified it as not being anomalous.
+
+  * The $F_1$ score is computed using precision ($prec$) and recall ($rec$) as follows:
+    $$F_1 = \frac{2\cdot prec \cdot rec}{prec + rec}$$ 
+
+**Implementation Note:** 
+In order to compute $tp$, $fp$ and $fn$, you may be able to use a vectorized implementation rather than loop over all the examples.
+
+
+If you get stuck, you can check out the hints presented after the cell below to help you with the implementation.
+
+```py
+# UNQ_C2
+# GRADED FUNCTION: select_threshold
+
+def select_threshold(y_val, p_val): 
+    """
+    Finds the best threshold to use for selecting outliers 
+    based on the results from a validation set (p_val) 
+    and the ground truth (y_val)
+    
+    Args:
+        y_val (ndarray): Ground truth on validation set
+        p_val (ndarray): Results on validation set
+        
+    Returns:
+        epsilon (float): Threshold chosen 
+        F1 (float):      F1 score by choosing epsilon as threshold
+    """ 
+
+    best_epsilon = 0
+    best_F1 = 0
+    F1 = 0
+    
+    step_size = (max(p_val) - min(p_val)) / 1000
+    
+    for epsilon in np.arange(min(p_val), max(p_val), step_size):
+    
+        ### START CODE HERE ###
+        predictions = p_val < epsilon
+        
+        tp = np.sum((predictions == 1) & (y_val == 1))
+        fp = np.sum((predictions == 1) & (y_val == 0))
+        fn = np.sum((predictions == 0) & (y_val == 1))
+        
+        prec = tp / (tp + fp)
+        rec = tp / (tp + fn)
+        
+        F1 = 2 * prec * rec / (prec + rec)
+        
+        ### END CODE HERE ### 
+        
+        if F1 > best_F1:
+            best_F1 = F1
+            best_epsilon = epsilon
+        
+    return best_epsilon, best_F1
+```
+![](2024-03-09-01-30-02.png)
+
+You can check your implementation using the code below
+
+```py
+p_val = multivariate_gaussian(X_val, mu, var)
+epsilon, F1 = select_threshold(y_val, p_val)
+
+print('Best epsilon found using cross-validation: %e' % epsilon)
+print('Best F1 on Cross Validation Set: %f' % F1)
+    
+# UNIT TEST
+select_threshold_test(select_threshold)
+
+# Best epsilon found using cross-validation: 8.990853e-05
+# Best F1 on Cross Validation Set: 0.875000
+# All tests passed!
+```
+
+![](2024-03-09-01-30-34.png)
+
+Now we will run your anomaly detection code and circle the anomalies in the plot (Figure 3 below).
+
+```py
+# Find the outliers in the training set 
+outliers = p < epsilon
+
+# Visualize the fit
+visualize_fit(X_train, mu, var)
+
+# Draw a red circle around those outliers
+plt.plot(X_train[outliers, 0], X_train[outliers, 1], 'ro',
+         markersize= 10,markerfacecolor='none', markeredgewidth=2)
+```
+
+![](2024-03-09-01-30-51.png)
+
+<a name="2.4"></a>
+### 2.4 High dimensional dataset
+
+Now,  we will run the anomaly detection algorithm that you implemented on a more realistic and much harder dataset.
+
+In this dataset, each example is described by 11 features, capturing many more properties of your compute servers.
+
+Let's start by loading the dataset.
+
+- The `load_data()` function shown below loads the data into variables `X_train_high`, `X_val_high` and `y_val_high`
+    -  `_high` is meant to distinguish these variables from the ones used in the previous part
+    - We will use `X_train_high` to fit Gaussian distribution 
+    - We will use `X_val_high` and `y_val_high` as a cross validation set to select a threshold and determine anomalous vs normal examples
+
+```py
+# load the dataset
+X_train_high, X_val_high, y_val_high = load_data_multi()
+```
+
+##### Check the dimensions of your variables
+
+Let's check the dimensions of these new variables to become familiar with the data
+
+```py
+print ('The shape of X_train_high is:', X_train_high.shape)
+print ('The shape of X_val_high is:', X_val_high.shape)
+print ('The shape of y_val_high is: ', y_val_high.shape)
+
+# The shape of X_train_high is: (1000, 11)
+# The shape of X_val_high is: (100, 11)
+# The shape of y_val_high is:  (100,)
+```
+
+#### Anomaly detection 
+
+Now, let's run the anomaly detection algorithm on this new dataset.
+
+The code below will use your code to 
+* Estimate the Gaussian parameters ($\mu_i$ and $\sigma_i^2$)
+* Evaluate the probabilities for both the training data `X_train_high` from which you estimated the Gaussian parameters, as well as for the the cross-validation set `X_val_high`. 
+* Finally, it will use `select_threshold` to find the best threshold $\varepsilon$. 
+
+```py
+# Apply the same steps to the larger dataset
+
+# Estimate the Gaussian parameters
+mu_high, var_high = estimate_gaussian(X_train_high)
+
+# Evaluate the probabilites for the training set
+p_high = multivariate_gaussian(X_train_high, mu_high, var_high)
+
+# Evaluate the probabilites for the cross validation set
+p_val_high = multivariate_gaussian(X_val_high, mu_high, var_high)
+
+# Find the best threshold
+epsilon_high, F1_high = select_threshold(y_val_high, p_val_high)
+
+print('Best epsilon found using cross-validation: %e'% epsilon_high)
+print('Best F1 on Cross Validation Set:  %f'% F1_high)
+print('# Anomalies found: %d'% sum(p_high < epsilon_high))
+
+# Best epsilon found using cross-validation: 1.377229e-18
+# Best F1 on Cross Validation Set:  0.615385
+# Anomalies found: 117
+```
+
+![](2024-03-09-01-32-08.png)
