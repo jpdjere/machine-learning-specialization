@@ -10,13 +10,13 @@ So, after an aircraft engine rolls off the assembly line, we measure a number of
 
 Since arcraft engine manufacturers don't make that many bad engines, the easier type of data to collect is: if we have manufactured $m$ aircraft engines, the features $x_1$ and $x_2$ about how these $m$ engines behave. Probably most of them are normal engines rather than ones with a defect or flaw in them. 
 
-![](2024-03-04-22-30-41.png)
+![](./img/2024-03-04-22-30-41.png)
 
 The anomaly detection problem is: **after the learning algorithm has seen these $m$ examples of how aircraft engines typically behave** in terms of how much heat is generated and how much they vibrate, if a brand new aircraft engine were to roll off the assembly line and **it had a new feature vector given by $x_{test}$, we'd like to know: _does this engine look similar to ones that have been manufactured before?_** 
 
 Here's how an anomaly detection algorithm works. Let's plot the examples $x_1$ through $x_m$, and marke two new engines - an OK engine, and an anomaly:
 
-![](2024-03-04-22-33-39.png)
+![](./img/2024-03-04-22-33-39.png)
 
 
 How can we have an algorithm address this problem? The most common way to carry out **anomaly detection is through a technique called density estimation.** When we're given our training sets of $m$ examples, the first thing we do is **build a model for the probability of $x$**. In other words, **the learning algorithm will try to figure out what are the values of the features $x_1$ and $x_2$ that have high probability and what are the values that are less likely or have a lower chance or lower probability of being seen in the data set.** 
@@ -24,7 +24,7 @@ How can we have an algorithm address this problem? The most common way to carry 
 
 In this example that we have here, it is quite likely to see examples in the ellipse in the middle, and decreases outwards.
 
-![](2024-03-04-22-40-46.png)
+![](./img/2024-03-04-22-40-46.png)
 
 And having modeled or having learned to model for $p(x)$, when we are given the new test example $x_{test}$, we compute the probability of $x_{test}$. And if it is small or more precisely, if it is less than some small number epsilon $\epsilon$, which means that $p(x)$ is very small or in other words, the specific value of $x$ that we saw for a certain user was very unlikely, relative to other usage that we have seen. 
 
@@ -32,11 +32,11 @@ But if the $p(x_{test})$ is less than some small threshold or some small number 
 
 So for example, if $x_{test}$ was all the way down and to the right of the graph, the probability of an example landing all the way out here is actually quite low. And so hopefully $p(x_{test})$ for this value of $x_{test}$ will be less than epsilon and so we would flag this as an anomaly.
 
-![](2024-03-04-22-44-39.png)
+![](./img/2024-03-04-22-44-39.png)
 
 In contrast, if $p(x_{test})$ is not less than epsilon, that is, if $p(x_{test})$ is greater than equal to epsilon, then we will say that it looks okay, this doesn't look like an anomaly. And that corresponds to an example where our model $p(x)$ will say that examples near the middle are actually quite high probability: there's a very high chance that the new airplane engine will have features close to these inner ellipses.
 
-![](2024-03-04-22-46-06.png)
+![](./img/2024-03-04-22-46-06.png)
 
 Anomaly detection is used today in many applications. 
 
@@ -44,7 +44,7 @@ It is frequently used in **fraud detection** where for example: if we are runnin
 
 In the common workflow of fraud detection, we wouldn't automatically turn off an account just because it seemed anomalous. Instead we may ask the security team to take a closer look or put in some additional security checks such as ask the user to verify their identity with a cell phone number or ask them to pass a capture to prove that they're human and so on. But algorithms like this are routinely used today to try to find unusual or maybe slightly suspicious activity. So we can more carefully screen those accounts to make sure there isn't something fraudulent. 
 
-![](2024-03-04-22-48-59.png)
+![](./img/2024-03-04-22-48-59.png)
 
 Anomaly detection is also frequently used in **manufacturing**. Many manufacturers routinely use anomaly detection to see if whatever they just manufactured. Anything from an airplane engine to a printed circuit board to a smartphone to a motor, to many, many things to see if we've just manufactured the unit that somehow behaves strangely. 
 
@@ -56,15 +56,15 @@ Let's take a look at what is the Gaussian or the normal distribution.
 
 If $x$ is a random number, sometimes called the random variable, $x$ can take on random values. If the probability of $x$ is given by a Gaussian or normal distribution with mean parameter $\mu$ , and with variance $\sigma^2$, the probability of $x$ looks like a curve that goes like this:
 
-![](2024-03-04-23-01-00.png)
+![](./img/2024-03-04-23-01-00.png)
 
 The center or the middle of the curve is given by the mean $\mu$ , and the standard deviation or the width of this curve is given by that variance parameter $\sigma$. Technically, $\sigma$ is called the standard deviation and the square of $\sigma$ is called the variance of the distribution. This curve here shows what is $p(x)$ or the probability of x. 
 
-![](2024-03-04-23-01-55.png)
+![](./img/2024-03-04-23-01-55.png)
 
 If we're wondering what does $p(x)$ really means? Here's one way to interpret it: It means that if we were to get, say, 100 numbers drawn from this probability distribution, and we were to plot a histogram of these 100 numbers drawn from this distribution, we might get a histogram that looks like this:
 
-![](2024-03-04-23-02-29.png)
+![](./img/2024-03-04-23-02-29.png)
 
 It looks vaguely bell-shaped. What this curve on the left indicates is not if we have just 100 examples or 1,000 or a million or a billion, but if we had a practically infinite number of examples, and we were to draw a histogram of this practically infinite number of examples with a very fine histogram bins. Then we end up with essentially this bell-shaped curve here on the left. 
 
@@ -76,35 +76,35 @@ Let's look at a few examples of how changing $\mu$  and $\sigma$ will affect the
 
 We notice that this distribution is centered at zero and that is the standard deviation $\sigma$ is equal to 1. 
 
-![](2024-03-04-23-06-51.png)
+![](./img/2024-03-04-23-06-51.png)
 
 Now, let's reduce the standard deviation $\sigma$ to 0.5. If we plot the Gaussian distribution with $\mu$ equals 0 and $\sigma$ equals 0.5, it now it looks like this.
 
-![](2024-03-04-23-07-09.png)
+![](./img/2024-03-04-23-07-09.png)
 
 Notice that it's still centered at zero because $\mu$ is zero. But it's become a much thinner curve because $\sigma$ is now 0.5. We might recall that $\sigma$ is the standard deviation is 0.5, whereas $\sigma$ squared is also called the variance. 
 
 That's equal to 0.5 squared or 0.25. You may have heard that probabilities always have to sum up to one, so that's why the area under the curve is always equal to one, which is why when the Gaussian distribution becomes skinnier, it has to become taller as well. 
 
-![](2024-03-04-23-07-43.png)
+![](./img/2024-03-04-23-07-43.png)
 
 Now, we're going to increase $\sigma$ to 2, so the standard deviation is 2 and the variance is 4. This now creates a much wider distribution because $\sigma$ here is now much larger, and because it's now a wider distribution is become shorter as well because the area under the curve is still equals 1.
 
-![](2024-03-04-23-08-13.png)
+![](./img/2024-03-04-23-08-13.png)
 
 Finally, let's try changing the mean parameter $\mu$, and I'll leave $\sigma$ equals 0.5. 
 
-![](2024-03-04-23-08-23.png)
+![](./img/2024-03-04-23-08-23.png)
 
 In this case, the center of the distribution $\mu$ moves over here to the right. But the width of the distribution is the same as the one on top because the standard deviation is 0.5 in both of these cases on the right. This is how different choices of $\mu$ and $\sigma$ affect the Gaussian distribution. 
 
 When we're applying this to anomaly detection, here's what we have to do: e are given a dataset of $m$ examples, and here $x$ is just a number. Here, are plotted of the training sets with 11 examples:
 
-![](2024-03-04-23-09-03.png)
+![](./img/2024-03-04-23-09-03.png)
 
 What we have to do is try to estimate what a good choice is for the mean parameter $\mu$, as well as for the variance parameter $\sigma$ squared. Given a dataset like this, it would seem that a Gaussian distribution maybe looking like that with a center here and a standard deviation like this. This might be a pretty good fit to the data.
 
-![](2024-03-04-23-09-35.png)
+![](./img/2024-03-04-23-09-35.png)
 
 The way we would compute $\mu$ and $\sigma$ squared mathematically is our estimate for $\mu$ will be just the average of all the training examples: 
 
@@ -118,7 +118,7 @@ These formulas for $\mu$ and $\sigma$ squared are technically called **the maxim
 
 If we were to get an example near the tip of the bell, then $p(x)$ is pretty high, whereas if we were to get an example, at the ends of the bell then $p(x)$ is pretty low, which is why we would consider this example, okay, not really anomalous, not a lot like the other ones. 
 
-![](2024-03-04-23-12-52.png)
+![](./img/2024-03-04-23-12-52.png)
 
 Now, we've done this only for when $x$ is a number, as if we had only a single feature for our anomaly detection problem. But for practical anomaly detection applications, we will have many features, two or three or some even larger number $n$ of features. Let's take what we saw for a single Gaussian and use it to build a more sophisticated anomaly detection algorithm that can handle multiple features.
 
@@ -130,7 +130,7 @@ Let's dive in. We have a training set $x_1$ through $x_m$, where here each examp
 
 In the case of the airplane engine example, we had two features corresponding to the heat and the vibrations. And so, each of these $\vec{\mathbf{x}}^{(i)}$'s would be a two dimensional vector and $n$ would be equal to 2. But for many practical applications $n$ can be much larger and we might do this with dozens or even hundreds of features.
 
-![](2024-03-04-23-24-57.png)
+![](./img/2024-03-04-23-24-57.png)
 
 Given this training set, what we would like to do is to carry out density estimation and all that means is, we will build a model or estimate the probability for $p(x)$. What's the probability of any given feature vector? And our model for $p(x)$ is going to be as follows:
 
@@ -148,7 +148,7 @@ In case we're wondering why we multiply probabilities: let's see an example for 
 
 We're saying that the chance of that is 1/10 times 1/20 which is 1/200. So it's really unlikely to get an engine that both run really hot and vibrates really hard. 
 
-![](2024-03-04-23-31-10.png)
+![](./img/2024-03-04-23-31-10.png)
 
 A somewhat more compact way to write this equation up here is:
 
@@ -158,15 +158,15 @@ So let's put it all together to see how we can build an anamoly detection system
 
 The first step is to choose features $x^{(i)}$ that we think might be indicative of anomalous examples.
 
-![](2024-03-04-23-33-19.png)
+![](./img/2024-03-04-23-33-19.png)
 
 Having come up with the features we want to use, we would then fit the parameters $\mu_1$  through $\mu_n$ and $\sigma_1^2$  1 through \sigma_n^2$, for the $n$ features in our data set. As we might guess, the parameter $\mu_j$ j will be just the average of $x_j$ of the feature $j$ of all the examples in our training set. And $\sigma_j^2$ will be the average of the square difference between the feature and the value $\mu_j$, that we just computed.
 
-![](2024-03-04-23-35-11.png)
+![](./img/2024-03-04-23-35-11.png)
 
 And by the way, if we have a vectorized implementation, we can also compute $\mu$ as the average of the training examples as follows: here $x$ and $\mu$ are both vectors. And so this would be the vectorized way of computing $\mu_1$ through $\mu_n$ and all at the same time.
 
-![](2024-03-04-23-36-00.png)
+![](./img/2024-03-04-23-36-00.png)
 
 And by estimating these parameters on our unlabeled training set, we've now computed all the parameters of our model. 
 
@@ -174,20 +174,20 @@ Finally, when we are given a new example, $x_{test}$  what we would do is comput
 
 $$ p(x) = \prod_{j=1}^n p(x_j; \mu_j, \sigma_j^2) = \prod_{j=1}^n \frac{1}{\sqrt{2\pi}\sigma_j} e^{-\frac{(x_j - \mu_j)^2}{2\sigma_j^2}} $$
 
-![](2024-03-04-23-37-25.png)
+![](./img/2024-03-04-23-37-25.png)
 
 And if we compute out this formula, we get some number for $p(x)$. 
 
 
 And the final step is to see a $p(x)$ is less than epsilon. And if it is then we flag that it is an anomaly.
 
-![](2024-03-04-23-38-16.png)
+![](./img/2024-03-04-23-38-16.png)
 
 One intuition behind what this algorithm is doing is that it will tend to flag an example as anomalous if one or more of the features are either very large or very small relative to what it has seen in the training set. 
 
 So for each of the features $x_j$, we're fitting a Gaussian distribution like this. And so if even one of the features of the new example was way out here, say, then $p(x_j)$ would be very small. And if just one of the terms in this product is very small, then this overall product, when we multiply together will tend to be very small and does $p(x)$ will be small.
 
-![](2024-03-04-23-39-46.png)
+![](./img/2024-03-04-23-39-46.png)
 
 So, what anomaly detection is doing in this algorithm is a systematic way of quantifying whether or not this new example $x$ has any features that are unusually large or unusually small. 
 
@@ -197,11 +197,11 @@ Notice that the features $x_1$ take on a much larger range of values than the fe
 
 And if we were to compute $\mu$ to the average of the features on next to the average is 3 and similarly is variance or standard deviation is much smaller, which is why $\sigma_2$ is equal to 1.
 
-![](2024-03-04-23-42-07.png)
+![](./img/2024-03-04-23-42-07.png)
 
 If we were to actually multiply $p(x_1)$  and $p(x_2)$, then we end up with this  3D surface plot for $p(x)$ where any point, the height of this is the product of $p(x_1)$ times $p(x_2)$. 
 
-![](2024-03-04-23-44-04.png)
+![](./img/2024-03-04-23-44-04.png)
 
 And this signifies that values where $p(x)$ is higher are more likely. So, values near the middle kind of here are more likely, whereas values far outare much less likely. 
 
@@ -219,7 +219,7 @@ Let's see some practical tips for developing an anomaly detection system. The ke
 
 When we are developing a learning algorithm (for example, choosing different features or trying different values of the parameters like $\epsilon$) **making decisions about whether or not to change a feature is much easier if we have a way of evaluating the learning algorithm.** 
 
-![](2024-03-05-17-56-07.png)
+![](./img/2024-03-05-17-56-07.png)
 
 This is called **real number evaluation**, meaning that if we can quickly change the algorithm in some way (such as change a feature or change a parameter) and have a way of computing a number that tells us if the algorithm got better or worse, then it makes it much easier to decide whether or not to stick with that change.
 
@@ -227,11 +227,11 @@ This is how it's often done in anomaly detection.
 
 Rven though we've mainly been talking about unlabeled data, we're going to change that assumption and assume that we have some labeled data, including  a small number usually of previously observed anomalies. (For example, after making airplane engines for a few years, we've just seen a few airplane engines that were anomalous, and we're going to associate those to a label $y = 1$to indicate this anomaly, while normal = 0).
 
-![](2024-03-05-18-06-23.png)
+![](./img/2024-03-05-18-06-23.png)
 
 **The training set that the anomaly detection algorithm will learn from is still this unlabeled training set of $x_1$ through $x_m$**, and we're going to think of all of these examples as ones that we'll just assume are normal -not anomalous-, so $y$ is equal to 0. 
 
-![](2024-03-05-18-07-18.png)
+![](./img/2024-03-05-18-07-18.png)
 
 In practice, if a few anomalous examples where to slip into this training set, our algorithm will still usually perform okay. 
 
@@ -241,21 +241,21 @@ To evaluate our algorithm, that is, to come up with a way for we to have a real 
 
 Also, we'd like to have a test set of some number of examples where both the cross validation and test sets hopefully includes a few anomalous examples. In other words, the cross validation and test sets will have a few examples of $y$ equals 1, but also a lot of examples where $y$ is equal to 0.
 
-![](2024-03-05-18-11-02.png)
+![](./img/2024-03-05-18-11-02.png)
 
 Let's illustrate this with the aircraft engine example. Let's say we have been manufacturing aircraft engines for years and so we've collected data from 10,000 good or normal engines, but over the years we had also collected data from 20 flawed or anomalous engines:
 
-![](2024-03-05-18-11-28.png)
+![](./img/2024-03-05-18-11-28.png)
 
 Usually the number of anomalous engines, that is $y$ equals 1, will be much smaller. It will not be a typical to apply this type of algorithm with anywhere from, say, 2-50 known anomalies. We're going to take this dataset and break it up into a training set, a cross validation set, and the test set:
 
-![](2024-03-05-18-11-51.png)
+![](./img/2024-03-05-18-11-51.png)
 
 Here's one example. We're going to put 6,000 good engines into the training set. (Again, if there are couple of anomalous engines that got slipped into this set is actually okay)
 
 Then let's put 2,000 good engines and 10 of the known anomalies into the cross-validation set, and a separate 2,000 good and 10 anomalous engines into the test set. 
 
-![](2024-03-05-18-12-34.png)
+![](./img/2024-03-05-18-12-34.png)
 
 What we can do then is **train the algorithm on the training set, fit the Gaussian distributions to these 6,000 examples**.
 
@@ -263,7 +263,7 @@ And then **on the cross-validation set, we can see how many of the anomalous eng
 
 For example, we could use the cross validation set to **tune the parameter epsilon**: set it higher or lower depending on whether the algorithm seems to be reliably detecting these 10 anomalies without taking too many of these 2,000 good engines and flagging them as anomalies. 
 
-![](2024-03-05-18-14-04.png)
+![](./img/2024-03-05-18-14-04.png)
 
 After we have tuned the parameter epsilon and maybe **also added or subtracted or tuned features $X_J$** we can then take the algorithm and **evaluate it on our test set to see how many of these 10 anomalous engines it finds, as well as how many mistakes it makes by flagging the good engines as anomalous ones.** 
 
@@ -274,13 +274,13 @@ Because the number of flawed engines is so small there's one other alternative u
 
 In this example, we will set train on 6,000 good engines, but take the remainder of the data, the 4,000 remaining good engines as well as all the anomalies, and put them in the cross validation set. We would then tune the parameters $\epsilon$ and add or subtract features $x_j$ to try to get it to do as well as possible as evaluated on the cross validation set. 
 
-![](2024-03-05-18-18-14.png)
+![](./img/2024-03-05-18-18-14.png)
 
 If we have very few flawed engines, so if we had only two flawed engines, then this really makes sense to put all of that in the cross validation set. Since we just don't have enough data to create a totally separate test set that is distinct from our cross-validation set. The downside of this alternative here is that after we've tuned our algorithm, we don't have a fair way to tell how well this will actually do on future examples because we don't have the test set. 
 
 Just be aware that there's a higher risk that we will have over-fitted some of our decisions around $\epsilon$ and choice of features and so on, to the cross-validation set, and so its performance on real data in the future may not be as good as we were expecting.
 
-![](2024-03-05-18-19-33.png)
+![](./img/2024-03-05-18-19-33.png)
 
 ### Algorithm evaluation
 
@@ -288,11 +288,11 @@ Just be aware that there's a higher risk that we will have over-fitted some of o
 
 - We would first fit the model $p(x)$ on the training set. This was a 6,000 examples of goods engines.
 
-![](2024-03-05-18-21-17.png)
+![](./img/2024-03-05-18-21-17.png)
 
 - Then on any cross validation or test example $x$, we would compute $p(x)$ and we will predict $y$ equals 1. That is, anomalous if $p(x)$ is less than $\epsilon$ and we predict $y$ is 0, if $p(x)$ is greater than or equal to $\epsilon$. 
 
-![](2024-03-05-18-22-45.png)
+![](./img/2024-03-05-18-22-45.png)
 
 - Based on this, we can now look at how accurately this algorithm's predictions on the cross validation or test set matches the labels $y$ that we have in the cross validation or the test sets. 
 
@@ -301,13 +301,13 @@ In the third week of the second course, we had had a couple of optional sections
 
 In our previous example, we had maybe 10 positive examples and 2,000 negative examples because we had 10 anomalies and 2,000 normal examples. If we saw those optional sections, we may recall that we saw it can be useful to compute things like the true positive, false positive, false negative, and true negative rates. Also compute precision recall or $F_1$ score and that these are alternative metrics and classification accuracy that could work better when our data distribution is very skewed.
 
-![](2024-03-05-18-23-51.png)
+![](./img/2024-03-05-18-23-51.png)
 
 So, we might consider applying those types of evaluation metrics as well to tell how well our learning algorithm is doing at finding that small handful of anomalies or positive examples amidst this much larger set of negative examples of normal plane engines.
 
 The intuition I hope we get is to use the cross-validation set to just look at how many anomalies is finding and also how many normal engines is incorrectly flagging as an anomaly. Then to just use that to try to choose a good choice for the parameter $\epsilon$.
 
-![](2024-03-05-18-24-50.png)
+![](./img/2024-03-05-18-24-50.png)
 
 ## Anomaly detection vs. supervised learning
 
@@ -317,19 +317,19 @@ The decision is actually quite subtle in some applications. So, let's see some s
 
 **An anomaly detection algorithm will typically be the more appropriate choice when we have a very small number of positive examples (0-20 positive examples is not uncommon) and a relatively large number of negative examples with which to try to build a model for $p(x)$.**
 
-![](2024-03-08-23-55-12.png)
+![](./img/2024-03-08-23-55-12.png)
 
 Recall that the parameters for $p(x)$ are learned only from the negative examples and this much smaller set of positive examples is only used in our cross validation set and test set for parameter tuning and for evaluation. 
 
 In contrast, **if we have a larger number of positive and negative examples, then supervised learning might be more applicable.** 
 
-![](2024-03-08-23-56-45.png)
+![](./img/2024-03-08-23-56-45.png)
 
 Now, even if we have only 20 positive training examples, it might be okay to apply a supervised learning algorithm. But it turns out that the way anomaly detection looks at the data set versus the way supervised learning looks at the data set are quite different. 
 
 Here is the main difference: **if we think there are many different types of anomalies or many different types of positive examples, then anomaly detection might be more appropriate.**
 
-![](2024-03-08-23-58-20.png)
+![](./img/2024-03-08-23-58-20.png)
 
 For example: when there are many different ways for an aircraft engine to go wrong, and if tomorrow there may be a brand new way for an aircraft engine to have something wrong with it, then our 20 positive examples may not cover all of the ways that an aircraft engine could go wrong. **That makes it hard for any algorithm to learn from the small set of positive examples what the anomalies, what the positive examples look like. And future anomalies may look nothing like any of the anomalous examples we've seen so far.** 
 
@@ -339,7 +339,7 @@ In contrast, **supervised learning has a different way of looking at the problem
 
 And **with supervised learning, we tend to assume that the future positive examples are likely to be similar to the ones in the training set**.
 
-![](2024-03-09-00-02-52.png)
+![](./img/2024-03-09-00-02-52.png)
 
 
 Let's illustrate this with one example, if we are using a system to find, say financial fraud. There are many different ways unfortunately that some individuals are trying to commit financial fraud. 
@@ -350,11 +350,11 @@ In contrast, if we look at the problem of email spam detection, well, there are 
 
 So that's why supervised learning works well for spam because it's trying to detect more of the types of spam emails that we have probably seen in the past in our training set. Whereas if we're trying to detect brand new types of fraud that have never been seen before, then anomaly detection maybe more applicable.
 
-![](2024-03-09-00-03-48.png)
+![](./img/2024-03-09-00-03-48.png)
 
 Let's go through a few more examples:
 
-![](2024-03-09-00-05-45.png)
+![](./img/2024-03-09-00-05-45.png)
 
 
 ## Choosing what features to use
@@ -371,21 +371,21 @@ One step that can take to help our anomaly detection algorithm is to **try to ma
 
 If we have a feature $x$, we can plot a histogram of the feature:
 
-![](2024-03-09-00-14-04.png)
+![](./img/2024-03-09-00-14-04.png)
 
 This distribution here looks pretty gaussia, so this would be a good candidate feature, if we think this is a feature that helps distinguish between anomalies and normal examples. 
 
 But quite often when we plot a histogram of our features, we may find that the feature has a distribution like this: 
 
-![](2024-03-09-00-15-22.png)
+![](./img/2024-03-09-00-15-22.png)
 
 This does not at all look like a symmetric bell shaped curve. When that is the case, we need to take this feature $x$, and transform it in order to make a more gaussian distribution.
 
-![](2024-03-09-00-16-07.png)
+![](./img/2024-03-09-00-16-07.png)
 
 For example: if we compute the $log(x)$ and plot its histogram its looks much more gaussian. So we can replace the feature $x$ with the feature $log(x)$:
 
-![](2024-03-09-00-17-39.png)
+![](./img/2024-03-09-00-17-39.png)
 
 Other than than we might apply the following transformations:
 
@@ -400,27 +400,27 @@ First you can plot the histogram with:
 ```py
 plt.hist(x, bins=50, color='blue')
 ```
-![](2024-03-09-00-23-53.png)
+![](./img/2024-03-09-00-23-53.png)
 
 We want to try a transformation to make this distribution gaussian, so we can try for example to plot $\sqrt(x)$.
 
 ```py
 plt.hist(x**0.5, bins=50, color='blue')
 ```
-![](2024-03-09-00-25-45.png)
+![](./img/2024-03-09-00-25-45.png)
 
 This actually looks somewhat more gaussian. But not perfectly, asond let's try a different parameter. 
 
 ```py
 plt.hist(x**0.25, bins=50, color='blue')
 ```
-![](2024-03-09-00-26-32.png)
+![](./img/2024-03-09-00-26-32.png)
 
 That overdid it a little bit. So let's try 0.4:
 ```py
 plt.hist(x**0.4, bins=50, color='blue')
 ```
-![](2024-03-09-00-27-33.png)
+![](./img/2024-03-09-00-27-33.png)
 That looks pretty gaussian. 
 
 So we would set $x$ to be equal to X to the power of 0.4, and just use the value of thew new $x$ in our training process instead.
@@ -434,7 +434,7 @@ We can also transform it using log:
 ```py
 plt.hist(np.log(x+7), bins=50)
 ```
-![](2024-03-09-00-30-21.png)
+![](./img/2024-03-09-00-30-21.png)
 
 A reminder: **whatever transformation we apply to the training set, we also need to apply the same transformation to our cross validation and test set data as well.**
 
@@ -449,11 +449,11 @@ So as a reminder, we want:
 
 When we've learned the model $p(x)$ from our unlabeled data, the most common problem that we may run into is that $p(x)$ is a comparable value for both normal and for anomalous examples (for example, a large value)
 
-![](2024-03-09-00-34-45.png)
+![](./img/2024-03-09-00-34-45.png)
 
 As a concrete example: if this is our data set:
 
-![](2024-03-09-00-35-19.png)
+![](./img/2024-03-09-00-35-19.png)
 
 And if we have an example in our cross validation set or test set, that is to the right as marked above and is anomalous, then it has a pretty high probability, and in fact, it looks quite similar to the other examples in our training set. 
 
@@ -463,13 +463,13 @@ If we can identify some new feature $x_2$ that helps distinguish this example fr
 
 Here's a picture showing that:
 
-![](2024-03-09-00-38-18.png)
+![](./img/2024-03-09-00-38-18.png)
 
 If we can come up with a new feature $x_2$, say, we're trying to detect fraudulent behavior, and if $x_1$ is the number of transactions they make, maybe this user looks like they're making some of the transactions as everyone else. 
 
 But if we discover that this user has some insanely fast typing speed, we can add a new feature $x_2$, that is the typing speed of this user. And if it turns out that when we plot this data using the old feature $x_1$ and this new feature $x_2$, causes $x_2$ to stand out to the upper right, then it becomes much easier for the anomaly detection algorithm to recognize from $x_2$ that we're dealing with an anomalous user.
 
-![](2024-03-09-00-40-03.png)
+![](./img/2024-03-09-00-40-03.png)
 
 ## Practice Lab: Anomaly Detection
 
@@ -611,7 +611,7 @@ plt.axis([0, 30, 0, 30])
 plt.show()
 ```
 
-![](2024-03-09-01-23-32.png)
+![](./img/2024-03-09-01-23-32.png)
 
 <a name="2.3"></a>
 #### 2.3 Gaussian distribution
@@ -697,13 +697,13 @@ estimate_gaussian_test(estimate_gaussian)
 # Variance of each feature: [1.83263141 1.70974533]
 # All tests passed!
 ```
-![](2024-03-09-01-24-35.png)
+![](./img/2024-03-09-01-24-35.png)
 
 Now that you have completed the code in `estimate_gaussian`, we will visualize the contours of the fitted Gaussian distribution. 
 
 You should get a plot similar to the figure below. 
 
-![](2024-03-09-01-24-50.png)
+![](./img/2024-03-09-01-24-50.png)
 
 From your plot you can see that most of the examples are in the region with the highest probability, while the anomalous examples are in the regions with lower probabilities.
 
@@ -716,7 +716,7 @@ p = multivariate_gaussian(X_train, mu, var)
 visualize_fit(X_train, mu, var)
 ```
 
-![](2024-03-09-01-25-07.png)
+![](./img/2024-03-09-01-25-07.png)
 
 #### 2.3.2 Selecting the threshold $\epsilon$
 
@@ -807,7 +807,7 @@ def select_threshold(y_val, p_val):
         
     return best_epsilon, best_F1
 ```
-![](2024-03-09-01-30-02.png)
+![](./img/2024-03-09-01-30-02.png)
 
 You can check your implementation using the code below
 
@@ -826,7 +826,7 @@ select_threshold_test(select_threshold)
 # All tests passed!
 ```
 
-![](2024-03-09-01-30-34.png)
+![](./img/2024-03-09-01-30-34.png)
 
 Now we will run your anomaly detection code and circle the anomalies in the plot (Figure 3 below).
 
@@ -842,7 +842,7 @@ plt.plot(X_train[outliers, 0], X_train[outliers, 1], 'ro',
          markersize= 10,markerfacecolor='none', markeredgewidth=2)
 ```
 
-![](2024-03-09-01-30-51.png)
+![](./img/2024-03-09-01-30-51.png)
 
 <a name="2.4"></a>
 ### 2.4 High dimensional dataset
@@ -910,4 +910,4 @@ print('# Anomalies found: %d'% sum(p_high < epsilon_high))
 # Anomalies found: 117
 ```
 
-![](2024-03-09-01-32-08.png)
+![](./img/2024-03-09-01-32-08.png)
