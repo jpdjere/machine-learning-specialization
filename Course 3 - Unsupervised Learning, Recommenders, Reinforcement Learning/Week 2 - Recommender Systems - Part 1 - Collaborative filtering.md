@@ -2,91 +2,109 @@
 
 ## Making recommendations
 
-Welcome to this second to last week of the machine learning specialization. we're really happy that together, almost all the way to the finish line. 
+Every time we go to an online shopping website like Amazon or a movie streaming sites like Netflix or go to one of the apps or sites that do food delivery, these sites will recommend things to us that they think we may want to buy or movies they think we may want to watch or restaurants that they think we may want to try out. 
 
-What we'll do this week is discuss recommended systems. This is one of the topics that has received quite a bit of attention in academia. But the commercial impact and the actual number of practical use cases of recommended systems seems to $me$ to be even vastly greater than the amount of attention it has received in academia. 
+For many companies, a large fraction of sales is driven by their recommended systems. So today for many companies, the economics or the value driven by recommended systems is very large/
 
-Every time we go to an online shopping website like Amazon or a movie streaming sites like Netflix or go to one of the apps or sites that do food delivery. Many of these sites will recommend things to we that they think we may want to buy or movies they think we may want to watch or restaurants that they think we may want to try out. And for many companies, a large fraction of sales is driven by their recommended systems. 
+Let's dive in, using as a running example the application of predicting movie ratings. 
 
-So today for many companies, the economics or the value driven by recommended systems is very large and so what we're doing this week is take a look at how they work. So with that let's dive in and take a look at what is a recommended system. we're going to use as a running example, the application of predicting movie ratings. 
+In our example, we run a large movie streaming website, where our users can rate movies using 0 to 5 stars.
 
-So say we run a large movie streaming website and our users have rated movies using one to five stars. And so in a typical recommended system we have a set of users, here we have four users Alice, Bob Carol and Dave. Which have numbered users 1,2,3,4. 
+![](2024-03-10-12-57-19.png)
 
-As well as a set of movies Love at last, Romance forever, Cute puppies of love and then Nonstop car chases and Sword versus karate. And what the users have done is rated these movies one to five stars. Or in fact to make some of these examples a little bit easier. 
+Notice that we denote via a question mark when a user has not rated a film.
 
-we're not going to let them rate the movies from zero to five stars. So say Alice has rated Love and last five stars, Romance forever five stars. Maybe she has not yet watched cute puppies of love so we don't have a rating for that. 
+The notation we're going to use is we're going to use is:
 
-And we're going to denote that via a question mark and she thinks nonstop car chases and sword versus karate deserve zero stars bob. Race at five stars has not watched that, so we don't have a rating race at four stars, 0,0. Carol on the other hand, thinks that deserve zero stars has not watched that zero stars and she loves nonstop car chases and swords versus karate and Dave rates the movies as follows. 
+- $n_u$: number of users
+- $n_m$: number of films
+- $r(i,j) = 1$: if user $j$ has rated movie $i$, otherwise $0$
+- $y(i,j)$: rating given by user $j$ to movie $i$
 
-In the typical recommended system, we have some number of users as well as some number of items. In this case the items are movies that we want to recommend to the users. And even though we're using movies in this example, the same logic or the same thing works for recommending anything from products or websites to $my$ self, to restaurants, to even which media articles, the social media articles to show, to the user that may be more interesting for them. 
+![](2024-03-10-13-00-01.png)
 
-The notation we're going to use is we're going to use nu to denote the number of users. So in this example nu is equal to four because we have four users and nm to denote the number of movies or really the number of items. So in this example nm is equal to five because we have five movies. 
+So with this framework for recommended systems **one possible way to approach the problem is to look at the movies that users have not rated, and to try to predict how users would rate those movies**. Based on this we can then try to recommend to users things that they are more likely to rate as five stars. 
 
-we're going to set r(i,j)=1, if user j has rated movie i. So for example, use a one Dallas Alice has rated movie one but has not rated movie three and so r(1,1) =1, because she has rated movie one, but r( 3,1)=0 because she has not rated movie number three. Then finally we're going to use y(i,j). 
+We'll start to develop an algorithm for doing exactly that, but making one very special assumption: we're going to assume temporarily that we have access to features or extra information about the movies such as which movies are romance movies, which movies are action movies. 
 
-J to denote the rating given by user j to movie i. So for example, this rating here would be that movie three was rated by user 2 to be equal to four. Notice that not every user rates every movie and it's important for the system to know which users have rated which movies. 
-
-That's why we're going to define r(i,j)=1 if user j has rated movie i and will be equal to zero if user j has not rated movie i. So with this framework for recommended systems one possible way to approach the problem is to look at the movies that users have not rated. And to try to predict how users would rate those movies because then we can try to recommend to users things that they are more likely to rate as five stars. 
-
-And in the next section we'll start to develop an algorithm for doing exactly that. But making one very special assumption. Which is we're going to assume temporarily that we have access to features or extra information about the movies such as which movies are romance movies, which movies are action movies. 
-
-And using that will start to develop an algorithm. But later this week will actually come back and ask what if we don't have these features, how can we still get the algorithm to work then? But let's go on to the next section to start building up this algorithm. 
+However, later we will actually ask what if we don't have these features, how can we still get the algorithm to work then?
 
 ## Using per-item features
 
-So let's take a look at how we can develop a recommender system if we had features of each item, or features of each movie. So here's the same data set that we had previously with the four users having rated some but not all of the five movies. What if we additionally have features of the movies? 
+So let's take a look at how we can develop a recommender system if we have features of each item (movie). 
 
-So here I've added two features X1 and X2, that tell us how much each of these is a romance movie, and how much each of these is an action movie. So for example Love at Last is a very romantic movie, so this feature takes on 0.9, but it's not at all an action movie. So this feature takes on 0. 
+Here's the same data set that we had previously with the four users having rated some but not all of the five movies. What if we additionally have features of the movies?
 
-But it turns out Nonstop Car chases has just a little bit of romance in it. So it's 0.1, but it has a ton of action. So that feature takes on the value of 1.0. 
+![](2024-03-12-17-21-52.png)
 
-So we recall that I had used the notation nu to denote the number of users, which is 4 and $m$ to denote the number of movies which is 5. we're going to also introduce n to denote the number of features we have here. And so n=2, because we have two features X1 and X2 for each movie. 
+The two features $x_1$ and $x_2$, that tell us how much each of these is a romance movie, and how much each of these is an action movie.
 
-With these features we have for example that the features for movie one, that is the movie Love at Last, would be 0.90. And the features for the third movie Cute Puppies of Love would be 0.99 and 0. And let's start by taking a look at how we might make predictions for Alice's movie ratings. 
+Rcall that we had used the notation $n_u$ to denote the number of users, which is 4 and $m$ to denote the number of movies, which is 5. We'll also introduce $n$ to denote the number of features we have here. And so $n = 2$, because we have two features $x_1$ and $x_2$ for each movie.
 
-So for user one, that is Alice, let's say we predict the rating for movie i as w.X(i)+b. So this is just a lot like linear regression. For example if we end up choosing the parameter w(1)=[5,0] and say b(1)=0, then the prediction for movie three where the features are 0.99 and 0, which is just copied from here, first feature 0.99, second feature 0. 
+![](2024-03-12-17-24-28.png)
 
-Our prediction would be w.X(3)+b=0.99 times 5 plus 0 times zero, which turns out to be equal to 4.95. And this rating seems pretty plausible. It looks like Alice has given high ratings to Love at Last and Romance Forever, to two highly romantic movies, but given low ratings to the action movies, Nonstop Car Chases and Swords vs Karate. 
+With these features we have for example that the features for movie one, "Love at Last", would be $[0.9 \space\space 0]$. And the features for the third movie "Cute Puppies of Love" would be $[0.99 \space\space 0]$. 
 
-So if we look at Cute Puppies of Love, well predicting that she might rate that 4.95 seems quite plausible. And so these parameters $w$ and $b$ for Alice seems like a reasonable model for predicting her movie ratings. Just add a little the notation because we have not just one user but multiple users, or really nu equals 4 users. 
+And let's start by taking a look at how we might make predictions for Alice's movie ratings. 
 
-we're going to add a superscript 1 here to denote that this is the parameter w(1) for user 1 and add a superscript 1 there as well. And similarly here and here as well, so that we would actually have different parameters for each of the 4 users on data set. And more generally in this model we can for user j, not just user 1 now, we can predict user j's rating for movie i as w(j).X(i)+b(j). 
+So for user one, that is Alice, let's say we predict the rating for movie $i$ as $w \cdot x^{(i)} + b$, which is just like linear regression. For example, if we had a parameter $w = [5 \space\space 0]$ (this is invented), then: 
 
-So here the parameters w(j) and b(j) are the parameters used to predict user j's rating for movie i which is a function of X(i), which is the features of movie i. And this is a lot like linear regression, except that we're fitting a different linear regression model for each of the 4 users in the dataset. So let's take a look at how we can formulate the cost function for this algorithm. 
+![](2024-03-12-17-32-57.png)
 
-As a reminder, our notation is that r(i.,j)=1 if user j has rated movie i or 0 otherwise. And y(i,j)=rating given by user j on movie i. And on the previous side we defined w(j), b(j) as the parameters for user j. 
+So for the first movie we would have a rating of 4.95. And this rating seems pretty plausible: Alice has given high ratings to "Love at Last" and Romance Forever, two highly romantic movies, but given low ratings to the action movies, "Nonstop Car Chases" and "Swords vs Karate". So if we look at "Cute Puppies of Love" predicting that she might rate that movie 4.95 seems quite plausible. 
 
-And X(i) as the feature vector for movie i. So the model we have is for user j and movie i predict the rating to be w(j).X(i)+b(j). we're going to introduce just one new piece of notation, which is we're going to use m(j) to denote the number of movies rated by user j. 
+So these parameters $w$ and $b$ for Alice seem like a reasonable model for predicting her movie ratings. 
 
-So if the user has rated 4 movies, then m(j) would be equal to 4. And if the user has rated 3 movies then m(j) would be equal to 3. So what we'd like to do is to learn the parameters w(j) and b(j), given the data that we have. 
+Just adding a little the notation: because we have not just 1 user but multiple users, or really $n_u$ equals 4 users, we're going to add a superscript 1 to denote that this is the parameter $w^{(1)}$ for user 1 and add a superscript 1 for $b$ as well.
 
-That is given the ratings a user has given of a set of movies. So the algorithm we're going to use is very similar to linear regression. So let's write out the cost function for learning the parameters w(j) and b(j) for a given user j. 
+More generally for this model we have user $j$ and we can predict his rating for movie $i$ as: 
 
-And let's just focus on one user on user j for now. we're going to use the mean squared error criteria. So the cost will be the prediction, which is w(j).X(i)+b(j) minus the actual rating that the user had given. 
+$$ \text{Rating for movie} \space i = w^{(j)} \cdot x^{(i)} + b^{(j)} $$
 
-So minus y(i,j) squared. And we're trying to choose parameters $w$ and $b$ to minimize the squared error between the predicted rating and the actual rating that was observed. But the user hasn't rated all the movies, so if we're going to sum over this, we're going to sum over only over the values of i where r(i,j)=1. 
 
-So we're going to sum only over the movies i that user j has actually rated. So that's what this denotes, sum of all values of i where r(i,j)=1. Meaning that user j has rated that movie i. 
+This is a lot like linear regression, except that we're fitting a different linear regression model for each of the 4 users in the dataset. 
 
-And then finally we can take the usual normalization 1 over m(j). And this is very much like the cost function we have for linear regression with $m$ or really m(j) training examples. Where we're summing over the m(j) movies for which we have a rating taking a squared error and the normalizing by this 1 over 2m(j). 
+Let's take a look at **how we can formulate the cost function for this algorithm**:
 
-And this is going to be a cost function J of w(j), b(j). And if we minimize this as a function of w(j) and b(j), then we should come up with a pretty good choice of parameters w(i) and b(j). For making predictions for user j's ratings. 
+As a reminder, our notation is: 
 
-Let $me$ have just one more term to this cost function, which is the regularization term to prevent overfitting. And so here's our usual regularization parameter, lambda divided by 2m(j) and then times as sum of the squared values of the parameters w. And so n is a number of numbers in X(i) and that's the same as a number of numbers in w(j). 
+![](2024-03-13-16-19-20.png)
 
-If we were to minimize this cost function J as a function of $w$ and b, we should get a pretty good set of parameters for predicting user j's ratings for other movies. Now, before moving on, it turns out that for recommender systems it would be convenient to actually eliminate this division by m(j) term, m(j) is just a constant in this expression. And so, even if we take it out, we should end up with the same value of $w$ and b. 
+Notice that we introduce a new $m^{(j)}$ to denote the number of movies rated by user $j$.
 
-Now let $me$ take this cost function down here to the bottom and copy it to the next slide. So we have that to learn the parameters w(j), b(j) for user j. We would minimize this cost function as a function of w(j) and b(j). 
+Therefore given the ratings that a user $j$ has given to the movies they have seen, to learn the parameters $w^{(j)}$ and $b^{(j)}$, we have the cost function:
 
-But instead of focusing on a single user, let's look at how we learn the parameters for all of the users. To learn the parameters w(1), b(1), w(2), b(2),...,w(nu), b(nu), we would take this cost function on top and sum it over all the nu users. So we would have sum from j=1 one to nu of the same cost function that we had written up above. 
+$$\text{min } J(w^{(j)},b^{(j)}) = \frac{1}{2m^{(j)}} \sum_{i:r(j, i) = 1} (w^{(j)} \cdot x^{(i)} + b^{(j)} - y^{(i, j)})^2 $$
 
-And this becomes the cost for learning all the parameters for all of the users. And if we use gradient descent or any other optimization algorithm to minimize this as a function of w(1), b(1) all the way through w(nu), b(nu), then we have a pretty good set of parameters for predicting movie ratings for all the users. And we may notice that this algorithm is a lot like linear regression, where that plays a role similar to the output f(x) of linear regression. 
+The avobe is using the mean squared error criteria. We're trying to choose parameters $w$ and $b$ to minimize the squared error between the predicted rating and the actual rating that was observed. **But the user hasn't rated all the movies, so if we're going to sum over this, we're going to sum over only over the values of $i$ where $r(i,j)=1$.** 
 
-Only now we're training a different linear regression model for each of the nu users. So that's how we can learn parameters and predict movie ratings, if we had access to these features X1 and X2. That tell we how much is each of the movies, a romance movie, and how much is each of the movies an action movie? 
+And we also do the usual normalization $\frac{1}{2m^{(j)}}$. And this is very much like the cost function we have for linear regression with $m$ or really $m^{(j)}$ training examples, where we're summing over the $m^{(j)}$ movies for which we have a rating, taking a squared error and then normalizing over $\frac{1}{2m^{(j)}}$.
 
-But where do these features come from? And what if we don't have access to such features that give we enough detail about the movies with which to make these predictions? In the next section, we'll look at the modification of this algorithm. 
+If we minimize this function, then we should come up with a pretty good choice of parameters $w^{(j)}$ and $b^{(j)}$, for making predictions for user $j$'s ratings. 
 
-They'll let we make predictions that we make recommendations. Even if we don't have, in advance, features that describe the items of the movies in sufficient detail to run the algorithm that we just saw. Let's go on and take a look at that in the next section
+Let's add one more term to this cost function, which is the **regularization term to prevent overfitting**:
+
+$$\text{min } J(w^{(j)},b^{(j)}) = \frac{1}{2m^{(j)}} \sum_{i:r(j, i) = 1} (w^{(j)} \cdot x^{(i)} + b^{(j)} - y^{(i, j)})^2 + \frac{\lambda}{2m^{(j)}} \sum_{k=1}^{n} (w_k^{(j)})^2$$
+
+Its our usual regularization parameter: lambda divided by $2m^{(j)}$ and then times the sum of the squared values of the parameters $w$. And so $n$ is the number of features in $x^{(i)}$ and that's the same as a number of features in $w^{(j)}$.
+
+Before moving on, it turns out that for recommender systems it is actually convenient to eliminate this division by $m^{(j)}$ term: it is just a constant in this expression. And so, even if we take it out, we should end up with the same value of $w$ and $b$:
+
+$$\text{min } J(w^{(j)},b^{(j)}) = \frac{1}{2} \sum_{i:r(j, i) = 1} (w^{(j)} \cdot x^{(i)} + b^{(j)} - y^{(i, j)})^2 + \frac{\lambda}{2} \sum_{k=1}^{n} (w_k^{(j)})^2$$
+
+So for a single user, we have the cost function above.
+
+But instead of focusing on a single user, let's look at how we learn the parameters for all of the users. To learn the parameters $w^{(1)}$, $b^{(1)}$, $w^{(2)}$, $b^{(2)}$,...,$w^{(n_u)}$, $b^{(n_u)}$, we would take this cost function on top and sum it over all the $n_u$ users. So we would have a sum from $j = 1$ to $n_u$ of the same cost function that we had written up above.:
+
+$$\text{min } J(w^{(j)},b^{(j)}) = \frac{1}{2} \sum_{j = 1}^{n_u} \sum_{i:r(j, i) = 1} (w^{(j)} \cdot x^{(i)} + b^{(j)} - y^{(i, j)})^2 + \frac{\lambda}{2}  \sum_{j = 1}^{n_u}  \sum_{k=1}^{n} (w_k^{(j)})^2$$
+
+And this becomes the cost for learning all the parameters for all of the users. 
+
+If we use gradient descent or any other optimization algorithm to minimize then we get a pretty good set of parameters for predicting movie ratings for all the users. And notice that this algorithm is a lot like linear regression, only now we're training a different linear regression model for each of the $n_u$ users. 
+
+---
+
+But where do these features come from? And what if we don't have access to such features that give we enough detail about the movies with which to make these predictions? 
 
 ## Collaborative filtering algorithm
 
@@ -152,7 +170,7 @@ Many important applications of recommender systems or collective filtering algor
 
 The process we'll use to generalize the algorithm will be very much reminiscent to how we have gone from linear regression to logistic regression, to predicting numbers to predicting a binary label back in course one, let's take a look. Here's an example of a collaborative filtering data set with binary labels. A one the notes that the user liked or engaged with a particular movie. 
 
-So label one could mean that Alice watched the movie Love at last all the way to the end and watch romance forever all the way to the end. But after playing a few minutes of nonstop car chases decided to stop the section and move on. Or it could mean that she explicitly hit like or favorite on an app to indicate that she liked these movies. 
+So label one could mean that Alice watched the movie "Love at Last" all the way to the end and watch "Romance Forever" all the way to the end. But after playing a few minutes of "Nonstop Car Chases" decided to stop the section and move on. Or it could mean that she explicitly hit like or favorite on an app to indicate that she liked these movies. 
 
 But after checking out nonstop car chasers and swords versus karate did not hit like. And the question mark usually means the user has not yet seen the item and so they weren't in a position to decide whether or not to hit like or favorite on that particular item. So the question is how can we take the collaborative filtering algorithm that we saw in the last section and get it to work on this dataset. 
 
