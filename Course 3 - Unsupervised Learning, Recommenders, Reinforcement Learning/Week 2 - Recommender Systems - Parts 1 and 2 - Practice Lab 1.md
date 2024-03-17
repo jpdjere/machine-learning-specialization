@@ -129,14 +129,341 @@ Now, you will begin implementing the collaborative filtering learning
 algorithm. You will start by implementing the objective function. 
 
 The collaborative filtering algorithm in the setting of movie
-recommendations considers a set of $n$-dimensional parameter vectors
-$\mathbf{x}^{(0)},...,\mathbf{x}^{(n_m-1)}$, $\mathbf{w}^{(0)},...,\mathbf{w}^{(n_u-1)}$ and $b^{(0)},...,b^{(n_u-1)}$, where the
-model predicts the rating for movie $i$ by user $j$ as
-$y^{(i,j)} = \mathbf{w}^{(j)}\cdot \mathbf{x}^{(i)} + b^{(j)}$ . Given a dataset that consists of
-a set of ratings produced by some users on some movies, you wish to
+recommendations considers a set of $n$-dimensional parameter vectors $\mathbf{x}^{(0)},...,\mathbf{x}^{(n_m-1)}$, $\mathbf{w}^{(0)},...,\mathbf{w}^{(n_u-1)}$ and $b^{(0)},...,b^{(n_u-1)}$, where the model predicts the rating for movie $i$ by user $j$ as
+$y^{(i,j)} = \mathbf{w}^{(j)}\cdot \mathbf{x}^{(i)} + b^{(j)}$ . Given a dataset that consists of a set of ratings produced by some users on some movies, you wish to
 learn the parameter vectors $\mathbf{x}^{(0)},...,\mathbf{x}^{(n_m-1)},
-\mathbf{w}^{(0)},...,\mathbf{w}^{(n_u-1)}$  and $b^{(0)},...,b^{(n_u-1)}$ that produce the best fit (minimizes
-the squared error).
+\mathbf{w}^{(0)},...,\mathbf{w}^{(n_u-1)}$  and $b^{(0)},...,b^{(n_u-1)}$ that produce the best fit (minimizes the squared error).
 
-You will complete the code in cofiCostFunc to compute the cost
-function for collaborative filtering. 
+You will complete the code in `cofiCostFunc` to compute the cost
+function for collaborative filtering.
+
+
+<a name="4.1"></a>
+### 4.1 Collaborative filtering cost function
+
+The collaborative filtering cost function is given by
+$$ J({\mathbf{x}^{(0)},...,\mathbf{x}^{(n_m-1)},\mathbf{w}^{(0)},b^{(0)},...,\mathbf{w}^{(n_u-1)},b^{(n_u-1)}})= \left[ \frac{1}{2}\sum_{(i,j):r(i,j)=1}(\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)} - y^{(i,j)})^2 \right]+ \underbrace{\left[\frac{\lambda}{2}\sum_{j=0}^{n_u-1}\sum_{k=0}^{n-1}(\mathbf{w}^{(j)}_k)^2+ \frac{\lambda}{2}\sum_{i=0}^{n_m-1}\sum_{k=0}^{n-1}(\mathbf{x}_k^{(i)})^2\right]}_{regularization}\tag{1}
+$$
+
+The first summation in (1) is "for all $i$, $j$ where $r(i,j)$ equals $1$" and could be written:
+
+$$
+= \left[ \frac{1}{2}\sum_{j=0}^{n_u-1} \sum_{i=0}^{n_m-1}r(i,j)*(\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)} - y^{(i,j)})^2 \right]
++\text{regularization}
+$$
+
+You should now write cofiCostFunc (collaborative filtering cost function) to return this cost.
+
+<a name="ex01"></a>
+### Exercise 1
+
+**For loop Implementation:**   
+Start by implementing the cost function using for loops.
+Consider developing the cost function in two steps. First, develop the cost function without regularization. A test case that does not include regularization is provided below to test your implementation. Once that is working, add regularization and run the tests that include regularization.  Note that you should be accumulating the cost for user $j$ and movie $i$ only if $R(i,j) = 1$.
+
+- You can structure the code in two for loops similar to the summation in (1). Implement the code without regularization first. Note that some of the elements in (1) are vectors. Use np.dot(). You can also use np.square(). Pay close attention to which elements are indexed by i and which are indexed by j. Don't forget to divide by two.
+- The code below pulls out each element from the matrix before using it. One could also reference the matrix directly.
+```py
+# GRADED FUNCTION: cofi_cost_func
+# UNQ_C1
+
+def cofi_cost_func(X, W, b, Y, R, lambda_):
+    """
+    Returns the cost for the content-based filtering
+    Args:
+      X (ndarray (num_movies,num_features)): matrix of item features
+      W (ndarray (num_users,num_features)) : matrix of user parameters
+      b (ndarray (1, num_users)            : vector of user parameters
+      Y (ndarray (num_movies,num_users)    : matrix of user ratings of movies
+      R (ndarray (num_movies,num_users)    : matrix, where R(i, j) = 1 if the i-th movies was rated by the j-th user
+      lambda_ (float): regularization parameter
+    Returns:
+      J (float) : Cost
+    """
+    nm, nu = Y.shape
+    J = 0
+    ### START CODE HERE ###
+    for j in range(nu):
+        w = W[j,:]
+        b_j = b[0,j]
+        for i in range(nm):
+            x = X[i,:]
+            y = Y[i,j]
+            r = R[i,j]
+            J += np.square(r * (np.dot(w,x) + b_j - y ) )
+    J = J/2
+    
+    J += (lambda_/2) * (np.sum(np.square(W)) + np.sum(np.square(X)))
+
+    ### END CODE HERE ### 
+
+    return J
+```
+
+```py
+# Reduce the data set size so that this runs faster
+num_users_r = 4
+num_movies_r = 5 
+num_features_r = 3
+
+X_r = X[:num_movies_r, :num_features_r]
+W_r = W[:num_users_r,  :num_features_r]
+b_r = b[0, :num_users_r].reshape(1,-1)
+Y_r = Y[:num_movies_r, :num_users_r]
+R_r = R[:num_movies_r, :num_users_r]
+
+# Evaluate cost function
+J = cofi_cost_func(X_r, W_r, b_r, Y_r, R_r, 0);
+print(f"Cost: {J:0.2f}")
+# Cost: 13.67
+```
+
+```py
+# Evaluate cost function with regularization 
+J = cofi_cost_func(X_r, W_r, b_r, Y_r, R_r, 1.5);
+print(f"Cost (with regularization): {J:0.2f}")
+# Cost (with regularization): 28.09
+```
+
+```py
+# Public tests
+from public_tests import *
+test_cofi_cost_func(cofi_cost_func)
+# All tests passed!
+```
+
+**Vectorized Implementation**
+
+It is important to create a vectorized implementation to compute $J$, since it will later be called many times during optimization. The linear algebra utilized is not the focus of this series, so the implementation is provided. If you are an expert in linear algebra, feel free to create your version without referencing the code below. 
+
+Run the code below and verify that it produces the same results as the non-vectorized version.
+
+```py
+def cofi_cost_func_v(X, W, b, Y, R, lambda_):
+    """
+    Returns the cost for the content-based filtering
+    Vectorized for speed. Uses tensorflow operations to be compatible with custom training loop.
+    Args:
+      X (ndarray (num_movies,num_features)): matrix of item features
+      W (ndarray (num_users,num_features)) : matrix of user parameters
+      b (ndarray (1, num_users)            : vector of user parameters
+      Y (ndarray (num_movies,num_users)    : matrix of user ratings of movies
+      R (ndarray (num_movies,num_users)    : matrix, where R(i, j) = 1 if the i-th movies was rated by the j-th user
+      lambda_ (float): regularization parameter
+    Returns:
+      J (float) : Cost
+    """
+    j = (tf.linalg.matmul(X, tf.transpose(W)) + b - Y)*R
+    J = 0.5 * tf.reduce_sum(j**2) + (lambda_/2) * (tf.reduce_sum(X**2) + tf.reduce_sum(W**2))
+    return J
+```
+
+```py
+# Evaluate cost function
+J = cofi_cost_func_v(X_r, W_r, b_r, Y_r, R_r, 0);
+print(f"Cost: {J:0.2f}")
+
+# Evaluate cost function with regularization 
+J = cofi_cost_func_v(X_r, W_r, b_r, Y_r, R_r, 1.5);
+print(f"Cost (with regularization): {J:0.2f}")
+
+# Cost: 13.67
+# Cost (with regularization): 28.09
+```
+
+<a name="5"></a>
+## 5 - Learning movie recommendations
+
+After you have finished implementing the collaborative filtering cost
+function, you can start training your algorithm to make
+movie recommendations for yourself. 
+
+In the cell below, you can enter your own movie choices. The algorithm will then make recommendations for you! We have filled out some values according to our preferences, but after you have things working with our choices, you should change this to match your tastes.
+A list of all movies in the dataset is in the file [movie list](data/small_movie_list.csv).
+
+```py
+movieList, movieList_df = load_Movie_List_pd()
+
+my_ratings = np.zeros(num_movies)          #  Initialize my ratings
+
+# Check the file small_movie_list.csv for id of each movie in our dataset
+# For example, Toy Story 3 (2010) has ID 2700, so to rate it "5", you can set
+my_ratings[2700] = 5 
+
+#Or suppose you did not enjoy Persuasion (2007), you can set
+my_ratings[2609] = 2;
+
+# We have selected a few movies we liked / did not like and the ratings we
+# gave are as follows:
+my_ratings[929]  = 5   # Lord of the Rings: The Return of the King, The
+my_ratings[246]  = 5   # Shrek (2001)
+my_ratings[2716] = 3   # Inception
+my_ratings[1150] = 5   # Incredibles, The (2004)
+my_ratings[382]  = 2   # Amelie (Fabuleux destin d'Amélie Poulain, Le)
+my_ratings[366]  = 5   # Harry Potter and the Sorcerer's Stone (a.k.a. Harry Potter and the Philosopher's Stone) (2001)
+my_ratings[622]  = 5   # Harry Potter and the Chamber of Secrets (2002)
+my_ratings[988]  = 3   # Eternal Sunshine of the Spotless Mind (2004)
+my_ratings[2925] = 1   # Louis Theroux: Law & Disorder (2008)
+my_ratings[2937] = 1   # Nothing to Declare (Rien à déclarer)
+my_ratings[793]  = 5   # Pirates of the Caribbean: The Curse of the Black Pearl (2003)
+my_rated = [i for i in range(len(my_ratings)) if my_ratings[i] > 0]
+
+print('\nNew user ratings:\n')
+for i in range(len(my_ratings)):
+    if my_ratings[i] > 0 :
+        print(f'Rated {my_ratings[i]} for  {movieList_df.loc[i,"title"]}');
+
+# New user ratings:
+
+# Rated 5.0 for  Shrek (2001)
+# Rated 5.0 for  Harry Potter and the Sorcerer's Stone (a.k.a. Harry Potter and the Philosopher's Stone) (2001)
+# Rated 2.0 for  Amelie (Fabuleux destin d'Amélie Poulain, Le) (2001)
+# Rated 5.0 for  Harry Potter and the Chamber of Secrets (2002)
+# Rated 5.0 for  Pirates of the Caribbean: The Curse of the Black Pearl (2003)
+# Rated 5.0 for  Lord of the Rings: The Return of the King, The (2003)
+# Rated 3.0 for  Eternal Sunshine of the Spotless Mind (2004)
+# Rated 5.0 for  Incredibles, The (2004)
+# Rated 2.0 for  Persuasion (2007)
+# Rated 5.0 for  Toy Story 3 (2010)
+# Rated 3.0 for  Inception (2010)
+# Rated 1.0 for  Louis Theroux: Law & Disorder (2008)
+# Rated 1.0 for  Nothing to Declare (Rien à déclarer) (2010)
+```
+
+Now, let's add these reviews to $Y$ and $R$ and normalize the ratings.
+
+```py
+# Reload ratings
+Y, R = load_ratings_small()
+
+# Add new user ratings to Y 
+Y = np.c_[my_ratings, Y]
+
+# Add new user indicator matrix to R
+R = np.c_[(my_ratings != 0).astype(int), R]
+
+# Normalize the Dataset
+Ynorm, Ymean = normalizeRatings(Y, R)
+```
+
+Let's prepare to train the model. Initialize the parameters and select the Adam optimizer.
+
+```py
+#  Useful Values
+num_movies, num_users = Y.shape
+num_features = 100
+
+# Set Initial Parameters (W, X), use tf.Variable to track these variables
+tf.random.set_seed(1234) # for consistent results
+W = tf.Variable(tf.random.normal((num_users,  num_features),dtype=tf.float64),  name='W')
+X = tf.Variable(tf.random.normal((num_movies, num_features),dtype=tf.float64),  name='X')
+b = tf.Variable(tf.random.normal((1,          num_users),   dtype=tf.float64),  name='b')
+
+# Instantiate an optimizer.
+optimizer = keras.optimizers.Adam(learning_rate=1e-1)
+```
+
+Let's now train the collaborative filtering model. This will learn the parameters $\mathbf{X}$, $\mathbf{W}$, and $\mathbf{b}$. 
+
+The operations involved in learning $w$, $b$, and $x$ simultaneously do not fall into the typical 'layers' offered in the TensorFlow neural network package.  Consequently, the flow used in Course 2: Model, Compile(), Fit(), Predict(), are not directly applicable. Instead, we can use a custom training loop.
+
+Recall from earlier labs the steps of gradient descent.
+- repeat until convergence:
+    - compute forward pass
+    - compute the derivatives of the loss relative to parameters
+    - update the parameters using the learning rate and the computed derivatives 
+    
+TensorFlow has the marvelous capability of calculating the derivatives for you. This is shown below. Within the `tf.GradientTape()` section, operations on Tensorflow Variables are tracked. When `tape.gradient()` is later called, it will return the gradient of the loss relative to the tracked variables. The gradients can then be applied to the parameters using an optimizer. 
+This is a very brief introduction to a useful feature of TensorFlow and other machine learning frameworks. Further information can be found by investigating "custom training loops" within the framework of interest.
+    
+```py
+iterations = 200
+lambda_ = 1
+for iter in range(iterations):
+    # Use TensorFlow’s GradientTape
+    # to record the operations used to compute the cost 
+    with tf.GradientTape() as tape:
+
+        # Compute the cost (forward pass included in cost)
+        cost_value = cofi_cost_func_v(X, W, b, Ynorm, R, lambda_)
+
+    # Use the gradient tape to automatically retrieve
+    # the gradients of the trainable variables with respect to the loss
+    grads = tape.gradient( cost_value, [X,W,b] )
+
+    # Run one step of gradient descent by updating
+    # the value of the variables to minimize the loss.
+    optimizer.apply_gradients( zip(grads, [X,W,b]) )
+
+    # Log periodically.
+    if iter % 20 == 0:
+        print(f"Training loss at iteration {iter}: {cost_value:0.1f}")
+
+Training loss at iteration 0: 2321191.3
+Training loss at iteration 20: 136168.7
+Training loss at iteration 40: 51863.3
+Training loss at iteration 60: 24598.8
+Training loss at iteration 80: 13630.4
+Training loss at iteration 100: 8487.6
+Training loss at iteration 120: 5807.7
+Training loss at iteration 140: 4311.6
+Training loss at iteration 160: 3435.2
+Training loss at iteration 180: 2902.1
+```
+
+<a name="6"></a>
+## 6 - Recommendations
+Below, we compute the ratings for all the movies and users and display the movies that are recommended. These are based on the movies and ratings entered as `my_ratings[]` above. To predict the rating of movie $i$ for user $j$, you compute $\mathbf{w}^{(j)} \cdot \mathbf{x}^{(i)} + b^{(j)}$. This can be computed for all ratings using matrix multiplication.
+
+```py
+# Make a prediction using trained weights and biases
+p = np.matmul(X.numpy(), np.transpose(W.numpy())) + b.numpy()
+
+#restore the mean
+pm = p + Ymean
+
+my_predictions = pm[:,0]
+
+# sort predictions
+ix = tf.argsort(my_predictions, direction='DESCENDING')
+
+for i in range(17):
+    j = ix[i]
+    if j not in my_rated:
+        print(f'Predicting rating {my_predictions[j]:0.2f} for movie {movieList[j]}')
+
+print('\n\nOriginal vs Predicted ratings:\n')
+for i in range(len(my_ratings)):
+    if my_ratings[i] > 0:
+        print(f'Original {my_ratings[i]}, Predicted {my_predictions[i]:0.2f} for {movieList[i]}')
+
+# Predicting rating 4.49 for movie My Sassy Girl (Yeopgijeogin geunyeo) (2001)
+# Predicting rating 4.48 for movie Martin Lawrence Live: Runteldat (2002)
+# Predicting rating 4.48 for movie Memento (2000)
+# Predicting rating 4.47 for movie Delirium (2014)
+# Predicting rating 4.47 for movie Laggies (2014)
+# Predicting rating 4.47 for movie One I Love, The (2014)
+# Predicting rating 4.46 for movie Particle Fever (2013)
+# Predicting rating 4.45 for movie Eichmann (2007)
+# Predicting rating 4.45 for movie Battle Royale 2: Requiem (Batoru rowaiaru II: Chinkonka) (2003)
+# Predicting rating 4.45 for movie Into the Abyss (2011)
+
+
+# Original vs Predicted ratings:
+
+# Original 5.0, Predicted 4.90 for Shrek (2001)
+# Original 5.0, Predicted 4.84 for Harry Potter and the Sorcerer's Stone (a.k.a. Harry Potter and the Philosopher's Stone) (2001)
+# Original 2.0, Predicted 2.13 for Amelie (Fabuleux destin d'Amélie Poulain, Le) (2001)
+# Original 5.0, Predicted 4.88 for Harry Potter and the Chamber of Secrets (2002)
+# Original 5.0, Predicted 4.87 for Pirates of the Caribbean: The Curse of the Black Pearl (2003)
+# Original 5.0, Predicted 4.89 for Lord of the Rings: The Return of the King, The (2003)
+# Original 3.0, Predicted 3.00 for Eternal Sunshine of the Spotless Mind (2004)
+# Original 5.0, Predicted 4.90 for Incredibles, The (2004)
+# Original 2.0, Predicted 2.11 for Persuasion (2007)
+# Original 5.0, Predicted 4.80 for Toy Story 3 (2010)
+# Original 3.0, Predicted 3.00 for Inception (2010)
+# Original 1.0, Predicted 1.41 for Louis Theroux: Law & Disorder (2008)
+# Original 1.0, Predicted 1.26 for Nothing to Declare (Rien à déclarer) (2010)
+```
+
+In practice, additional information can be utilized to enhance our predictions. Above, the predicted ratings for the first few hundred movies lie in a small range. We can augment the above by selecting from those top movies, movies that have high average ratings and movies with more than 20 ratings. This section uses a [Pandas](https://pandas.pydata.org/) data frame which has many handy sorting features.
