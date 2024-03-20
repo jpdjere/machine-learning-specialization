@@ -10,7 +10,7 @@ Let's dive in, using as a running example the application of predicting movie ra
 
 In our example, we run a large movie streaming website, where our users can rate movies using 0 to 5 stars.
 
-![](2024-03-10-12-57-19.png)
+![](./img/2024-03-10-12-57-19.png)
 
 Notice that we denote via a question mark when a user has not rated a film.
 
@@ -21,7 +21,7 @@ The notation we're going to use is we're going to use is:
 - $r(i,j) = 1$: if user $j$ has rated movie $i$, otherwise $0$
 - $y(i,j)$: rating given by user $j$ to movie $i$
 
-![](2024-03-10-13-00-01.png)
+![](./img/2024-03-10-13-00-01.png)
 
 So with this framework for recommended systems **one possible way to approach the problem is to look at the movies that users have not rated, and to try to predict how users would rate those movies**. Based on this we can then try to recommend to users things that they are more likely to rate as five stars. 
 
@@ -35,13 +35,13 @@ So let's take a look at how we can develop a recommender system if we have featu
 
 Here's the same data set that we had previously with the four users having rated some but not all of the five movies. What if we additionally have features of the movies?
 
-![](2024-03-12-17-21-52.png)
+![](./img/2024-03-12-17-21-52.png)
 
 The two features $x_1$ and $x_2$, that tell us how much each of these is a romance movie, and how much each of these is an action movie.
 
 Rcall that we had used the notation $n_u$ to denote the number of users, which is 4 and $m$ to denote the number of movies, which is 5. We'll also introduce $n$ to denote the number of features we have here. And so $n = 2$, because we have two features $x_1$ and $x_2$ for each movie.
 
-![](2024-03-12-17-24-28.png)
+![](./img/2024-03-12-17-24-28.png)
 
 With these features we have for example that the features for movie one, "Love at Last", would be $[0.9 \space\space 0]$. And the features for the third movie "Cute Puppies of Love" would be $[0.99 \space\space 0]$. 
 
@@ -49,7 +49,7 @@ And let's start by taking a look at how we might make predictions for Alice's mo
 
 So for user one, that is Alice, let's say we predict the rating for movie $i$ as $w \cdot x^{(i)} + b$, which is just like linear regression. For example, if we had a parameter $w = [5 \space\space 0]$ (this is invented), then: 
 
-![](2024-03-12-17-32-57.png)
+![](./img/2024-03-12-17-32-57.png)
 
 So for the first movie we would have a rating of 4.95. And this rating seems pretty plausible: Alice has given high ratings to "Love at Last" and Romance Forever, two highly romantic movies, but given low ratings to the action movies, "Nonstop Car Chases" and "Swords vs Karate". So if we look at "Cute Puppies of Love" predicting that she might rate that movie 4.95 seems quite plausible. 
 
@@ -68,7 +68,7 @@ Let's take a look at **how we can formulate the cost function for this algorithm
 
 As a reminder, our notation is: 
 
-![](2024-03-13-16-19-20.png)
+![](./img/2024-03-13-16-19-20.png)
 
 Notice that we introduce a new $m^{(j)}$ to denote the number of movies rated by user $j$.
 
@@ -112,15 +112,15 @@ What if we don't have the features $x_1$ and $x_2 that tell you how much of a mo
 
 Here's the data that we had before. but what if instead of having these numbers for $x_1$ and $x_2$, we didn't know in advance what the values of the features $x_1$ and $x_2$ were?
 
-![](2024-03-13-21-29-21.png)
+![](./img/2024-03-13-21-29-21.png)
 
 Now, just for the purposes of illustration, let's say we had somehow already learned parameters for the four users. To simplify this example, all the values of $b$ are actually equal to 0. Just to reduce a little bit of writing, we're going to ignore $b$ for the rest of this example.
 
-![](2024-03-13-21-30-42.png)
+![](./img/2024-03-13-21-30-42.png)
 
 Let's take a look at how we can try to guess what might be reasonable features for movie 1. If these are the parameters we have on the left, then given that Alice rated movie 1, 5, we should have that $w^{(1)}\cdot x^{(1)}$ should be about equal to 5 and $w^{(2)} \cdot x^{(2)}$ should also be about equal to 5 because Bob rated it 5. $w^{(3)} \cdot x^{(1)}$ should be close to 0 and $w^{(4)} \cdot x^{(1)}$ should be close to 0 as well:
 
-![](2024-03-13-21-34-21.png)
+![](./img/2024-03-13-21-34-21.png)
 
 The question is: **given these values for $w$ that we have up here, what choice for $x_1$ will cause these values to be right?** 
 
@@ -133,7 +133,7 @@ What we have is that if we have the parameters for all four users here, and if w
 
 Similarly, if we have these parameter vectors, we can also try to come up with a feature vector $x_2$ for the second movie, feature vector $x_3$ for the third movie, and so on to try to make the algorithm's predictions on these additional movies close to what was actually the ratings given by the users.
 
-![](2024-03-13-21-39-33.png)
+![](./img/2024-03-13-21-39-33.png)
 
 Let's come up with a cost function for actually learning the values of $x_1$ and $x_2$. By the way, notice that this works only because we have parameters for 4 users: that's what allows us to try to guess appropriate features, $x_1$. This is why in a typical linear regression application if we had just a single user, we don't actually have enough information to figure out what would be the features, $x_1$ and $x_2$, which is why in the linear regression contexts that we saw in course 1, we can't come up with features $x_1$ and $x_2$ from scratch. 
 
@@ -149,7 +149,7 @@ Notice that now this will be a sum over all values of $j$ where $r(i, j) = 1$.
 
 So if we minimize this cost function of $x^{(i)}$ we'll be choosing the features $x^{(i)}$ for the movie $i$ so that for all the users $j$ that have rated movie $i$, we will try to minimize the squared difference between what our choice of features $x^{(i)}$ results in terms of the predicted movie rating minus the actual movie rating that the user had given it. And we also add a regularization term as usual, which notice that uses the variable $x_k$.
 
-![](2024-03-13-22-00-55.png)
+![](./img/2024-03-13-22-00-55.png)
 
 Lastly, to learn all the features $x_1$ through $x^n_m$ because we have $n_m$ movies, we can take this cost function on top and sum it over all the movies from $i = 1$ through the number of movies. And this becomes a cost function for learning the features for all of the movies in the dataset:
 
@@ -158,7 +158,7 @@ $$J(x^{(1)}, x^{(2)}, ..., x^{(n_m)}) = \frac{1}{2} \sum_{i = 1}^{n_m} \sum_{j:r
 
 So if we have parameters $w$ and $b$, all the users, then minimizing this cost function as a function of $x_1$ through $x^{n_m}$ using gradient descent or some other algorithm, this will actually allow we to take a pretty good guess at learning good features for the movies.
 
-![](2024-03-13-22-06-22.png)
+![](./img/2024-03-13-22-06-22.png)
 
 This is pretty remarkable: **for most machine learning applications the features had to be externally given but in this algorithm, we can actually learn the features for a given movie.** 
 
@@ -168,7 +168,7 @@ However, so far we we assumed we had those parameters $w$ and $b$ for the differ
 
 Here's the cost function for learning the features and the cost function to learn $x^{(i)}$ through $x^{(n_m)}$:
 
-![](2024-03-13-22-08-55.png)
+![](./img/2024-03-13-22-08-55.png)
 
 
 Now, if we put these two together, we see that the first term of each equation is exactly the same to the first of the other equation. Notice that the sum over $j$ of all values of $i$ where $r(j, i) = 1$ is the same as summing over all values of $i$ with all $j$ where $r(j, i) = 1$. This summation is just summing over all user-movie pairs where there is a rating. 
@@ -178,7 +178,7 @@ What we're going to do is put these two cost functions together, writing out the
 $$J(x^{(1)}, x^{(2)}, ..., x^{(n_m)}) = \frac{1}{2} \sum_{(i, j):r(i, j) = 1} (w^{(j)} \cdot x^{(i)} + b^{(j)} - y^{(i, j)})^{2} + \frac{\lambda}{2} \sum_{j = 1}^{n_m} \sum_{k=1}^{n} (w_k^{(i)})^{2} + \frac{\lambda}{2} \sum_{i = 1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^{2}$$
 
 
-![](2024-03-13-22-20-35.png)
+![](./img/2024-03-13-22-20-35.png)
 
 It turns out that if we minimize this cost function as a function of $w$ and $b$ as well as $x$, then this algorithm actually works.
 
@@ -186,21 +186,21 @@ Here's what I mean: If we had three users and two movies and if we have ratings 
 
 But an alternative way to carry out the summation is to first look at movie 1 (summation of the first row) and then to include all the users that rated movie 1, and then look at movie 2 and have a term for all the users that had rated movie 2. 
 
-![](2024-03-13-22-23-22.png)
+![](./img/2024-03-13-22-23-22.png)
 
 This summation on cost function for the features and the summation in the cost function for $x$s are the two ways of summing over all of the pairs where the user had rated that movie.
 
-![](2024-03-13-22-25-47.png)
+![](./img/2024-03-13-22-25-47.png)
 
 **How do we minimize this cost function as a function of $w$, $b$, and $x$?** Use gradient descent.
 
 When we learned about linear regression, this is the gradient descent algorithm we had seen, where we had the cost function $J$, which is a function of the parameters $w$ and b, and we'd apply gradient descent as follows:
 
-![](2024-03-13-22-27-02.png)
+![](./img/2024-03-13-22-27-02.png)
 
 With collaborative filtering, the cost function isn't a function of just $w$ and $b$, is now also a function of $x$. We're using $w$ and $b$ here to denote the parameters for all of the users and $x$ here just informally to denote the features of all of the movies. But if we're able to take partial derivatives with respect to the different parameters, we can then continue to update the parameters as follows:
 
-![](2024-03-13-22-28-16.png)
+![](./img/2024-03-13-22-28-16.png)
 
 We're using the notation here a little bit informally and not keeping very careful track of the superscripts and subscripts, but the key takeaway I hope we have from this is that the parameters to this model are $w$ and b, and $x$ now is also a parameter, which is why we minimize the cost function as a function of all three of these sets of parameters, $w$ and b, as well as x. 
 
@@ -216,13 +216,13 @@ The process we'll use to generalize the algorithm will be very much reminiscent 
 
 Here's an example of a collaborative filtering data set with binary labels. A 1 denotes that the user liked or engaged with a particular movie (1 means either clicked on liked or watched the full movie, 0 is dislike or changed after a few minutes) The question mark usually means the user has not yet seen the item and so they weren't in a position to decide.
 
-![](2024-03-13-22-36-20.png)
+![](./img/2024-03-13-22-36-20.png)
 
 So the question is how can we take the collaborative filtering algorithm that we saw in the last section and get it to work on this dataset? By predicting how likely Alice, Bob, Carol and Dave are to like the items that they have not yet rated, we can then decide how much we should recommend these items to them. 
 
 There are many ways of defining what is the label 1 and what is the label 0, and what is the label question mark in collaborative filtering with binary labels. Let's take a look at a few examples:
 
-![](2024-03-13-22-39-18.png)
+![](./img/2024-03-13-22-39-18.png)
 
 So given these binary labels, let's look at how we can generalize our algorithm which is a lot like linear regression from the previous couple sections to predicting these binary outputs. 
 
@@ -232,21 +232,21 @@ For binary labels, we're going to predict that the probability of $y^{(i, j)} = 
 
 $$ g(w^{(j)} \cdot x^{(i)}+b^{(j)}) \quad\text{where} \space g(z) = \frac{1}{1 + e^{-z}}  $$
 
-![](2024-03-13-22-44-55.png)
+![](./img/2024-03-13-22-44-55.png)
 
 In order to build this algorithm, we'll also have to modify the cost function: from the squared error cost function to the cost function that is more appropriate for binary labels for a logistic-regression-like model. 
 
 So previously, in our cost function the part played a role similar to $f(x)$, the prediction of the algorithm:
 
-![](2024-03-13-22-48-33.png)
+![](./img/2024-03-13-22-48-33.png)
 
 Now have binary labels, $y^{(i, j)}$ when the labels are 1 or 0 or question mark, then the prediction $f(x)$ becomes $g$, the logistic function. 
 
-![](2024-03-13-22-49-48.png)
+![](./img/2024-03-13-22-49-48.png)
 
 And similar to when we had derived logistic regression, we had written out the following loss function for a single example, which was at the loss if the algorithm predicts $f(x)$ and the true label was $y$, the loss was:
 
-![](2024-03-13-22-50-42.png)
+![](./img/2024-03-13-22-50-42.png)
 
 $$ L(f_{(w,b,x)}(x), y^{(i, j)} = - y^{(i, j)} \log [f_{(w,b,x)}(x)] - ( 1 - y^{(i, j)} ) \log (1 - [f_{(w,b,x)}(x)]) $$
 

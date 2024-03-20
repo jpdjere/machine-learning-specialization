@@ -27,7 +27,7 @@ from recsys_utils import *
 <a name="1"></a>
 ## 1 - Notation
 
-![](2024-03-21-00-14-05.png)
+![](./img/2024-03-21-00-14-05.png)
 
 <a name="2"></a>
 ## 2 - Recommender Systems
@@ -36,11 +36,11 @@ The goal of a collaborative filtering recommender system is to generate two vect
 
 The diagram below details how these vectors are learned.
 
-![](2024-03-21-00-14-27.png)
+![](./img/2024-03-21-00-14-27.png)
 
 Existing ratings are provided in matrix form as shown. $Y$ contains ratings; 0.5 to 5 inclusive in 0.5 steps. 0 if the movie has not been rated. $R$ has a 1 where movies have been rated. Movies are in rows, users in columns. Each user has a parameter vector $w^{user}$ and bias. Each movie has a feature vector $x^{movie}$. These vectors are simultaneously learned by using the existing user/movie ratings as training data. One training example is shown above: $\mathbf{w}^{(1)} \cdot \mathbf{x}^{(1)} + b^{(1)} = 4$. It is worth noting that the feature vector $x^{movie}$ must satisfy all the users while the user vector $w^{user}$ must satisfy all the movies. This is the source of the name of this approach - all the users collaborate to generate the rating set. 
 
-![](2024-03-21-00-14-41.png)
+![](./img/2024-03-21-00-14-41.png)
 
 Once the feature vectors and parameters are learned, they can be used to predict how a user might rate an unrated movie. This is shown in the diagram above. The equation is an example of predicting a rating for user one on movie zero.
 
@@ -467,3 +467,12 @@ for i in range(len(my_ratings)):
 ```
 
 In practice, additional information can be utilized to enhance our predictions. Above, the predicted ratings for the first few hundred movies lie in a small range. We can augment the above by selecting from those top movies, movies that have high average ratings and movies with more than 20 ratings. This section uses a [Pandas](https://pandas.pydata.org/) data frame which has many handy sorting features.
+
+```py
+filter=(movieList_df["number of ratings"] > 20)
+movieList_df["pred"] = my_predictions
+movieList_df = movieList_df.reindex(columns=["pred", "mean rating", "number of ratings", "title"])
+movieList_df.loc[ix[:300]].loc[filter].sort_values("mean rating", ascending=False)
+```
+
+![](./img/2024-03-21-00-27-21.png)

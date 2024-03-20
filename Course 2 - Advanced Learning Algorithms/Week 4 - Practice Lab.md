@@ -54,7 +54,7 @@ Note: The dataset used is for illustrative purposes only. It is not meant to be 
 
 You will start by loading the dataset for this task. The dataset you have collected is as follows:
 
-![](2024-02-18-21-16-51.png)
+![](./img/2024-02-18-21-16-51.png)
 
 -  You have 10 examples of mushrooms. For each example, you have
     - Three features
@@ -68,7 +68,7 @@ You will start by loading the dataset for this task. The dataset you have collec
 ### 3.1 One hot encoded dataset
 For ease of implementation, we have one-hot encoded the features (turned them into 0 or 1 valued features)
 
-![](2024-02-18-21-17-04.png)
+![](./img/2024-02-18-21-17-04.png)
 
 Therefore,
 - `X_train` contains three features for each example 
@@ -236,7 +236,7 @@ Next, you'll write a helper function called `split_dataset` that takes in the da
 - For example, say we're starting at the root node (so `node_indices = [0,1,2,3,4,5,6,7,8,9]`), and we chose to split on feature `0`, which is whether or not the example has a brown cap. 
     - The output of the function is then, `left_indices = [0,1,2,3,4,7,9]` (data points with brown cap) and `right_indices = [5,6,8]` (data points without a brown cap)
 
-![](2024-02-18-21-19-53.png)
+![](./img/2024-02-18-21-19-53.png)
 
 <a name="ex02"></a>
 ### Exercise 2
@@ -327,14 +327,14 @@ CASE 1:
 Left indices:  [0, 1, 2, 3, 4, 7, 9]
 Right indices:  [5, 6, 8]
 ```
-![](2024-02-18-21-20-40.png)
+![](./img/2024-02-18-21-20-40.png)
 
 ```py
 CASE 2:
 Left indices:  [0, 2, 4]
 Right indices:  [6, 8]
 ```
-![](2024-02-18-21-20-53.png)
+![](./img/2024-02-18-21-20-53.png)
 
 ```py
 All tests passed.
@@ -563,4 +563,4 @@ generate_tree_viz(root_indices, y_train, tree)
 #   -- Right leaf node with indices [2, 3, 6, 9]
 ```
 
-![](2024-02-18-21-23-57.png)
+![](./img/2024-02-18-21-23-57.png)
