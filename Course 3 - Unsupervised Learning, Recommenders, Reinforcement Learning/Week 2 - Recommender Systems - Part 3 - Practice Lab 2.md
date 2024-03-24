@@ -53,7 +53,7 @@ bygenre_df = pd.read_csv("./data/content_bygenre_df.csv")
 top10_df
 ```
 
-![](2024-03-24-23-03-04.png)
+![](./img/2024-03-24-23-03-04.png)
 
 The next table shows information sorted by genre. The number of ratings per genre vary substantially. Note that a movie may have multiple genre's so the sum of the ratings below is larger than the number of original ratings.
 
@@ -61,7 +61,7 @@ The next table shows information sorted by genre. The number of ratings per genr
 bygenre_df
 ```
 
-![](2024-03-24-23-03-23.png)
+![](./img/2024-03-24-23-03-23.png)
 
 <a name="3"></a>
 ## 3 - Content-based filtering with a neural network
@@ -70,7 +70,7 @@ In the collaborative filtering lab, you generated two vectors, a user vector and
 
 Content-based filtering also generates a user and movie feature vector but recognizes there may be other information available about the user and/or movie that may improve the prediction. The additional information is provided to a neural network which then generates the user and movie vector as shown below.
 
-![](2024-03-24-23-03-45.png)
+![](./img/2024-03-24-23-03-45.png)
 
 <a name="3.1"></a>
 ### 3.1 Training Data
@@ -103,7 +103,7 @@ Let's look at the first few entries in the user training array.
 pprint_train(user_train, user_features, uvs,  u_s, maxcount=5)
 ```
 
-![](2024-03-24-23-04-27.png)
+![](./img/2024-03-24-23-04-27.png)
 
 Some of the user and item/movie features are not used in training. In the table above, the features in brackets "[]" such as the "user id", "rating count" and "rating ave" are not included when the model is trained and used.
 
@@ -172,7 +172,7 @@ The scaled, shuffled data now has a mean of zero.
 ```py
 pprint_train(user_train, user_features, uvs, u_s, maxcount=5)
 ```
-![](2024-03-24-23-06-28.png)
+![](./img/2024-03-24-23-06-28.png)
 
 <a name="4"></a>
 ## 4 - Neural Network for content-based filtering
@@ -436,7 +436,7 @@ sorted_items = item_vecs[sorted_index]  #using unscaled vectors for display
 print_pred_movies(sorted_ypu, sorted_items, movie_dict, maxcount = 10)
 ```
 
-![](2024-03-24-23-09-25.png)
+![](./img/2024-03-24-23-09-25.png)
 
 <a name="5.2"></a>
 ### 5.2 - Predictions for an existing user.
@@ -468,7 +468,7 @@ sorted_y     = y_vecs[sorted_index]
 print_existing_user(sorted_ypu, sorted_y.reshape(-1,1), sorted_user, sorted_items, ivs, uvs, movie_dict, maxcount = 50)
 ```
 
-![](2024-03-24-23-09-51.png)
+![](./img/2024-03-24-23-09-51.png)
 
 The model prediction is generally within 1 of the actual rating though it is not a very accurate predictor of how a user rates specific movies. This is especially true if the user rating is significantly different than the user's genre average. You can vary the user id above to try different users. Not all user id's were used in the training set.
 
@@ -573,7 +573,7 @@ print(f"size of all predicted movie feature vectors: {vms.shape}")
 
 Let's now compute a matrix of the squared distance between each movie feature vector and all other movie feature vectors:
 
-![](2024-03-24-23-11-46.png)
+![](./img/2024-03-24-23-11-46.png)
 
 We can then find the closest movie by finding the minimum along each row. We will make use of [numpy masked arrays](https://numpy.org/doc/1.21/user/tutorial-ma.html) to avoid selecting the same movie. The masked values along the diagonal won't be included in the computation.
 
@@ -600,6 +600,6 @@ table = tabulate.tabulate(disp, tablefmt='html', headers="firstrow")
 table
 ```
 
-![](2024-03-24-23-12-10.png)
+![](./img/2024-03-24-23-12-10.png)
 
 The results show the model will generally suggest a movie with similar genre's.
