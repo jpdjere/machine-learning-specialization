@@ -1,52 +1,62 @@
 # Reinforcement Learning introduction
 
-## What is Reinforcement Learning? Welcome to this final week of the machine learning specialization. 
+## What is Reinforcement Learning? 
 
-It's a little bit bittersweet for $me$ that we're approaching the end of this specialization, but we're looking forward to this week, sharing with we some exciting ideas about reinforcement learning. In machine learning, reinforcement learning is one of those ideas that while not very widely applied in commercial applications yet today, is one of the pillars of machine learning. And has lots of exciting research backing it up and improving it every single day. 
+In machine learning, reinforcement learning is one of those ideas that, while not very widely applied in commercial applications today, is one of the pillars of machine learning. And it has lots of exciting research backing it up and improving it every single day. 
 
-So let's start by taking a look at what is reinforcement learning. Let's start with an example. Here's a picture of an autonomous helicopter. 
+So let's start by taking a look at what is reinforcement learning. 
 
-This is actually the Stanford autonomous helicopter, weighs 32 pounds and it's actually sitting in $my$ office right now. Like many other autonomous helicopters, it's instrumented with an onboard computer, GPS, accelerometers, and gyroscopes and the magnetic compass so it knows where it is at all times quite accurately. And if I were to give we the keys to this helicopter and ask we to write a program to fly it, how would we do so? 
+Let's start with an example. Here's a picture of an autonomous helicopter:
 
-Radio controlled helicopters are controlled with joysticks like these and so the task is ten times per second we're given the position and orientation and speed and so on of the helicopter. And we have to decide how to move these two control sticks in order to keep the helicopter balanced in the air. By the way, I've flown radio controlled helicopters as well as quad rotor drones myself. 
+![](2024-03-25-23-04-44.png)
 
-And radio controlled helicopters are actually quite a bit harder to fly, quite a bit harder to keep balanced in the air. So how do we write a program to do this automatically? Let $me$ show we a fun section of something we got a Stanford autonomous helicopter to do. 
+This is actually the Stanford autonomous helicopter, weighs 32 pounds. Like many other autonomous helicopters, it's instrumented with an onboard computer, GPS, accelerometers, and gyroscopes and the magnetic compass so it knows where it is at all times quite accurately. 
 
-Here's a section of it flying under the control of a reinforcement learning algorithm. And let $me$ play the section. I was actually the cameraman that day and this is the helicopter flying on the computer control and if I zoom out the section, we see the trees planted in the sky. 
+If we were to have the keys to this helicopter and ask ourself to write a program to fly it, how would we do so? 
 
-So using reinforcement learning, we actually got this helicopter to learn to fly upside down. We told it to fly upside down. And so reinforcement learning has been used to get helicopters to fly a wide range of stunts or we call them aerobatic maneuvers. 
+Hw do we write a program to do this automatically, to keep an helicopter balanced in the air? How do we get a helicopter to fly itself using reinforcement learning? 
 
-By the way, if we're interested in seeing other sections, we can also check them out at this URL. So how do we get a helicopter to fly itself using reinforcement learning? The task is given the position of the helicopter to decide how to move the control sticks. 
+The task is: given the position of the helicopter, decide how to move the control sticks. 
 
-In reinforcement learning, we call the position and orientation and speed and so on of the helicopter the state s. And so the task is to find a function that maps from the state of the helicopter to an action a, meaning how far to push the two control sticks in order to keep the helicopter balanced in the air and flying and without crashing. One way we could attempt this problem is to use supervised learning. 
+In reinforcement learning, we call the position and orientation and speed and so on of the helicopter the state $s$. And so the task is to find a function that maps from the state $s$ of the helicopter to an action $a$, meaning how far to push the two control sticks in order to keep the helicopter balanced in the air and flying and without crashing.
 
-It turns out this is not a great approach for autonomous helicopter flying. But we could say, well if we could get a bunch of observations of states and maybe have an expert human pilot tell us what's the best action $y$ to take. we could then train a neural network using supervised learning to directly learn the mapping from the states s which we're calling $x$ here, to an action a which we're calling the label $y$ here. 
+![](2024-03-25-23-07-58.png)
 
-But it turns out that when the helicopter is moving through the air is actually very ambiguous, what is the exact one right action to take. Do we tilt a bit to the left or a lot more to the left or increase the helicopter stress a little bit or a lot? It's actually very difficult to get a data set of $x$ and the ideal action y. 
+One (incorrect) way we could attempt this problem is to use supervised learning. If we could get a bunch of observations of states and maybe have an expert human pilot tell us what's the best action $y$ to take. We could then train a neural network using supervised learning to directly learn the mapping from the states $s$ which we're calling $x$ here, to an action a which we're calling the label $y$ here. 
 
-So that's why for a lot of task of controlling a robot like a helicopter and other robots, the supervised learning approach doesn't work well and we instead use reinforcement learning. Now a key input to a reinforcement learning is something called the reward or the reward function which tells the helicopter when it's doing well and when it's doing poorly. So the way I like to think of the reward function is a bit like training a dog. 
+But it turns out that when the helicopter is moving through the air is actually very ambiguous to decide what is the exact one right action to take. Do we tilt a bit to the left or a lot more to the left or increase the helicopter stress a little bit or a lot? It's actually very difficult to get a data set of $x$ and the ideal action $y$. 
 
-When I was growing up, $my$ family had a dog and it was $my$ job to train the dog or the puppy to behave. So how do we get a puppy to behave well? Well, we can't demonstrate that much to the puppy. 
+So that's why for a lot of task of controlling a robot like a helicopter and other robots, the supervised learning approach doesn't work well and we instead use reinforcement learning.
 
-Instead we let it do its thing and whenever it does something good, we go, good dog. And whenever they did something bad, we go, bad dog. And then hopefully it learns by itself how to do more of the good dog and fewer of the bad dog things. 
+![](2024-03-25-23-09-35.png)
 
-So training with the reinforcement learning algorithm is like that. When the helicopter's flying well, we go, good helicopter and if it does something bad like crash, we go, bad helicopter. And then it's the reinforcement learning algorithm's job to figure out how to get more of the good helicopter and fewer of the bad helicopter outcomes. 
 
-One way to think of why reinforcement learning is so powerful is we have to tell it what to do rather than how to do it. And specifying the reward function rather than the optimal action gives we a lot more flexibility in how we design the system. Concretely for flying the helicopter, whenever it is flying well, we may give it a reward of plus one every second it is flying well. 
+Now a key input to a reinforcement learning is something called **the reward or the reward function** which tells the helicopter when it's doing well and when it's doing poorly. 
 
-And maybe whenever it's flying poorly we may give it a negative reward or if it ever crashes, we may give it a very large negative reward like negative 1,000. And so this would incentivize the helicopter to spend a lot more time flying well and hopefully to never crash. But here's another fun section. 
+We can think of the reward function is a bit like training a dog. How do we get a puppy to behave well? We can't demonstrate that much to the puppy; instead we let it do its thing and whenever it does something good, we go, "good dog". And whenever they did something bad, we go, "bad dog". And then hopefully it learns by itself based on these reactions. 
 
-I was using the good dog bad dog analogy for reinforcement learning for many years. And then one day I actually managed to get $my$ hands on a robotic dog and could actually use this reinforcement learning good dog bad dog methodology to train a robot dog to get over obstacles. So this is a section of a robot dog that using reinforcement learning, which rewards it, moving toward the left of the screen has learned how to place its feet carefully or climb over a variety of obstacles. 
+So training with the reinforcement learning algorithm is like that. When the helicopter's flying well, we go, "good helicopter" and if it does something bad like crash, we go, "bad helicopter". And then it's the reinforcement learning algorithm's job to figure out how to get more of the good helicopter and fewer of the bad helicopter outcomes. 
 
-And if we think about what it takes to program a dog like this, I have no idea, I really don't know how to tell it what's the best way to place its legs to get over a given obstacle. All of these things were figured out automatically by the robot just by giving it rewards that incentivizes it, making progress toward the goal on the left of the screen. Today, reinforcement learning has been successfully applied to a variety of applications ranging from controlling robots. 
+**Specifying the reward function rather than the optimal action gives we a lot more flexibility in how we design the system.** 
 
-And in fact later this week in the practice lab, we implement for yourself a reinforcement learning algorithm to land a lunar lander in simulation. It's also been used for factory optimization. How do we rearrange things in the factory to maximize throughput and efficiency as well as financial stock trading. 
+Concretely for flying the helicopter, whenever it is flying well, we may give it a reward of plus one (+1) every second it is flying well. 
 
-For example, one of $my$ friends was working on efficient stock execution. So if we decided to sell a million shares over the next several days, well, we may not want to dump a million shares on the stock market suddenly because that will move prices against we. So what's the best way to sequence out our trades over time so that we can sell the shares we want to sell and hopefully get the best possible price for them? 
+And whenever it's flying poorly we may give it a negative reward or if it ever crashes, we may give it a very large negative reward like negative 1000. 
 
-Finally, there have also been many applications of reinforcement learning to playing games, everything from checkers to chess to the card game of bridge to go as well as for playing many section games. So that's reinforcement learning. Even though reinforcement learning is not used nearly as much as supervised learning, it is still used in a few applications today. 
+This would incentivize the helicopter to spend a lot more time flying well and hopefully to never crash. 
 
-And the key idea is rather than we needing to tell the algorithm what is the right output $y$ for every single input, all we have to do instead is specify a reward function that tells it when it's doing well and when it's doing poorly. And it's the job of the algorithm to automatically figure out how to choose good actions. With that, let's now go into the next section where we'll formalize the reinforcement learning problem and also start to develop algorithms for automatically picking good actions
+![](2024-03-25-23-13-46.png)
+
+Also: when training a robot dog to walk to a certain point, we might not have any idea what it takes to program a dog like that. Even though we might not know how to tell it what's the best way to place its legs to get over a given obstacle, all of these things were figured out automatically by the robot just by giving it rewards that incentivizes it, making progress toward the goal on the left of the screen. 
+
+Applications of reinforcement learning:
+
+- Controlling robots
+- Factory optimization
+- Financial (stock) trading
+- Playing games (including video games)
+
+So, **the key idea is: rather than we needing to tell the algorithm what is the right output $y$ for every single input $x$, all we have to do instead is specify a reward function that tells it when it's doing well and when it's doing poorly. And it's the job of the algorithm to automatically figure out how to choose good actions.** 
 
 ## Mars Rover example
 
