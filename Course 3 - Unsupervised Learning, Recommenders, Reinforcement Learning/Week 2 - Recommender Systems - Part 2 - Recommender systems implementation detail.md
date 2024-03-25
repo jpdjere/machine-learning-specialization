@@ -6,7 +6,7 @@ Back in the first course, we have seen how for linear regression, feature normal
 
 Let's take a look. Here's the dataset we have been using and cost function we used to learn the parameters for the model:
 
-![](2024-03-13-23-09-29.png)
+![](./img/2024-03-13-23-09-29.png)
 
  In order to explain mean normalization, we're actually going to add fifth user, Eve, who has not yet rated any movies. Adding mean normalization will help the algorithm make better predictions on the user Eve. 
 
@@ -18,15 +18,15 @@ But if $w = [0 \space 0]$ and $b^{(5)} = 0$ are the parameters for user 5, (Eve)
 
 **Mean normalization will help this algorithm come up with better predictions of the movie ratings for a new user that has not yet rated any movies.**
 
-![](2024-03-13-23-17-36.png)
+![](./img/2024-03-13-23-17-36.png)
 
 In order to describe mean normalization, we'll create a matrix with all user-movie ratings and then calculate a new vector $\mu$ that is the average rating of each movie, but only for user which have rated the movie, ignoring question marks:
 
-![](2024-03-13-23-19-01.png)
+![](./img/2024-03-13-23-19-01.png)
 
 Now, instead of using the original 0 to 5 star ratings over, we're going to take the averages and subtract from every rating the mean rating that it was given:
 
-![](2024-03-13-23-21-42.png)
+![](./img/2024-03-13-23-21-42.png)
 
 And these new values on the right become our new values of $y(i,j)$. So, we're going to pretend that user 1 had given a 2.5 rating to movie 1 and a -2.25 rating to movie 4. 
 
@@ -34,11 +34,11 @@ And using this, we can then learn $w^{(j)}, b^{(j})$ and $x^{(i)}$: in the same 
 
 But because we had subtracted off $\mu_i$ for movie $i$ during this mean normalization step, in order to avoid predicting a negative star rating (which is impossible for user rates from 0 to 5 stars), we have to add back this $\mu_i$ which is just the value we have subtracted out.
 
-![](2024-03-13-23-26-08.png)
+![](./img/2024-03-13-23-26-08.png)
 
 For example, for Eve:
 
-![](2024-03-13-23-27-06.png)
+![](./img/2024-03-13-23-27-06.png)
 
 So this prediction of 2.5 seems more reasonable, as it is more reasonable to think that Eve is likely to rate this movie 2.5 rather than that she will rate all movie zero stars just because she hasn't rated any movies yet. 
 
@@ -57,11 +57,11 @@ Normalizing the columns would help if there was a brand new movie that no one ha
 
 In this section, we'll take a look at how we can use TensorFlow to implement the collaborative filtering algorithm.
 
-![](2024-03-13-23-38-57.png)
+![](./img/2024-03-13-23-38-57.png)
 
 Sometimes computing this derivative or partial derivative term can be difficult. But it turns out that TensorFlow can help with that. Let's see how:
 
-![](2024-03-13-23-55-48.png)
+![](./img/2024-03-13-23-55-48.png)
 
 Here we have a cost function $J = (wx - 1)^2$ and the gradient descent algorithm will repeat until convergence the update $ w = w - \alpha \frac{d}{dw}J(w,b) $. 
 
@@ -135,7 +135,7 @@ for iter in range(iterations):
 
 If we are using gradient descent for collateral filtering, recall that the cost function $J$ would be a function of $w$, $b$ as well as $x$. And if we are applying gradient descent, we take the partial derivative with respect to each of these three, and update them on each step, until convergence:
 
-![](2024-03-14-00-17-57.png)
+![](./img/2024-03-14-00-17-57.png)
 
 Maybe your're wondering why we couldn't just use a dense layer and then `model.compiler` and `model fit` like we've done previously?.The reason we couldn't use that old recipe is: **the collateral filtering algorithm and cost function don't neatly fit into the dense layer or the other standard neural network layer types of TensorFlow.**
 
@@ -145,7 +145,7 @@ That's why we had to implement it this other way where we would implement the co
 
 How do the websites do recommendations so that when we're looking at one item, it gives us other similar or related items to consider? It turns out the collaborative filtering algorithm gives us a nice way to find related items.
 
-![](2024-03-14-00-23-26.png)
+![](./img/2024-03-14-00-23-26.png)
 
 To find item **_k_** with $x^{(k)}$ similar to $x^{(i)}$:
 
