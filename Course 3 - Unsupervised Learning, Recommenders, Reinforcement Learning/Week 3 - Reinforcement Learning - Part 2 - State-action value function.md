@@ -204,38 +204,38 @@ There's a generalization of the reinforcement learning framework we've talked ab
 
 Continuing with our simplifying Mars Rover example, let's say we take the action and command it to go left. Most of the time we'll succeed but what if 10 percent of the time or 0.1 of the time, it actually ends up accidentally slipping and going in the opposite direction? So, if we command it to go left, it has a 90 percent chance or 0.9 chance of correctly going in the left direction, but a 0.1 chance of actually heading to the right so that it has a 90 percent chance of ending up in state 3 and a 10 percent chance of ending up in state 5.
 
-![](2024-03-26-17-00-47.png)
+![](./img/2024-03-26-17-00-47.png)
 
 Conversely, if we were to command it to go right, it has a 0.9 chance of ending up in state 5 and 0.1 chance of ending up in state 3.
 
-![](2024-03-26-17-01-49.png)
+![](./img/2024-03-26-17-01-49.png)
 
 This would be an example of a **stochastic environment**. Let's see what happens in this reinforcement learning problem. Let's say we use this policy shown here, where we go left in states 2, 3, and 4 and  try to go right in state 5.
 
-![](2024-03-26-17-02-28.png)
+![](./img/2024-03-26-17-02-28.png)
 
 If we were to start in state 4 and we were to follow this policy, then the actual sequence of states we visit may be random. For example, in state 4, we will go left, and maybe we're a little bit lucky, and it actually gets the state 3, and then we try to go left again, and maybe it actually gets there. We tell it to go left again, and it gets to the terminal that state. 
 
 If this is what happens, we end up with the sequence of rewards $0 \rightarrow 0 \rightarrow 0 \rightarrow 100$.
 
-![](2024-03-26-17-04-58.png)
+![](./img/2024-03-26-17-04-58.png)
 
 
 But if we were to try this exact same policy a second time, maybe we're a little less lucky, the second time we start here. Try to go left and say it succeeds so a zero from state 4 zero from state 3, here we tell it to go left, but we've got unlucky this time and the robot slips and ends up heading back to state 4 instead. Then we tell it to go left, and left, and left, and eventually get to that reward of 100. In that case, this will be the sequence of rewards we observe: $0 \rightarrow 0 \rightarrow 0 \rightarrow  0 \rightarrow  0 \rightarrow 100$.
 
-![](2024-03-26-17-06-02.png)
+![](./img/2024-03-26-17-06-02.png)
 
 Itis even possible, if we tell from state 4 to go left following the policy, we may get unlucky even on the first step and we end up going to state 5 because it slipped. Then on state 5, we command it to go right, and it succeeds as we end up in the terminal case. In this case, the sequence of rewards we see will be $0 \rightarrow 0 \rightarrow 40$.
 
-![](2024-03-26-17-07-18.png)
+![](./img/2024-03-26-17-07-18.png)
 
 We had previously written out the return as this sum of discounted rewards. But when the reinforcement learning problem is stochastic, there isn't one sequence of rewards that we see for sure instead we see this sequence of different rewards.
 
-![](2024-03-26-17-07-35.png)
+![](./img/2024-03-26-17-07-35.png)
 
 **In a stochastic reinforcement learning problem**, what we're interested in is not maximizing the return because that's a random number. What **we're interested in is maximizing the average value of the sum of discounted rewards**. By average value, I mean if we were to take our policy and try it out a thousand times or a 100,000 times or a million times, we get lots of different reward sequences and if we were to take the average over all of these different sequences of the sum of discounted rewards, then that's what we call the **expected return**.
 
-![](2024-03-26-17-08-24.png)
+![](./img/2024-03-26-17-08-24.png)
 
 In statistics, the term expected is just another way of saying average. But what this means is we want to maximize what we expect to get on average in terms of the sum of discounted rewards. 
 
@@ -247,11 +247,11 @@ The job of reinforcement learning algorithm is to choose a policy $\pi$ to maxim
 
 To summarize: when we have a stochastic reinforcement learning problem or a stochastic Markov decision process the goal is to choose a policy to tell us what action to take in state $s$ so as to maximize the expected return.
 
-![](2024-03-26-17-10-58.png)
+![](./img/2024-03-26-17-10-58.png)
 
 The last way that this changes when in a stochastic environment is that it modifies the Bellman equation a little bit. The difference now is that when we take the action $a$ in state $s$, the next state $s'$ we get to is actually random.
 
-![](2024-03-26-17-12-02.png)
+![](./img/2024-03-26-17-12-02.png)
 
 When we're in state 3 and we tell it to go left the next state $s'$  could be the state 2, or it could be the state 4. $s'$ is now random, which is why we also put an average operator or unexpected operator sorrounding the max element:
 
@@ -259,16 +259,16 @@ $$ Q(s,a) = R_{s} + \gamma * E[ \max_{a'}Q(s',a')] $$
 
 We say that the total return from state $s$, taking action $a$, once, and then behaving optimally, is equal to the reward we get right away, also called the immediate reward, plus the discount factor, gamma, plus what we expect to get on average of the future returns. 
 
-![](2024-03-26-17-14-46.png)
+![](./img/2024-03-26-17-14-46.png)
 
 If we want to sharpen our intuition about what happens with these stochastic reinforcement learning problems, go back to the optional lab where we have the parameter `misstep_prob` which is the probability of our Mars Rover going in the opposite direction than we had commanded it to. 
 
 If we said misstep prop two is 0.1 and re-execute the Notebook and the numbers above are the optimal return if we were to take the best possible actions, take this optimal policy but the robot were to step in the wrong direction 10 percent of the time and below we see the $Q$ values for this stochastic MDP:
 
-![](2024-03-26-17-17-08.png)
+![](./img/2024-03-26-17-17-08.png)
 
 Notice that these values are now a little bit lower because we can't control the robot as well as before. The $Q$ values, as well as the optimal returns, have gone down a bit. 
 
 In fact, if we were to increase the misstep probability, say 40 percent of the time, then these values end up even lower because our degree of control over the robot has decreased.
 
-![](2024-03-26-17-18-04.png)
+![](./img/2024-03-26-17-18-04.png)
