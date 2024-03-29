@@ -207,139 +207,211 @@ We're going to call this $y^{(1)}$. When we compute this, it will be some number
 
 We'll save that number in the table as $y^{(1)}$, so that this pair $x^{(1)}$, $y^{(1)}$ becomes the first training example in this little dataset we're computing. 
 
+Now, we may be wondering, where does $Q(S', a')$ or $Q(s'^{(1)}, a')$ come from? Well, initially we don't know what is the Q function. 
 
---- here 9.19
-Now, we may be wondering, where does $Q(S', a' or Q(s'^1, a' come from. Well, initially we don't know what is the Q function. 
+But it turns out that when we don't know what is the Q function, we can start off with taking a totally random guess and the algorithm will work nonetheless. 
 
-But it turns out that when we don't know what is the Q function, we can start off with taking a totally random guess. What is the Q function? We'll see on the next slide that the algorithm will work nonetheless. 
+The algorithm will learn in every step and get better over time until it reaches the actual $Q$ function. 
 
-But in every step Q here is just going to be some guess. They'll get better over time it turns out of what is the actual Q function. Let's look at the second example. 
+Then we can do this for our second experience:
 
-If we had a second experience where we are in state S^2 to got to a^2, got that reward and then got to that state. Then we would create a second training example in this dataset, x^2, where the input is now S^2, a^2, so the first two elements go to computing the input x, and then y^2 will be equal to R(s^2 plus gamma max of a' Q(s' to a', and whatever this number is, y^2. We put this over here in our small but growing training set, and so on and so forth, until maybe we end up with 10,000 training examples with these x, $y$ pairs. 
+![](2024-03-27-22-47-01.png)
 
-What we'll see later is that we'll actually take this training set where the x's are inputs with 12 features and the y's are just numbers. We'll train a neural network with, say, the mean squared error loss to try to predict $y$ as a function of the input x. What I describe here is just one piece of the learning algorithm we'll use. 
+And then we can continue doing this for 10,000 different experiences and create a dataset of 10,000 training points.
 
-Let's put it all together on the next slide and see how it all comes together into a single algorithm. Let's take a look at what a full algorithm for learning the Q-function is like. First, we're going to take our neural network and initialize all the parameters of the neural network randomly. 
+![](2024-03-27-22-47-15.png)
 
-Initially we have no idea, whether it's a Q function, let's just pick totally random values of the weights. We'll pretend that this neural network is our initial random guess for the Q-function. This is a little bit like when we are training linear regression and we initialize all the parameters randomly and then use gradient descent to improve the parameters. 
+What we'll see later is that we'll actually take this training set where the $x$'s are inputs with 12 features and the $y$'s are just numbers and we'll train a neural network with, say, the mean squared error loss to try to predict $y$ as a function of the input $x$. What we describe here is just one piece of the learning algorithm we'll use. 
 
-Initializing it randomly for now is fine. What's important is whether the algorithm can slowly improve the parameters to get a better estimate. Next, we will repeatedly do the following; We will take actions in the Lunar Lander, so float around randomly, take some good actions, take some bad actions. 
+Let's put it all together and see how it all comes together into a single algorithm. Let's take a look at what a full algorithm for learning the Q-function is like. **First, we're going to take our neural network and initialize all the parameters of the neural network randomly.**
 
-It's okay either way. But we get lots of these tuples of when it was in some state, we took some action a get a reward R(s and we got to some state s prime. What we will do is store to 10,000 most recent examples of these tuples. 
+![](2024-03-27-22-48-44.png)
 
-As we run this algorithm, we will see many steps in the Lunar Lander, maybe hundreds of thousands(steps. But to make sure we don't end up using excessive computer memory, common practice is to just remember the 10,000 most recent such tuples that we saw taking actions in the MTP. This technique(storing the most recent examples only is sometimes called the replay buffer in reinforcement learning algorithm. 
+Initially we have no idea, what is the $Q$ function, so we just pick totally random values for the weights and that neural network is our initial random guess for the Q-function. This is a little bit like when we are training linear regression and we initialize all the parameters randomly and then use gradient descent to improve the parameters. 
 
-For now, we're just flying the Lunar Lander randomly, sometimes crashing, sometimes not and getting these tuples as experienced for our learning algorithm. Occasionally then we will train the neural network. In order to train the neural network, here's what we'll do. 
+Next, we will repeatedly do the following;
 
-We'll look at these 10,000 most recent tuples we had saved and create a training set of 10,000 examples. Training set needs lots of pairs of $x$ and y. For our training examples, $x$ will be the s, a from this part of the tuple. 
+- take actions in the Lunar Lander, so float around randomly, take some good actions, take some bad actions. Get lots of  tuples of when it was in some state $s$, we took some action $a$, got a reward $R(s)$ and we got to some state $s'$. 
+- store 10,000 most recent examples of the $(s, a, R(S), s')$ tuples.
 
-There'll be a list of 12 numbers, the 8 numbers for the state and the 4 numbers for the one-hot encoding of the action. The target value that we want a neural network to try to predict would be $y$ equals R(s plus Gamma max of a prime, Q(s prime a prime. How do we get this value of Q? 
+![](2024-03-27-22-56-47.png)
 
-Well, initially is this neural network that we had randomly initialized. It may not be a very good guess, but it's a guess. After creating these 10,000 training examples we'll have training examples $x_1$, y1 through $x_10$,000, y10,000. 
+As we run this algorithm, we will see many steps in the Lunar Lander, maybe hundreds of thousands of steps. But to make sure we don't end up using excessive computer memory, common practice is to just remember the 10,000 most recent such tuples that we saw taking actions in the MTP. This technique of storing the most recent examples only is sometimes called the **replay buffer** in reinforcement learning algorithms. 
 
-We'll train a neural network and we're going to call the new neural network Q new, such that Q new(s, a learns to approximate y. This is exactly training that neural network to output f with parameters $w$ and b, to input $x$ to try to approximate the target value y. Now, this neural network should be a slightly better estimates of what the Q function or the state action value function should be. 
+For now, we're just flying the Lunar Lander randomly, sometimes crashing, sometimes not and getting these tuples as experienced for our learning algorithm. 
 
-What we'll do is we're going to take Q and set it to this new neural network that we had just learned. Many of the ideas in this algorithm are due to Mnih et al. It turns out that if we run this algorithm where we start with a really random guess of the Q function, then use Bellman's equations to repeatedly try to improve the estimates of the Q function. 
+Occasionally then we will train the neural network. In order to train the neural network, we we'll look at these 10,000 most recent tuples we had saved and:
+- create a training set of 10,000 examples. As we said already, the training set needs lots of pairs of $x$ and $y$. For our training examples, $x$ will be the $(s, a)$ from the first two elements of the tuple (a list of 12 numbers, the 8 numbers for the state and the 4 numbers for the one-hot encoding of the action). Meanwhile, the target value that we want a neural network to try to predict would be $y$, which equals: $$R(s) + \gamma \max_{a} Q(s', a')$$
 
-Then by doing this over and over, taking lots of actions, training a model, that will improve our guess for the Q-function. For the next model we train, we now have a slightly better estimate of what is the Q function. Then the next model we train will be even better. 
+The values of $Q(s', a')$ from the previous equation will be initailly randomly initialized. It may not be a very good guess, but it's a guess, that will improve. After creating these 10,000 training examples we'll have training examples ($x_1$, $y_1$) through ($x_{10,000}$, $y_{10,000}$).
 
-When we update Q equals Q new. Then for the next time we train a model Q(s prime a prime will be an even better estimate. As we run this algorithm on every iteration, Q(s prime, a prime hopefully becomes an even better estimate of the Q function so that when we run the algorithm long enough, this will actually become a pretty good estimate of the true value of $Q(s, a)$, so that we can then use this to pick, hopefully good actions or the MTP. 
+![](2024-03-27-23-03-56.png)
 
-The algorithm we just saw is sometimes called the DQN algorithm which stands for Deep Q-Network because we're using deep learning and neural network to train a model to learn the Q functions. Hence DQN or DQ using a neural network. If we use the algorithm as I described it, it will work, okay, on the Lunar Lander. 
+Next: **we'll train a neural network and we're going to call the new neural network $Q_{new}$, such that $Q_{new}(s, a)$ learns to approximate $y$**:
 
-Maybe it'll take a long time to converge, maybe it won't land perfectly, but it'll work. But it turns out that with a couple of refinements to the algorithm, it can work much better. In the next few sections, let's take a look at some refinements to the algorithm that we just saw. 
+![](2024-03-27-23-05-07.png)
+
+This is exactly training that neural network to output $f$ with parameters $w$ and $b$, to input $x$ to try to approximate the target value $y$. Now, this neural network should be a slightly better estimate of what the $Q$ function or the state action value function should be. 
+
+What we'll do next is **we're going to take $Q$ and set it to this new neural network $Q_{new}$ that we had just learned.** It turns out that if we run this algorithm where we start with a really random guess of the Q function, then use Bellman's equations to repeatedly try to improve the estimates of the Q function, then by doing this over and over, taking lots of actions, training a model, that will improve our guess for the Q-function. 
+
+![](2024-03-27-23-07-16.png)
+
+For the next model we train, we now have a slightly better estimate of what is the Q function. Then the next model we train will be even better. Then for the next time we train a model $Q(s', a')$ will be an even better estimate. As we run this algorithm on every iteration, $Q(s', a')$ will become an even better estimate of the $Q$ function so that when we run the algorithm long enough, this will actually become a pretty good estimate of the true value of $Q(s, a)$, so that we can then use this to pick good actions.
+
+![](2024-03-27-23-09-11.png)
+
+The algorithm we just saw is sometimes called the **DQN algorithm** which stands for **Deep Q-Network** because we're using deep learning and neural network to train a model to learn the Q functions.
+
+If we use the algorithm as I described it, it will work on the Lunar Lander. However, it will probably take a long time to converge, maybe it won't land perfectly, but it'll work. But it turns out that with a couple of refinements to the algorithm, it can work much better. In the next few sections, let's take a look at some refinements to the algorithm that we just saw. 
 
 ## Algorithm refinement: Imporved neural network architecture
 
-In the last section, we saw a neural network architecture that will input the state and action and attempt to output the Q function, $Q(s, a)$. It turns out that there's a change to neural network architecture that make this algorithm much more efficient. Most implementations of DQN actually use this more efficient architecture that we'll see in this section. 
+In the last section, we saw a neural network architecture that will input the state and action and attempt to output the $Q$ function, $Q(s, a)$. However, there's a change to neural network architecture that make this algorithm much more efficient. Most implementations of **DQN** actually use this more efficient architecture that we'll see in this section. 
 
-Let's take a look. This was the neural network architecture we saw previously, where it would input 12 numbers and output $Q(s, a)$. Whenever we are in some state s, we would have to carry out inference in the neural network separately four times to compute these four values so as to pick the action a that gives us the largest Q value. 
+This was the neural network architecture we saw previously, where it would input 12 numbers and output $Q(s, a)$: 
 
-This is inefficient because we have to carry our inference four times from every single state. Instead, it turns out to be more efficient to train a single neural network to output all four of these values simultaneously. This is what it looks like. 
+![](2024-03-27-23-13-27.png)
 
-Here's a modified neural network architecture where the input is eight numbers corresponding to the state of the Lunar Lander. It then goes through the neural network with 64 units in the first hidden layer, 64 units in the second hidden layer. Now the output unit has four output units, and the job of the neural network is to have the four output units output Q(s, nothing, Q(s, left, Q(s, main, and q(s, right. 
+Whenever we are in some state $s$, we would have to carry out inference in the neural network separately four times to compute these four values so as to pick the action $a$ that gives us the largest $Q$ value. 
 
-The job of the neural network is to compute simultaneously the Q value for all four possible actions for when we are in the state s. This turns out to be more efficient because given the state s we can run inference just once and get all four of these values, and then very quickly pick the action a that maximizes $Q(s, a)$. we notice also in Bellman's equations, there's a step in which we have to compute max over a prime Q(s prime a prime, this multiplied by gamma and then there was plus R(s up here. 
+This is inefficient because we have to carry our inference four times from every single state. Instead, **we can more efficiently train a single neural network to output all four of these values simultaneously.** This is what it looks like:
 
-This neural network also makes it much more efficient to compute this because we're getting Q(s prime a prime for all actions a prime at the same time. we can then just pick the max to compute this value for the right-hand side of Bellman's equations. This change to the neural network architecture makes the algorithm much more efficient, and so we will be using this architecture in the practice lab. 
+![](2024-03-27-23-14-49.png)
 
-Next, there's one other idea that'll help the algorithm a lot which is something called an Epsilon-greedy policy, which affects how we choose actions even while we're still learning. Let's take a look at the next section , and what that means. ## Algorithm refinement: $\epsilon$-greedy policy
+It is a modified neural network architecture where the input is eight numbers corresponding to the state of the Lunar Lander - notice the actions are not part of the input but of part of the output. It then goes through the neural network with 64 units in the first hidden layer, 64 units in the second hidden layer. And the output unit has four output units, and **the job of the neural network is to have the four output units output $Q(s, nothing)$, $Q(s, left)$, $Q(s, main)$, and $Q(s, right)$**. 
 
-The learning algorithm that we developed, even while we're still learning how to approximate Q(s,a), we need to take some actions in the Lunar Lander. 
+So, the job of the neural network is to **compute simultaneously the $Q$ value for all four possible actions for when we are in the state $s$**. This turns out to be more efficient because given the state $s$ we can run inference just once and get all four of these values, and then very quickly pick the action a that maximizes $Q(s, a)$. 
 
-How do we pick those actions while we're still learning? The most common way to do so is to use something called an Epsilon-greedy policy. Let's take a look at how that works. 
+Notice also in Bellman's equations, there's a step in which we have to compute $\max_{a'} Q(s', a')$ to get the target value. With this architecture, it is much more efficient, because we can compute all the $Q(s', a')$ values for all actions a prime at the same time.
 
-Here's the algorithm that we saw earlier. One of the steps in the algorithm is to take actions in the Lunar Lander. When the learning algorithm is still running, we don't really know what's the best action to take in every state. 
+Then we can then just pick the max to compute this value for the right-hand side of Bellman's equations. This change to the neural network architecture makes the algorithm much more efficient, and so we will be using this architecture in the practice lab. 
 
-If we did, we'd already be done learning. But even while we're still learning and don't have a very good estimate of Q(s,a) yet, how do we take actions in this step of the learning algorithm? Let's look at some options. 
 
-When we're in some state s, we might not want to take actions totally at random because that will often be a bad action. One natural option would be to pick whenever in state s, pick an action a that maximizes Q(s,a). We may say, even if Q(s,a) is not a great estimate of the Q function, let's just do our best and use our current guess of Q(s,a) and pick the action a that maximizes it. 
+## Algorithm refinement: $\epsilon$-greedy policy
 
-It turns out this may work okay, but isn't the best option. Instead, here's what is commonly done. Here's option 2, which is most of the time, let's say with probability of 0.95, pick the action that maximizes Q(s,a). 
+In the learning algorithm that we developed, even while we're still learning how to approximate $Q(s,a)$, we need to take some actions in the Lunar Lander. 
 
-Most of the time we try to pick a good action using our current guess of Q(s,a). But the small fraction of the time, let's say, five percent of the time, we'll pick an action a randomly. Why do we want to occasionally pick an action randomly? 
+So, how do we pick those actions while we're still learning? The most common way to do so is to use something called an $\epsilon-greedy policy$. Let's take a look at how that works. 
 
-Well, here's why. Suppose there's some strange reason that Q(s,a) was initialized randomly so that the learning algorithm thinks that firing the main thruster is never a good idea. Maybe the neural network parameters were initialized so that Q(s, main) is always very low. 
+Here's the algorithm that we saw earlier. One of the steps in the algorithm is to take actions in the Lunar Lander: 
 
-If that's the case, then the neural network, because it's trying to pick the action a that maximizes Q(s,a), it will never ever try firing the main thruster. Because it never ever tries firing the main thruster, it will never learn that firing the main thruster is actually sometimes a good idea. Because of the random initialization, if the neural network somehow initially gets stuck in this mind that some things are bad idea, just by chance, then option 1, it means that it will never try out those actions and discover that maybe is actually a good idea to take that action, like fire the main thrusters sometimes. 
+![](2024-03-27-23-27-50.png)
 
-Under option 2 on every step, we have some small probability of trying out different actions so that the neural network can learn to overcome its own possible preconceptions about what might be a bad idea that turns out not to be the case. This idea of picking actions randomly is sometimes called an exploration step. Because we're going to try out something that may not be the best idea, but we're going to just try out some action in some circumstances, explore and learn more about an action in the circumstance where we may not have had as much experience before. 
+So, when the learning algorithm is still running, we don't really know what's the best action to take in every state. If we did, we'd already be done learning. 
 
-Taking an action that maximizes Q(s,a), sometimes this is called a greedy action because we're trying to actually maximize our return by picking this. Or in the reinforcement learning literature, sometimes we'll also hear this as an exploitation step. I know that exploitation is not a good thing, nobody should ever explore anyone else. 
+But  **while we're still learning and don't have a very good estimate of $Q(s,a)$ yet, how do we take actions in this step of the learning algorithm?** Let's look at some options:
 
-But historically, this was the term used in reinforcement learning to say, let's exploit everything we've learned to do the best we can. In the reinforcement learning literature, sometimes we hear people talk about the exploration versus exploitation trade-off, which refers to how often do we take actions randomly or take actions that may not be the best in order to learn more, versus trying to maximize our return by say, taking the action that maximizes Q (s,a). This approach, that is option 2, has a name, is called an Epsilon-greedy policy, where here Epsilon is 0.05 is the probability of picking an action randomly. 
+![](2024-03-27-23-28-35.png)
 
-This is the most common way to make our reinforcement learning algorithm explore a little bit, even whilst occasionally or maybe most of the time taking greedy actions. By the way, lot of people have commented that the name Epsilon-greedy policy is confusing because we're actually being greedy 95 percent of the time, not five percent of the time. So maybe 1 minus Epsilon-greedy policy, because it's 95 percent greedy, five percent exploring, that's actually a more accurate description of the algorithm. 
+When we're in some state $s$, we will **not want to take actions totally at random because that will often be a bad action**. 
 
-But for historical reasons, the name Epsilon-greedy policy is what has stuck. This is the name that people use to refer to the policy that explores actually Epsilon fraction of the time rather than this greedy Epsilon fraction of the time. Lastly, one of the trick that's sometimes used in reinforcement learning is to start off Epsilon high. 
+One natural - **option 1** - would be to p pick an action a that maximizes $Q(s,a)$. We may say, even if $Q(s,a)$ is not a great estimate of the $Q$ function yet, let's just do our best and use our current guess of $Q(s,a)$ and pick the action a that maximizes it. 
 
-Initially, we are taking random actions a lot at a time and then gradually decrease it, so that over time we are less likely to take actions randomly and more likely to use our improving estimates of the Q-function to pick good actions. For example, in the Lunar Lander exercise, we might start off with Epsilon very, very high, maybe even Epsilon equals 1.0. we're just picking actions completely at random initially and then gradually decrease it all the way down to say 0.01, so that eventually we're taking greedy actions 99 percent of the time and acting randomly only a very small one percent of the time. 
+It turns out this may work okay, but isn't the best option. 
 
-If this seems complicated, don't worry about it. We'll provide the code in the Jupiter lab that shows we how to do this. If we were to implement the algorithm as we've described it with the more efficient neural network architecture and with an Epsilon-greedy exploration policy, we find that they work pretty well on the Lunar Lander. 
+Instead, here's what is commonly done. In **Option 2**, most of the time, with for example, probability of 0.95, pick the action that maximizes $Q(s,a)$. The remaining 0.05 o of the time, pick an action randomly. 
 
-One of the things that I've noticed for reinforcement learning algorithm is that compared to supervised learning, they're more finicky in terms of the choice of hyper parameters. For example, in supervised learning, if we set the learning rate a little bit too small, then maybe the algorithm will take longer to learn. Maybe it takes three times as long to train, which is annoying, but maybe not that bad. 
+Why do we want to occasionally pick an action randomly? Suppose for some strange reason $Q(s,a)$ was initialized randomly so that the learning algorithm thinks that firing the main thruster is never a good idea. Maybe the neural network parameters were initialized so that $Q(s, main)$ is always very low. 
 
-Whereas in reinforcement learning, find that if we set the value of Epsilon not quite as well, or set other parameters not quite as well, it doesn't take three times as long to learn. It may take 10 times or a 100 times as long to learn. Reinforcement learning algorithms, I think because they're are less mature than supervised learning algorithms, are much more finicky to little choices of parameters like that, and it actually sometimes is frankly more frustrating to tune these parameters with reinforcement learning algorithm compared to a supervised learning algorithm. 
+If that's the case, then the neural network, because it's trying to pick the action a that maximizes $Q(s,a)$, will never ever try firing the main thruster. Because it never ever tries firing the main thruster, it will never learn that firing the main thruster is actually sometimes a good idea. Because of the random initialization, if the neural network somehow initially gets stuck in this mind that some things are bad idea, just by chance, then if using option 1, it means that it will never try out those actions and discover that maybe is actually a good idea to take that action.
 
-But again, if we're worried about the practice lab, the program exercise, we'll give we a sense of good parameters to use in the program exercise so that we should be able to do that and successfully learn the Lunar Lander, hopefully without too many problems. In the next optional section, I want us to drive a couple more algorithm refinements, mini batching, and also using soft updates. Even without these additional refinements, the algorithm will work okay, but these are additional refinements that make the algorithm run much faster. 
+Instead, under option 2 on every step, we have some small probability of trying out different actions so that the neural network can learn to overcome its own possible preconceptions about what might be a bad idea. **This idea of picking actions randomly is sometimes called an "exploration" step**.
 
-It's okay if we skip this section, we've provided everything we need in the practice lab to hopefully successfully complete it. But if we're interested in learning about more of these details of two named reinforcement learning algorithms, then come with $me$ and let's see in the next section, mini batching and soft updates. ## Algorithm refinement: Mini-batch and soft updates
+On the other hand, **taking an action that maximizes $Q(s,a)$ is called a greedy action because we're trying to actually maximize our return by picking the action that we think will maximize the return.** In the reinforcement learning literature, this is called an "**exploitation**" step.
+
+In reinforcement learning, we talk about the **exploration versus exploitation trade-off**, which refers to how often do we take actions randomly or take actions that may not be the best in order to learn more, versus trying to maximize our return by say, taking the action that maximizes $Q(s,a)$.
+
+This approach is called the $\epsilon$-greedy policy, where here epsilon is 0.05, the probability of picking an action randomly. 
+
+Lastly, one of the trick that's sometimes used in reinforcement learning is to s**tart off $\epsilon$ high**. 
+
+Initially, we are taking random actions a lot at a time and then gradually decrease it, so that over time we are less likely to take actions randomly and more likely to use our improving estimates of the Q-function to pick good actions. For example, in the Lunar Lander exercise, we might start off with Epsilon very, very high, maybe even epslon equals 1.0, so we're just picking actions completely at random initially and then gradually decrease it all the way down to say 0.01, so that eventually we're taking greedy actions 99 percent of the time and acting randomly only a very small one percent of the time.
+
+![](2024-03-27-23-39-20.png)
+
+One additional realization: reinforcement learning algorithms, compared to supervised learning, are more finicky in terms of the choice of hyperparameters. For example, in supervised learning, if we set the learning rate a little bit too small, then maybe the algorithm will take longer to learn, maybe something like 3 times as long.
+
+However, in reinforcement learning, we find that if we set the value of $\epsilon$ not quite as well, or set other parameters not quite as well, it doesn't take three times as long to learn, it may take 10 times or a 100 times as long to learn. 
+
+Reinforcement learning algorithms, because they're are less mature than supervised learning algorithms, are much more finicky to little choices of parameters like that, and it actually sometimes is frankly more frustrating to tune these parameters with reinforcement learning algorithm compared to a supervised learning algorithm. 
+
+## Algorithm refinement: Mini-batch and soft updates
 
 In this section, we'll look at two further refinements to the reinforcement learning algorithm we've seen. 
 
-The first idea is called using mini-batches, and this turns out to be an idea they can both speedup our reinforcement learning algorithm and it's also applicable to supervised learning. They can help we speed up our supervised learning algorithm as well, like training a neural network, or training a linear regression, or logistic regression model. The second idea we'll look at is soft updates, which it turns out will help our reinforcement learning algorithm do a better job to converge to a good solution. 
+### Mini-batches
 
-Let's take a look at mini-batches and soft updates. To understand mini-batches, let's just look at supervised learning to start. Here's the dataset of housing sizes and prices that we had seen way back in the first course of this specialization on using linear regression to predict housing prices. 
+The first idea is **using mini-batches**, an approach that can both speed up our reinforcement learning algorithm but is also applicable to supervised learning, including training a neural network, or training a linear regression, or a logistic regression model. 
 
-There we had come up with this cost function for the parameters $w$ and b, it was 1 over 2m, sum of the prediction minus the actual value y^​2. The gradient descent algorithm was to repeatedly update $w$ as $w$ minus the learning rate alpha times the partial derivative respect to $w$ of the cost J of wb, and similarly to update $b$ as follows. Let $me$ just take this definition of J of wb and substitute it in here. 
+The second idea we'll look at is **soft updates**, which it turns out will help our reinforcement learning algorithm do a better job to converge to a good solution. 
 
-Now, when we looked at this example, way back when were starting to talk about linear regression and supervised learning, the training set size $m$ was pretty small. I think we had 47 training examples. But what if we have a very large training set? 
+To understand **mini-batches**, let's just look at supervised learning to start. Here's the dataset of housing sizes and prices that we had seen way back in the first course of this specialization:
 
-Say $m$ equals 100 million. There are many countries including the United States with over a 100 million housing units, and so a national census will give we a dataset that is this order of magnitude or size. The problem with this algorithm when our dataset is this big, is that every single step of gradient descent requires computing this average over 100 million examples, and this turns out to be very slow. 
+![](2024-03-28-15-08-32.png)
 
-Every step of gradient descent means we would compute this sum or this average over 100 million examples. Then we take one tiny gradient descent step and we go back and have to scan over our entire 100 million example dataset again to compute the derivative on the next step, they take another tiny gradient descent step and so on and so on. When the training set size is very large, this gradient descent algorithm turns out to be quite slow. 
+There we had come up with the cost function for the parameters $w$ and $b$ and the gradient descent algorithm. Let's replace the cost function into the algorithm:
 
-The idea of mini-batch gradient descent is to not use all 100 million training examples on every single iteration through this loop. Instead, we may pick a smaller number, let $me$ call it $m$ prime equals say, 1,000. On every step, instead of using all 100 million examples, we would pick some subset of 1,000 or $m$ prime examples. 
+![](2024-03-28-15-17-41.png)
 
-This inner term becomes 1 over 2m prime is sum over sum $m$ prime examples. Now each iteration through gradient descent requires looking only at the 1,000 rather than 100 million examples, and every step takes much less time and just leads to a more efficient algorithm. What mini-batch gradient descent does is on the first iteration through the algorithm, may be it looks at that subset of the data. 
+Now, when we looked at this example initially, the training set size $m$ was pretty small, around 47 training examples. But what if we have a very large training set? 
 
-On the next iteration, maybe it looks at that subset of the data, and so on. For the third iteration and so on, so that every iteration is looking at just a subset of the data so each iteration runs much more quickly. To see why this might be a reasonable algorithm, here's the housing dataset. 
+For example, $m$ equals 100 million. There are many countries including the United States with over a 100 million housing units, and so a national census will give us a dataset that is this order of magnitude or size. **The problem with this algorithm when our dataset is this big, is that every single step of gradient descent requires computing this average over 100 million examples, and this turns out to be very slow.** 
 
-If on the first iteration we were to look at just say five examples, this is not the whole dataset but it's slightly representative of the string line we might want to fit in the end, and so taking one gradient descent step to make the algorithm better fit these five examples is okay. But then on the next iteration, we take a different five examples like that shown here. we take one gradient descent step using these five examples, and on the next iteration we use a different five examples and so on and so forth. 
+Every step of gradient descent means we would compute this sum or this average over 100 million examples. Then we take one tiny gradient descent step and we go back and have to scan over our entire 100 million example dataset again to compute the derivative on the next step, they take another tiny gradient descent step and so on and so on. When the training set size is very large, this gradient descent algorithm becomes quite slow. 
 
-we can scan through this list of examples from top to bottom. That would be one way. Another way would be if on every single iteration we just pick a totally different five examples to use. 
+Instead of using all 100 million training examples on every single iteration through this loop, **the idea of mini-batch gradient descent is to pick a subset of a much smaller number than the total size of the dataset on each step**. On every step, instead of using all 100 million examples, we would pick some subset of 1,000 or $m'$ examples.
 
-we might remember with batch gradient descent, if these are the contours of the cost function J. Then batch gradient descent would say, start here and take a step, take a step, take a step, take a step, take a step. Every step of gradient descent causes the parameters to reliably get closer to the global minimum of the cost function here in the middle. 
+![](2024-03-28-15-24-00.png)
 
-In contrast, mini-batch gradient descent or a mini-batch learning algorithm will do something like this. If we start here, then the first iteration uses just five examples. It'll hit in the right direction but maybe not the best gradient descent direction. 
+This inner term $\frac{1}{2m}$ becomes $\frac{1}{2m'}$. Now each iteration through gradient descent requires looking only at the 1,000 rather than 100 million examples, and every step takes much less time and just leads to a more efficient algorithm. 
 
-Then the next iteration they may do that, the next iteration that, and that and sometimes just by chance, the five examples we chose may be an unlucky choice and even head in the wrong direction away from the global minimum, and so on and so forth. But on average, mini-batch gradient descent will tend toward the global minimum, not reliably and somewhat noisily, but every iteration is much more computationally inexpensive and so mini-batch learning or mini-batch gradient descent turns out to be a much faster algorithm when we have a very large training set. In fact, for supervised learning, where we have a very large training set, mini-batch learning or mini-batch gradient descent, or a mini-batch version with other optimization algorithms like Atom, is used more common than batch gradient descent. 
+What mini-batch gradient descent does is, on the first iteration through the algorithm, looks at the first $m'$ training examples, on the next, takes the next $m'$ training examples, and so on:
 
-Going back to our reinforcement learning algorithm, this is the algorithm that we had seen previously. The mini-batch version of this would be, even if we have stored the 10,000 most recent tuples in the replay buffer, what we might choose to do is not use all 10,000 every time we train a model. Instead, what we might do is just take the subset. 
+![](2024-03-28-15-28-02.png)
 
-we might choose just 1,000 examples of these s, a, R(s, s prime tuples and use it to create just 1,000 training examples to train the neural network. It turns out that this will make each iteration of training a model a little bit more noisy but much faster and this will overall tend to speed up this reinforcement learning algorithm. That's how mini-batching can speed up both a supervised learning algorithm like linear regression as well as this reinforcement learning algorithm where we may use a mini-batch size(say, 1,000 examples, even if we store it away, 10,000 of these tuples in our replay buffer. 
+To see why this might be a reasonable algorithm, here's the housing dataset:
 
-Finally, there's one other refinement to the algorithm that can make it converge more reliably, which is, I've written out this step here(set Q equals $Q_new$. But it turns out that this can make a very abrupt change to Q. If we train a new neural network to new, maybe just by chance is not a very good neural network. 
+![](2024-03-28-15-28-27.png)
+
+If on the first iteration we were to look at just say five examples, this is not the whole dataset but it's slightly representative of the straight line we might want to fit in the end, and so taking one gradient descent step to make the algorithm better fit these five examples is okay:
+
+![](2024-03-28-15-28-58.png)
+
+But then on the next iteration, we take a different five examples, take one gradient descent step using these five examples, and on the next iteration we use a different five examples and so on and so forth:
+
+![](2024-03-31-23-06-31.png)
+
+We can add from the list of examples from top to bottom, or we could, on every single iteration, just pick a totally different five examples to use, randomly.
+
+We might remember with batch gradient descent, if the following are the contours of the cost function $J$:
+![](2024-03-31-23-07-44.png)
+
+Then batch gradient descent would look like the graph in the left: start here and take a step, take a step, take a step, take a step, take a step. Every step of gradient descent causes the parameters to reliably get closer to the global minimum of the cost function in the middle:
+
+![](2024-03-31-23-08-27.png)
+
+In contrast, mini-batch gradient descent or a mini-batch learning algorithm will do something like the following. If we start at the outer border, then the first iteration uses just five examples. It'll hit in the right direction but maybe not the best gradient descent direction. Sometimes just by chance, the five examples we chose may be an unlucky choice and even head in the wrong direction away from the global minimum, and so on and so forth. But on average, mini-batch gradient descent will tend toward the global minimum, although not fully reliably and somewhat noisily. 
+
+![](2024-03-31-23-11-10.png)
+
+But, in this way, every iteration is much more computationally inexpensive and so mini-batch learning or mini-batch gradient descent turns out to be a much faster algorithm when we have a very large training set.
+
+In fact, for supervised learning, where we have a very large training set, **mini-batch learning or mini-batch gradient descent, with other optimization algorithms like Adam, is used more common than batch gradient descent.**
+
+Going back to our reinforcement learning algorithm, this is the algorithm that we had seen previously:
+
+![](2024-03-31-23-12-31.png)
+
+The mini-batch version of this would be, even if we have stored the 10,000 most recent tuples in the replay buffer, what we might choose to do is not use all 10,000 every time we train a model. 
+
+Instead, what we might do is just take the subset: we choose just 1,000 examples of these $(s, a, R(s), s')$  tuples and use it to create just 1,000 training examples to train the neural network. This will make each iteration of training a model a little bit more noisy but much faster and this will overall tend to speed up this reinforcement learning algorithm. 
+
+![](2024-03-31-23-14-14.png)
+
+### Soft updates
+
+Finally, there's one other refinement to the algorithm that can make it converge more reliably, which is, I've written out this step here(set Q equals $Q_new$. But this can make a very abrupt change to Q. If we train a new neural network to new, maybe just by chance is not a very good neural network. 
 
 Maybe is even a little bit worse than the old one, then we just overwrote our Q function with a potentially worse noisy neural network. The soft update method helps to prevent $Q_new$ through just one unlucky step getting worse. In particular, the neural network Q will have some parameters, W and B, all the parameters for all the layers in the neural network. 
 
