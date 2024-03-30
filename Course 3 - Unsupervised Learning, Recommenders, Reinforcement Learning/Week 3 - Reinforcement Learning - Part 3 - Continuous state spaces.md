@@ -411,21 +411,37 @@ Instead, what we might do is just take the subset: we choose just 1,000 examples
 
 ### Soft updates
 
-Finally, there's one other refinement to the algorithm that can make it converge more reliably, which is, I've written out this step here(set Q equals $Q_new$. But this can make a very abrupt change to Q. If we train a new neural network to new, maybe just by chance is not a very good neural network. 
+We also have the **soft updates** refinement to the algorithm, that can make the reinforcement converge more reliably: in the algorithm, we've written out this step here which sets $Q$ equals $Q_{new}$. But this can make a very abrupt change to $Q$:
 
-Maybe is even a little bit worse than the old one, then we just overwrote our Q function with a potentially worse noisy neural network. The soft update method helps to prevent $Q_new$ through just one unlucky step getting worse. In particular, the neural network Q will have some parameters, W and B, all the parameters for all the layers in the neural network. 
+![](2024-03-31-23-28-25.png)
 
-When we train the new neural network, we get some parameters $W_new$ and $B_new$. In the original algorithm S as described on that slide, we would set W to be equal to $W_new$ and B equals $B_new$. That's what set Q equals $Q_new$ means. 
+If we train a new neural network to and completely replace the old one, maybe, by chance, the new version is not a very good neural network, maybe even a little bit worse than the old one. In a scenario like that, then we just overwrote our $Q$ function with a potentially worse neural network. 
 
-With the soft update, what we do is instead Set W equals 0.01 times $W_new$ plus 0.99 times W. In other words, we're going to make W to be 99 percent the old version of W plus one percent of the new version $W_new$. This is called a soft update because whenever we train a new neural network $W_new$, we're only going to accept a little bit of the new value. 
+The soft update method helps to prevent $Q_{new}$ from getting worse through just one unlucky. 
 
-As similarly, B equals 0.01 times $B_new$ plus 0.99 times B. These numbers, 0.01 and 0.99, these are hyperparameters that we could set, but it controls how aggressively we move W to $W_new$ and these two numbers are expected to add up to one. One extreme would be if we were to set W equals one times $W_new$ plus 0 times W, in which case, we're back to the original algorithm up here where we're just copying $W_new$ onto W. 
+In particular, the neural network $Q$ will have some parameters, $w$ and $b$, all the parameters for all the layers in the neural network. When we train the new neural network, we get some parameters $W_{new}$ and $B_{new}$:
 
-But a soft update allows we to make a more gradual change to Q or to the neural network parameters W and B that affect our current guess for the Q function $Q(s, a)$. It turns out that using the soft update method causes the reinforcement learning algorithm to converge more reliably. It makes it less likely that the reinforcement learning algorithm will oscillate or divert or have other undesirable properties. 
+![](2024-03-31-23-31-37.png)
 
-With these two final refinements to the algorithm, mini-batching, which actually applies very well to supervise learning as well, not just reinforcement learning, as well as the idea(soft updates, we should be able to get our lunar algorithm to work really well on the Lunar Lander. The Lunar Lander is actually a decently complex, decently challenging application and so that we can get it to work and land safely on the moon. I think that's actually really cool and I hope we enjoy playing with the practice lab. 
+In the original algorithm $S$ as described previously, we would set $W$ to be equal to $W_{new}$ and $B$ equals $B_{new}$. That's what set $Q$ equals $Q_{new}$ means:
 
-Now, we've talked a lot about reinforcement learning. Before we wrap up, I'd like to share with we $my$ thoughts on the state of reinforcement learning so that as we go out and build applications using different machine learning techniques via supervised, unsupervised, reinforcement learning techniques that we have a framework for understanding where reinforcement learning fits in to the world of machine learning today. Let's go take a look at that in the next section. 
+![](2024-03-31-23-32-16.png)
+
+With the soft update, what we do is instead set $W$ equals $0.01$ times $W_{new}$ plus $0.99$ times $W$:
+
+![](2024-03-31-23-32-55.png)
+
+In other words, we're going to make $W$ to be 99 percent the old version of $W$ plus one percent of the new version $W_{new}$. This is called a soft update because whenever we train a new neural network $W_{new}$, we're only going to accept a little bit of the new value. 
+
+And similarly, $B$ equals 0.01 times $B_{new}$ plus 0.99 times $B$: 
+
+![](2024-03-31-23-33-47.png)
+
+These numbers, 0.01 and 0.99, these are hyperparameters that we can set, but it controls how aggressively we move $W$ to $W_{new}$ and these two numbers are expected to add up to 1. One extreme would be if we were to set $W$ equals one times $W_{new}$ plus 0 times $W$, in which case, we're back to the original algorithm up here where we're just copying $W_{new}$ onto $W$:
+
+![](2024-03-31-23-34-42.png)
+
+But a soft update allows we to make a more gradual change to Q or to the neural network parameters $W$ and $B$ that affect our current guess for the Q function $Q(s, a)$. **Using the soft update method causes the reinforcement learning algorithm to converge more reliably and makes it less likely that the reinforcement learning algorithm will oscillate or divert or have other undesirable properties.**
 
 ## The state of reinforcement learning
 
